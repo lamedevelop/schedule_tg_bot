@@ -12,15 +12,17 @@ class DbController:
         pass
 
 
-    def getCursor(self):
+    def openConnection(self):
         self.sqliteConnection = sqlite3.connect(self.dbFilename)
-        self.cursor = sqliteConnection.cursor()
+        self.cursor = self.sqliteConnection.cursor()
 
 
-    def execute(self, query):
+    def executeQuery(self, query):
         self.cursor.execute(query)
+        self.sqliteConnection.commit()
 
 
+    # Unused method
     def commit(self):
         self.sqliteConnection.commit()
 
@@ -30,9 +32,18 @@ class DbController:
         self.sqliteConnection.close()
 
 
-    def db_drop(self, dbFilename=self.dbFilename):
+    def runQuery(self, query):
         try:
-            os.remove(dbFilename)
+            self.openConnection()
+            self.executeQuery(query)
+            self.closeConnection()
+        except sqlite3.Error as error:
+            return 'Error while connecting to database {}'.format(error)
+
+
+    def db_drop(self):
+        try:
+            os.remove(self.dbFilename)
             return 'DB was deleted'
         except Exception as e:
             return "Error while deleting db {}".format(e)
