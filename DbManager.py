@@ -21,7 +21,8 @@ class DbManager:
 
 
     def addUniversity(self, university_name="МГТУ"):
-        query = "INSERT INTO universities (university_name) VALUES ({})".format(university_name)
+        query = "INSERT INTO universities (\"university_name\") VALUES (\"{}\")".format(university_name)
+        print(query)
         DbController().submitQuery(query)
 
 
