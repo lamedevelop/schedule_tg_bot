@@ -1,6 +1,6 @@
-from Migrations.UsersTableMigration import UsersTableMigration
 from Migrations.GroupsTableMigration import GroupsTableMigration
 from Migrations.UniversitiesTableMigration import UniversitiesTableMigration
+from Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
 from Migrations.RandomMessagesTableMigration import RandomMessagesTableMigration
 
 from DbController import DbController
@@ -9,9 +9,9 @@ from DbController import DbController
 class DbManager:
 
     migrations = [
-        UsersTableMigration(),
         GroupsTableMigration(),
         UniversitiesTableMigration(),
+        TelegramUsersTableMigration(),
         RandomMessagesTableMigration()
     ]
 
