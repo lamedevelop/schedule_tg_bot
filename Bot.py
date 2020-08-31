@@ -6,9 +6,11 @@ import telegram
 import cherrypy
 
 from Configs.tgConfig import *
+from TelegramViewController import TelegramViewController
 
 
 bot = telebot.TeleBot(BOT_TOKEN)
+viewController = TelegramViewController()
 
 
 class WebhookServer(object):
@@ -30,9 +32,9 @@ class WebhookServer(object):
 
 @bot.message_handler(commands=["start"])
 def keyboard (message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.row('/help')
-    bot.send_message(message.chat.id, "Default start", reply_markup=markup)
+    startMsg = viewController.getStartMsg()
+    markup = viewController.getStartKeyboardMarkup()
+    bot.send_message(message.chat.id, startMsg.format(message.from_user.username), reply_markup=markup)
 
 
 @bot.message_handler(commands=["help"])

@@ -20,6 +20,11 @@ class DbManager:
         self.dbController = DbController()
 
 
+    def getUniversities(self):
+        query = "SELECT university_name FROM universities"
+        return self.dbController.fetchQuery(query)
+
+
     def upAllMigrations(self):
         for migration in self.migrations:
             migration.up()

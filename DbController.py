@@ -19,6 +19,9 @@ class DbController:
 
     def executeQuery(self, query):
         self.cursor.execute(query)
+
+
+    def commitQuery(self):
         self.sqliteConnection.commit()
 
 
@@ -31,7 +34,31 @@ class DbController:
         try:
             self.openConnection()
             self.executeQuery(query)
+            self.commitQuery()
             self.closeConnection()
+            
+        except sqlite3.Error as error:
+            return 'Error while connecting to database {}'.format(error)
+
+
+    def fetchResult(self):
+        rows = self.cursor.fetchall()
+        result = []
+     
+        for row in rows:
+            result.append(row)
+
+        return result
+
+
+    def fetchQuery(self, query):
+        try:
+            self.openConnection()
+            self.executeQuery(query)
+            result = self.fetchResult()
+            self.closeConnection()
+            return result
+
         except sqlite3.Error as error:
             return 'Error while connecting to database {}'.format(error)
 
