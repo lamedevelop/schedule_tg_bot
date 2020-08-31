@@ -33,11 +33,3 @@ class DbManager:
     def getDescriptionForAllMigrations(self):
         for migration in self.migrations:
             migration.getDescription()
-
-
-if __name__ == '__main__':
-    db = DbManager()
-    db.upAllMigrations()
-    # db.downAllMigrations()
-    # db.getDescriptionForAllMigrations()
-    # db.dbController.db_drop()
