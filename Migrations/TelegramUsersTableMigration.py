@@ -2,7 +2,7 @@ from DbController import DbController
 from Migrations.Migration import Migration
 
 
-class UsersTableMigration(Migration):
+class TelegramUsersTableMigration(Migration):
 
     def __init__(self):
         self.dbControler = DbController()
@@ -13,7 +13,7 @@ class UsersTableMigration(Migration):
 
 
     def up(self):
-        query = '''CREATE TABLE users (
+        query = '''CREATE TABLE telegramUsers (
                 user_id INTEGER PRIMARY KEY,
                 first_name TEXT,
                 last_name TEXT,
@@ -25,10 +25,10 @@ class UsersTableMigration(Migration):
                 group_id INTEGER);'''
 
         self.dbControler.runQuery(query)
-        print("UsersTable up")
+        print("TelegramUsersTableMigration up")
 
 
     def down(self):
-        query = '''DROP TABLE users;'''
+        query = '''DROP TABLE telegramUsers;'''
         self.dbControler.runQuery(query)
-        print("UsersTable down")
+        print("TelegramUsersTableMigration down")
