@@ -20,11 +20,11 @@ class GroupsTableMigration(Migration):
                 schedule_text TEXT,
                 schedule_url TEXT,
                 update_date DATETIME default current_timestamp);'''
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("GroupsTableMigration up")
 
 
     def down(self):
         query = '''DROP TABLE groups;'''
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("GroupsTableMigration down")

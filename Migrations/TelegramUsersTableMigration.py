@@ -24,11 +24,11 @@ class TelegramUsersTableMigration(Migration):
                 university_id INTEGER,
                 group_id INTEGER);'''
 
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("TelegramUsersTableMigration up")
 
 
     def down(self):
         query = '''DROP TABLE telegramUsers;'''
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("TelegramUsersTableMigration down")

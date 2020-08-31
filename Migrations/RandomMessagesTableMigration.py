@@ -18,11 +18,11 @@ class RandomMessagesTableMigration(Migration):
                 user_id INTEGER,
                 message TEXT,
                 creation_date DATETIME default current_timestamp);'''
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("RandomMessagesTableMigration up")
 
 
     def down(self):
         query = '''DROP TABLE randomMessages;'''
-        self.dbControler.runQuery(query)
+        self.dbControler.submitQuery(query)
         print("RandomMessagesTableMigration down")

@@ -17,12 +17,17 @@ class DbManager:
 
     
     def __init__(self):
-        self.dbController = DbController()
+        pass
+
+
+    def addUniversity(self, university_name="МГТУ"):
+        query = "INSERT INTO universities (university_name) VALUES ({})".format(university_name)
+        DbController().submitQuery(query)
 
 
     def getUniversities(self):
         query = "SELECT university_name FROM universities"
-        return self.dbController.fetchQuery(query)
+        return DbController().fetchQuery(query)
 
 
     def upAllMigrations(self):

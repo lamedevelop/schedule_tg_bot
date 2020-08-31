@@ -30,7 +30,7 @@ class DbController:
         self.sqliteConnection.close()
 
 
-    def runQuery(self, query):
+    def submitQuery(self, query):
         try:
             self.openConnection()
             self.executeQuery(query)
