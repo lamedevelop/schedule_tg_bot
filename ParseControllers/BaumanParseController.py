@@ -3,7 +3,7 @@ import json
 import re
 import requests
 
-from ParseController import ParseController
+from ParseControllers.ParseController import ParseController
 
 
 class BaumanParseController(ParseController):
