@@ -13,6 +13,7 @@ class BotManager:
 
     def startBot(self):
         bot = Bot()
+        self.startServer()
 
 
     def startServer(self):
