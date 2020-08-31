@@ -22,11 +22,6 @@ class DbController:
         self.sqliteConnection.commit()
 
 
-    # Unused method
-    def commit(self):
-        self.sqliteConnection.commit()
-
-
     def closeConnection(self):
         self.cursor.close()
         self.sqliteConnection.close()
