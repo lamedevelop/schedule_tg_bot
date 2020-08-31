@@ -9,4 +9,4 @@ WEBHOOK_SSL_CERT = './name_of_file'  # Путь к сертификату
 WEBHOOK_SSL_PRIV = './name_of_file'  # Путь к приватному ключу
 
 WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)
-WEBHOOK_URL_PATH = "/%s/" % (token)
+WEBHOOK_URL_PATH = "/%s/" % (BOT_TOKEN)
