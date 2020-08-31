@@ -9,4 +9,4 @@ class BotManager:
         pass
 
     def run(self):
-        pass
+        print("Hello i'm BOT")
