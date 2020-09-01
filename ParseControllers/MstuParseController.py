@@ -1,31 +1,10 @@
-import json
-
-import re
-import requests
-
-from ParseControllers.ParseController import ParseController
+from ParseController import (ParseController, re, requests)
 
 
-class BaumanParseController(ParseController):
+class MstuParseController(ParseController):
 
-    #url = 'https://students.bmstu.ru/schedule/201c396c-8610-11ea-959d-005056960017'
-    url = 'https://students.bmstu.ru/schedule/d2e34cf6-4aee-11e9-b081-005056960017'
-
-    def __init__(self):
-        pass
-
-    def run(self):
-
-        jsonOUT = getJson(parse(self.url))
-        # print(jsonOUT)
-
-        f = open('text.json', 'w', encoding='utf-8')
-        for x in jsonOUT:
-            f.write(x)
-        f.close()
-
-    def parse(self, link):
-        page = requests.get(link)
+    def _parse(self, url):
+        page = requests.get(url)
         if page.status_code == 200:
             d = {
                 "div": r'<div class=\"col-md-6 hidden-xs\">(.+?)</div>',
@@ -68,35 +47,3 @@ class BaumanParseController(ParseController):
                     stageInTR += 1
         else:
             print("Connection error")
-
-    def getJson(self, text):
-        d = {
-            "ПН": "Понедельник",
-            "ВТ": "Вторник",
-            "СР": "Среда",
-            "ЧТ": "Четверг",
-            "ПТ": "Пятница",
-            "СБ": "Суббота"
-        }
-        finalDict, timeArr = {}, {}
-        day, time = "", ""
-        pairs = []
-        for result in text:
-            if result:
-                if len(result[0]) == 2:
-                    if timeArr:
-                        finalDict[day] = timeArr
-                        timeArr = {}
-                    day = d[result[0]]
-                elif len(result) == 1:
-                    if pairs:
-                        timeArr[time] = pairs
-                        pairs = []
-                    time = result[0]
-                else:
-                    pairs.append(
-                        list(map(lambda x: x.replace("&#160;", " "), result)))
-            if timeArr:
-                timeArr[time] = pairs
-                finalDict[day] = timeArr
-        return json.dumps(finalDict, indent=4, ensure_ascii=False)
