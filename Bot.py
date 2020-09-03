@@ -8,12 +8,14 @@ import cherrypy
 from Configs.tgConfig import *
 from DbManager import DbManager
 from TelegramViewController import TelegramViewController
+from UserController import UserController
 
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
 dbManager = DbManager()
 viewController = TelegramViewController()
+userController = UserController()
 
 
 # class WebhookServer(object):
@@ -35,6 +37,8 @@ viewController = TelegramViewController()
 
 @bot.message_handler(commands=["start"])
 def chooseUniversity(message):
+    userController.CURR_STATUS = UserController().DEFAULT_STATUS
+
     userInfo = {
         'user_id': message.from_user.id,
         'first_name': message.from_user.first_name,
@@ -46,7 +50,12 @@ def chooseUniversity(message):
 
     startMsg = viewController.getStartMsg()
     markup = viewController.getUniversityKeyboardMarkup()
-    bot.send_message(message.chat.id, startMsg.format(message.from_user.first_name), reply_markup=markup)
+    bot.send_message(
+        message.chat.id,
+        startMsg.format(message.from_user.first_name),
+        reply_markup=markup,
+        parse_mode="markdown"
+    )
 
 
 @bot.message_handler(commands=["help"])
@@ -60,8 +69,22 @@ def sendHelp(message):
 
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def main(message):
-    bot.send_message(message.chat.id, "*" + message.text + "*", parse_mode="markdown")
-    bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBSjVfUVrzol8Zw2y2gZUGYZxVd-jRHAACrAADaJpdDJxjOnTSw630GwQ')
+    replyMsg = "default reply"
+
+    universities = DbManager().getUniversities()
+    for university in universities:
+        if userController.CURR_STATUS == UserController().DEFAULT_STATUS and message == university[0]:
+
+            universityId = DbManager().getUniversityIdByName(message)
+
+            userController.CURR_STATUS = UserController().UNIVERSITY_CHOSEN
+        else:
+            replyMsg = "University already chosen" \
+                       "If you want to chose another one type /start"
+
+
+    bot.send_message(message.chat.id, replyMsg, parse_mode="markdown")
+    # bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBSjVfUVrzol8Zw2y2gZUGYZxVd-jRHAACrAADaJpdDJxjOnTSw630GwQ')
 
 
 bot.remove_webhook()

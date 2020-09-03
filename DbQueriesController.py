@@ -9,6 +9,9 @@ class DbQueriesController:
     def getSelectQuery(self, subject, source):
         return "SELECT {} FROM {}".format(subject, source)
 
+    def getSelectWithParamQuery(self, subject, source, paramName, value):
+        return "SELECT {} FROM {} WHERE {}={}".format(subject, source, paramName, value)
+
     # For inserting several fields
     # use optimised queries
     def getInsertQuery(self, destination, subject, value):
