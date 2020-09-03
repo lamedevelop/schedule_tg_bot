@@ -1,16 +1,16 @@
-class Migration:
+from abc import ABC, abstractmethod, abstractproperty
 
-    def __init__(self):
+
+class Migration(ABC):
+
+    @abstractmethod
+    def getDescription(self):
         pass
 
-
-    def getDescription(self):
-    	pass
-
-
+    @abstractmethod
     def up(self):
-    	pass
+        pass
 
-
+    @abstractmethod
     def down(self):
-    	pass
+        pass

@@ -4,10 +4,6 @@ from Migrations.Migration import Migration
 
 class GroupsTableMigration(Migration):
 
-    def __init__(self):
-        self.dbControler = SqlLiteDbController()
-
-
     def getDescription(self):
         print("Create GroupsTable migration")
 
@@ -20,11 +16,12 @@ class GroupsTableMigration(Migration):
                 schedule_text TEXT,
                 schedule_url TEXT,
                 update_date DATETIME default current_timestamp);'''
-        self.dbControler.submitQuery(query)
+
+        SqlLiteDbController().submitQuery(query)
         print("GroupsTableMigration up")
 
 
     def down(self):
         query = '''DROP TABLE groups;'''
-        self.dbControler.submitQuery(query)
+        SqlLiteDbController().submitQuery(query)
         print("GroupsTableMigration down")

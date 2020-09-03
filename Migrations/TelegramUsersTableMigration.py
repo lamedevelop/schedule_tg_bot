@@ -4,10 +4,6 @@ from Migrations.Migration import Migration
 
 class TelegramUsersTableMigration(Migration):
 
-    def __init__(self):
-        self.dbControler = SqlLiteDbController()
-
-
     def getDescription(self):
         print("Create UsersTable migration")
 
@@ -24,11 +20,11 @@ class TelegramUsersTableMigration(Migration):
                 university_id INTEGER,
                 group_id INTEGER);'''
 
-        self.dbControler.submitQuery(query)
+        SqlLiteDbController().submitQuery(query)
         print("TelegramUsersTableMigration up")
 
 
     def down(self):
         query = '''DROP TABLE telegramUsers;'''
-        self.dbControler.submitQuery(query)
+        SqlLiteDbController().submitQuery(query)
         print("TelegramUsersTableMigration down")
