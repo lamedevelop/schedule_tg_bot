@@ -15,9 +15,6 @@ class DbManager:
         RandomMessagesTableMigration()
     ]
 
-    def __init__(self):
-        pass
-
     def addUniversity(self, university_name="МГТУ"):
         query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
         SqlLiteDbController().submitQuery(query)
@@ -25,6 +22,16 @@ class DbManager:
     def getUniversities(self):
         query = DbQueriesController().getSelectQuery("university_name", "universities")
         return SqlLiteDbController().fetchQuery(query)
+
+    def addUser(self, userInfo):
+        query = DbQueriesController().checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
+        isExist = SqlLiteDbController().fetchQuery(query)[0][0]
+
+        if (isExist):
+            print("user {} exist!".format(userInfo.get("username")))
+        else:
+            query = DbQueriesController().getUserInsertQuery("telegramUsers", userInfo)
+            SqlLiteDbController().submitQuery(query)
 
     # Migrations methods
     def upAllMigrations(self):

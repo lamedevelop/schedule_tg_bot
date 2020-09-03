@@ -6,9 +6,6 @@ class SqlLiteDbController:
 
     dbFilename = 'sqlite.db'
 
-    def __init__(self):
-        pass
-
     def openConnection(self):
         self.sqliteConnection = sqlite3.connect(self.dbFilename)
         self.cursor = self.sqliteConnection.cursor()
@@ -40,7 +37,7 @@ class SqlLiteDbController:
             self.closeConnection()
             
         except sqlite3.Error as error:
-            return 'Error while connecting to database {}'.format(error)
+            print('Error while connecting to database {}'.format(error))
 
     def fetchQuery(self, query):
         try:
@@ -51,11 +48,11 @@ class SqlLiteDbController:
             return result
 
         except sqlite3.Error as error:
-            return 'Error while connecting to database {}'.format(error)
+            print('Error while connecting to database {}'.format(error))
 
     def db_drop(self):
         try:
             os.remove(self.dbFilename)
-            return 'DB was deleted'
+            print('DB was deleted')
         except Exception as e:
-            return "Error while deleting db {}".format(e)
+            print("Error while deleting db {}".format(e))

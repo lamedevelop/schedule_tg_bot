@@ -6,10 +6,13 @@ import telegram
 import cherrypy
 
 from Configs.tgConfig import *
+from DbManager import DbManager
 from TelegramViewController import TelegramViewController
 
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+dbManager = DbManager()
 viewController = TelegramViewController()
 
 
@@ -33,17 +36,17 @@ viewController = TelegramViewController()
 @bot.message_handler(commands=["start"])
 def chooseUniversity(message):
     userInfo = {
-        'id': message.from_user.id,
+        'user_id': message.from_user.id,
         'first_name': message.from_user.first_name,
         'last_name': message.from_user.last_name,
         'username': message.from_user.username,
-        'language_code': message.from_user.language_code,
-        'is_bot': message.from_user.is_bot
     }
+
+    dbManager.addUser(userInfo)
 
     startMsg = viewController.getStartMsg()
     markup = viewController.getUniversityKeyboardMarkup()
-    bot.send_message(message.chat.id, startMsg.format(message.from_user.full_name), reply_markup=markup)
+    bot.send_message(message.chat.id, startMsg.format(message.from_user.first_name), reply_markup=markup)
 
 
 @bot.message_handler(commands=["help"])
