@@ -8,3 +8,4 @@ Configs/tgConfig.py
 *.pem
 *Config.py
 */*Config.py
+.idea/
