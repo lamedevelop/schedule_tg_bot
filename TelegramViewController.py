@@ -1,4 +1,3 @@
-import telebot
 from telebot import types
 
 from DbManager import DbManager
@@ -12,14 +11,14 @@ class TelegramViewController:
 
 
     def getStartMsg(self):
-        return '''Hello {}!\nIt's schedule bot'''
+        return '''Hello {}!\nIt's telegram schedule bot'''
 
 
     def getStartKeyboardMarkup(self):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         universities = self.dbManager.getUniversities()
         
-        for universitiy in universities:
-            markup.row(universitiy)
+        for university in universities:
+            markup.row(university[0])
 
         return markup

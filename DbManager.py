@@ -3,11 +3,11 @@ from Migrations.UniversitiesTableMigration import UniversitiesTableMigration
 from Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
 from Migrations.RandomMessagesTableMigration import RandomMessagesTableMigration
 
-from DbController import DbController
+from DbQueriesController import DbQueriesController
+from SqlLiteDbController import SqlLiteDbController
 
 
 class DbManager:
-
     migrations = [
         GroupsTableMigration(),
         UniversitiesTableMigration(),
@@ -15,22 +15,22 @@ class DbManager:
         RandomMessagesTableMigration()
     ]
 
-    
+
     def __init__(self):
         pass
 
 
     def addUniversity(self, university_name="МГТУ"):
-        query = "INSERT INTO universities (\"university_name\") VALUES (\"{}\")".format(university_name)
-        print(query)
-        DbController().submitQuery(query)
+        query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
+        SqlLiteDbController().submitQuery(query)
 
 
     def getUniversities(self):
-        query = "SELECT university_name FROM universities"
-        return DbController().fetchQuery(query)
+        query = DbQueriesController().getSelectQuery("university_name", "universities")
+        return SqlLiteDbController().fetchQuery(query)
 
 
+    # Migrations methods
     def upAllMigrations(self):
         for migration in self.migrations:
             migration.up()

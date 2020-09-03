@@ -2,15 +2,12 @@ import os
 import sqlite3
 
 
-class DbController:
+class SqlLiteDbController:
 
-    
     dbFilename = 'sqlite.db'
-
 
     def __init__(self):
         pass
-
 
     def openConnection(self):
         self.sqliteConnection = sqlite3.connect(self.dbFilename)
@@ -30,6 +27,16 @@ class DbController:
         self.sqliteConnection.close()
 
 
+    def fetchResult(self):
+        rows = self.cursor.fetchall()
+        result = []
+
+        for row in rows:
+            result.append(row)
+
+        return result
+
+
     def submitQuery(self, query):
         try:
             self.openConnection()
@@ -39,16 +46,6 @@ class DbController:
             
         except sqlite3.Error as error:
             return 'Error while connecting to database {}'.format(error)
-
-
-    def fetchResult(self):
-        rows = self.cursor.fetchall()
-        result = []
-     
-        for row in rows:
-            result.append(row)
-
-        return result
 
 
     def fetchQuery(self, query):

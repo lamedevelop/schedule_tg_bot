@@ -1,11 +1,11 @@
-from DbController import DbController
+from SqlLiteDbController import SqlLiteDbController
 from Migrations.Migration import Migration
 
 
 class UniversitiesTableMigration(Migration):
 
     def __init__(self):
-        self.dbControler = DbController()
+        self.dbControler = SqlLiteDbController()
 
 
     def getDescription(self):
