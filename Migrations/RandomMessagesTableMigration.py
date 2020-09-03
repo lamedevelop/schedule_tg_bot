@@ -7,7 +7,6 @@ class RandomMessagesTableMigration(Migration):
     def getDescription(self):
         print("Create RandomMessagesTable migration")
 
-
     def up(self):
         query = '''CREATE TABLE randomMessages (
                 message_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +16,6 @@ class RandomMessagesTableMigration(Migration):
 
         SqlLiteDbController().submitQuery(query)
         print("RandomMessagesTableMigration up")
-
 
     def down(self):
         query = '''DROP TABLE randomMessages;'''

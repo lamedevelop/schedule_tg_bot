@@ -5,16 +5,13 @@ from DbManager import DbManager
 
 class TelegramViewController:
 
-
     def __init__(self):
         self.dbManager = DbManager()
-
 
     def getStartMsg(self):
         return '''Hello {}!\nIt's telegram schedule bot'''
 
-
-    def getStartKeyboardMarkup(self):
+    def getUniversityKeyboardMarkup(self):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         universities = self.dbManager.getUniversities()
         

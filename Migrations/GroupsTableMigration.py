@@ -7,7 +7,6 @@ class GroupsTableMigration(Migration):
     def getDescription(self):
         print("Create GroupsTable migration")
 
-
     def up(self):
         query = '''CREATE TABLE groups (
                 group_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +18,6 @@ class GroupsTableMigration(Migration):
 
         SqlLiteDbController().submitQuery(query)
         print("GroupsTableMigration up")
-
 
     def down(self):
         query = '''DROP TABLE groups;'''

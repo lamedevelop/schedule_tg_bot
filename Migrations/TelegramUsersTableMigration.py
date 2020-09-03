@@ -7,7 +7,6 @@ class TelegramUsersTableMigration(Migration):
     def getDescription(self):
         print("Create UsersTable migration")
 
-
     def up(self):
         query = '''CREATE TABLE telegramUsers (
                 user_id INTEGER PRIMARY KEY,
@@ -22,7 +21,6 @@ class TelegramUsersTableMigration(Migration):
 
         SqlLiteDbController().submitQuery(query)
         print("TelegramUsersTableMigration up")
-
 
     def down(self):
         query = '''DROP TABLE telegramUsers;'''

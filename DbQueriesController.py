@@ -6,10 +6,8 @@ class DbQueriesController:
     using non-sql database management system
     """
 
-
     def getSelectQuery(self, subject, source):
         return "SELECT {} FROM {}".format(subject, source)
-
 
     # For inserting several fields
     # use optimised queries
@@ -21,3 +19,6 @@ class DbQueriesController:
             subject,
             value
         )
+
+    def getUserInsertQuery(self, userInfo):
+        pass
