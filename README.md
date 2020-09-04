@@ -8,10 +8,12 @@ Start bot from CLI:
 python3 Bot.py
 ```
 
+
 Create db file:
 ```bash
 python3 CliRunInterface.py --manager=Db --action=upAllMigrations
 ```
+
 
 Drop dp and fill with test data:
 ```bash
