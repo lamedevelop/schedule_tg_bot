@@ -17,7 +17,7 @@ python3 CliRunInterface.py --manager=Db --action=upAllMigrations
 
 Drop db file:
 ```bash
-python3 CliRunInterface.py —manager=Db —action=dropDb
+python3 CliRunInterface.py -—manager=Db —-action=dropDb
 ```
 
 
