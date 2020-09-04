@@ -1,8 +1,11 @@
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 from Migrations.Migration import Migration
+from Controllers.Log.LogController import LogController
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class UserMessagesTableMigration(Migration):
+
+    logger = LogController()
 
     def getDescription(self):
         print("Create RandomMessagesTable migration")
@@ -15,9 +18,9 @@ class UserMessagesTableMigration(Migration):
                 creation_date DATETIME default current_timestamp);'''
 
         SqlLiteDbController().submitQuery(query)
-        print("UserMessagesTableMigration up")
+        self.logger.info("UserMessagesTableMigration up")
 
     def down(self):
         query = '''DROP TABLE userMessages;'''
         SqlLiteDbController().submitQuery(query)
-        print("UserMessagesTableMigration down")
+        self.logger.info("UserMessagesTableMigration down")
