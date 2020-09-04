@@ -19,3 +19,9 @@ Drop dp and fill with test data:
 ```bash
 python3 CliRunInterface.py --manager=Db --action=resetDb 
 ```
+
+
+Install correct version of telebot
+```bash
+sudo python3 -m pip install PyTelegramBotAPI==2.2.3
+```
