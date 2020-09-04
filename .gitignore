@@ -3,3 +3,9 @@
 */*/.DS_Store
 __pycache__/
 */__pycache__/
+Configs/*
+Configs/tgConfig.py
+*.pem
+*Config.py
+*/*Config.py
+.idea/

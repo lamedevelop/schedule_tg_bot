@@ -1,16 +1,11 @@
-from DbController import DbController
+from SqlLiteDbController import SqlLiteDbController
 from Migrations.Migration import Migration
 
 
 class TelegramUsersTableMigration(Migration):
 
-    def __init__(self):
-        self.dbControler = DbController()
-
-
     def getDescription(self):
         print("Create UsersTable migration")
-
 
     def up(self):
         query = '''CREATE TABLE telegramUsers (
@@ -24,11 +19,10 @@ class TelegramUsersTableMigration(Migration):
                 university_id INTEGER,
                 group_id INTEGER);'''
 
-        self.dbControler.runQuery(query)
+        SqlLiteDbController().submitQuery(query)
         print("TelegramUsersTableMigration up")
-
 
     def down(self):
         query = '''DROP TABLE telegramUsers;'''
-        self.dbControler.runQuery(query)
+        SqlLiteDbController().submitQuery(query)
         print("TelegramUsersTableMigration down")
