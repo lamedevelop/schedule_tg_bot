@@ -23,6 +23,18 @@ class DbQueriesController:
             value
         )
 
+    def getUpdateQuery(self, destination, subject, value, condParam, condVal):
+        return """UPDATE {}
+            SET {}={},
+            WHERE {}={};
+        """.format(
+            destination,
+            subject,
+            value,
+            condParam,
+            condVal
+        )
+
     def checkIfExist(self, source, subject, value):
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 

@@ -1,8 +1,6 @@
 import telebot
 # from telebot import types
 
-import telegram
-
 import cherrypy
 
 from Configs.tgConfig import *
@@ -45,8 +43,7 @@ def chooseUniversity(message):
         'last_name': message.from_user.last_name,
         'username': message.from_user.username,
     }
-
-    dbManager.addUser(userInfo)
+    dbManager.addTgUser(userInfo)
 
     startMsg = viewController.getStartMsg()
     markup = viewController.getUniversityKeyboardMarkup()
@@ -69,26 +66,61 @@ def sendHelp(message):
 
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def main(message):
-    replyMsg = "default reply"
+    userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
 
-    universities = DbManager().getUniversities()
-    for university in universities:
-        if userController.CURR_STATUS == UserController().DEFAULT_STATUS and message == university[0]:
+    if userController.CURR_STATUS == UserController().DEFAULT_STATUS:
+        universities = DbManager().getUniversities()
+        for university in universities:
+            if message == university[0]:
+                universityId = DbManager().getUniversityIdByName(message)
+                dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
+                userController.CURR_STATUS = UserController().UNIVERSITY_CHOSEN
 
-            universityId = DbManager().getUniversityIdByName(message)
+                bot.send_message(
+                    message.chat.id,
+                    viewController.getUniversitySpecifiedMsg(),
+                    reply_markup=viewController.getGroupKeyboardMarkup(),
+                    parse_mode="markdown"
+                )
 
-            userController.CURR_STATUS = UserController().UNIVERSITY_CHOSEN
-        else:
-            replyMsg = "University already chosen" \
-                       "If you want to chose another one type /start"
+    elif userController.CURR_STATUS == UserController().UNIVERSITY_CHOSEN:
+        groups = DbManager().getGroupsByUniversityId()
+        for group in groups:
+            if message == group[0]:
+                universityId = userController.getUserUniversityId(message.from_user.id)
+                groupId = DbManager().getGroupIdByNameAndUniversityId(message, universityId)
+                dbManager.updateTgUser(message.from_user.id, "group_id", groupId)
+                userController.CURR_STATUS = UserController().GROUP_CHOSEN
 
+                bot.send_message(
+                    message.chat.id,
+                    viewController.getGroupSpecifiedMsg(),
+                    reply_markup=viewController.getScheduleKeyboardMarkup(),
+                    parse_mode="markdown"
+                )
 
-    bot.send_message(message.chat.id, replyMsg, parse_mode="markdown")
-    # bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBSjVfUVrzol8Zw2y2gZUGYZxVd-jRHAACrAADaJpdDJxjOnTSw630GwQ')
+    elif userController.CURR_STATUS == UserController().GROUP_CHOSEN:
+        if message == "monday":
+            bot.send_message(message.chat.id, "monday", parse_mode="markdown")
+        if message == "tuesday":
+            bot.send_message(message.chat.id, "tuesday", parse_mode="markdown")
+        if message == "wednesday":
+            bot.send_message(message.chat.id, "wednesday", parse_mode="markdown")
+        if message == "thursday":
+            bot.send_message(message.chat.id, "thursday", parse_mode="markdown")
+        if message == "friday":
+            bot.send_message(message.chat.id, "friday", parse_mode="markdown")
+        if message == "saturday":
+            bot.send_message(message.chat.id, "saturday", parse_mode="markdown")
 
 
 bot.remove_webhook()
-bot.polling()
+
+try:
+    bot.polling()
+except Exception as e:
+    print('Error while polling: {}'.format(e))
+
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 #
 #

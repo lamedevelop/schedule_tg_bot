@@ -27,7 +27,7 @@ class DbManager:
         query = DbQueriesController().getSelectWithParamQuery("university_id", "universities", "university_name", name)
         return SqlLiteDbController().fetchQuery(query)
 
-    def addUser(self, userInfo):
+    def addTgUser(self, userInfo):
         query = DbQueriesController().checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
         isExist = SqlLiteDbController().fetchQuery(query)[0][0]
 
@@ -37,9 +37,13 @@ class DbManager:
             query = DbQueriesController().getUserInsertQuery("telegramUsers", userInfo)
             SqlLiteDbController().submitQuery(query)
 
-    def updateUser(self, paramName, paramVal):
-        query = DbQueriesController().getInsertQuery("telegramUsers", paramName, paramVal)
+    def updateTgUser(self, user_id, paramName, paramVal):
+        query = DbQueriesController().getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
         SqlLiteDbController().submitQuery(query)
+
+    def getTgUserInfo(self, user_id):
+        query = DbQueriesController().getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
+        return SqlLiteDbController().fetchQuery(query)
 
     # Migrations methods
     def upAllMigrations(self):

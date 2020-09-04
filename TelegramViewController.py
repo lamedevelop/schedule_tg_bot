@@ -10,6 +10,14 @@ class TelegramViewController:
                'It\'s telegram schedule bot\n' \
                'Choose your *university*'
 
+    def getUniversitySpecifiedMsg(self):
+        return "University *successfully specified*\n" \
+               "Chose your *group*"
+
+    def getGroupSpecifiedMsg(self):
+        return "Group *successfully specified*\n" \
+               "Here is your *schedule*"
+
     def getUniversityKeyboardMarkup(self):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         universities = DbManager().getUniversities()
