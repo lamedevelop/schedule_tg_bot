@@ -13,10 +13,10 @@ class UserController:
     def getCurrStatus(self, user_id):
         userInfo = DbManager().getTgUserInfo(user_id)[0]
 
-        if isinstance(userInfo[8], int):
-            return self.UNIVERSITY_CHOSEN
-        elif isinstance(userInfo[7], int):
+        if isinstance(userInfo[7], int) and isinstance(userInfo[8], int):
             return self.GROUP_CHOSEN
+        elif isinstance(userInfo[7], int):
+            return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS
 

@@ -16,8 +16,9 @@ class DbQueriesController:
     # use optimised queries
     def getInsertQuery(self, destination, subject, value):
         return """INSERT INTO {}
-            (\"{}\") 
-            VALUES (\"{}\")""".format(
+                (\"{}\") 
+                VALUES (\"{}\")
+        """.format(
             destination,
             subject,
             value
@@ -25,8 +26,8 @@ class DbQueriesController:
 
     def getUpdateQuery(self, destination, subject, value, condParam, condVal):
         return """UPDATE {}
-            SET {}={}
-            WHERE {}=\"{}\";
+                SET {}={}
+                WHERE {}=\"{}\";
         """.format(
             destination,
             subject,
@@ -38,11 +39,22 @@ class DbQueriesController:
     def checkIfExist(self, source, subject, value):
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 
+    def getGroupIdQuery(self, group_name, university_id):
+        return """SELECT grop_id 
+                FROM groups 
+                WHERE group_name=\"{}\"
+                AND university_id=\"{}\"
+        """.format(
+            group_name,
+            university_id
+        )
+
     # Optimized queries
     def getUserInsertQuery(self, destination, userInfo):
         return """INSERT INTO {}
-                    ('{}', '{}', '{}', '{}') 
-                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                ('{}', '{}', '{}', '{}') 
+                VALUES ('{}', '{}', '{}', '{}')
+        """.format(
             destination,
             'user_id',
             'first_name',
@@ -56,8 +68,9 @@ class DbQueriesController:
 
     def getGroupInsertQuery(self, groupInfo):
         return """INSERT INTO groups
-                    ('{}', '{}', '{}', '{}') 
-                    VALUES ('{}', '{}', '{}', '{}')""".format(
+                ('{}', '{}', '{}', '{}') 
+                VALUES ('{}', '{}', '{}', '{}')
+        """.format(
             "group_name",
             "university_id",
             "schedule_text",
@@ -67,4 +80,15 @@ class DbQueriesController:
             groupInfo.get('schedule_text'),
             groupInfo.get('schedule_url'),
 
+        )
+
+    def getMessageInsertQuery(self, user_id, message):
+        return """INSERT INTO userMessages
+                ('{}', '{}') 
+                VALUES ('{}', '{}')
+        """.format(
+            "user_id",
+            "message",
+            user_id,
+            message,
         )

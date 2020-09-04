@@ -55,7 +55,7 @@ class SqlLiteDbController:
             print('Error while connecting to database {}'.format(error))
             print('Problem query: ', query)
 
-    def db_drop(self):
+    def dropDb(self):
         try:
             os.remove(self.dbFilename)
             print('DB was deleted')
