@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
 import requests
 import threading
 import re
-import concurrent.futures
 
 
 class MstuParseController(ParseController):
