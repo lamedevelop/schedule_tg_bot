@@ -1,5 +1,5 @@
 from MpeiParseController import MpeiParseController
-from MstuParseController import MstuParseController
+from BmstuParseController import BmstuParseController
 import time
 
 #url1 = "https://mpei.ru/Education/timetable/Pages/table.aspx?groupoid=10342&start=2020.08.31"
@@ -8,12 +8,12 @@ import time
 
 def main(obj):
     start = time.time()
-    obj.run("Mstu")
+    obj.run("result")
     end = time.time()
     total = (end - start)
-    print("MSTU: %f sec" % total)
+    print("finished in: %f sec" % total)
 
 
 if __name__ == '__main__':
-    main(MstuParseController())
-    # main(MpeiParseController())
+    # main(BmstuParseController())
+    main(MpeiParseController('А-06м-20'))
