@@ -14,7 +14,7 @@ class UserController:
         userInfo = DbManager().getTgUserInfo(user_id)[0]
 
         if isinstance(userInfo[8], int):
-            return self.GROUP_CHOSEN
+            return self.UNIVERSITY_CHOSEN
         elif isinstance(userInfo[7], int):
             return self.GROUP_CHOSEN
         else:

@@ -96,3 +96,10 @@ class DbManager:
         }
         query = DbQueriesController().getGroupInsertQuery(groupInfo)
         SqlLiteDbController().submitQuery(query)
+
+        print("Db written with test data. Delete before deploy!")
+
+    def renewDb(self):
+        self.downAllMigrations(self)
+        self.upAllMigrations(self)
+        self.fillTestData(self)
