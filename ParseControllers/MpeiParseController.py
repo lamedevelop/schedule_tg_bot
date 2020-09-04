@@ -6,8 +6,9 @@ import json
 
 class MpeiParseController(ParseController):
 
-    def __init__(self, group_name: str):
+    def __init__(self, group_name: str, date: str):
         self.group_name = group_name
+        self.date = date
 
     def _parse(self):
 
@@ -41,9 +42,8 @@ class MpeiParseController(ParseController):
             search_json = search_groupid.json()
             if len(search_json) == 1:
                 group_id = search_json[0]['id']
-                date = '2020.08.31'
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%d?start=%s&lng=1' % (
-                    group_id, date)
+                    group_id, self.date)
                 group_schedule = requests.get(group_schedule_url)
                 if group_schedule.status_code == 200:
                     group_schedule_json = group_schedule.json()

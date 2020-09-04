@@ -16,4 +16,4 @@ def main(obj):
 
 if __name__ == '__main__':
     # main(BmstuParseController())
-    main(MpeiParseController('А-06м-20'))
+    main(MpeiParseController('А-06м-20', '2020.08.31'))
