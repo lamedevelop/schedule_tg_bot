@@ -15,6 +15,12 @@ python3 CliRunInterface.py --manager=Db --action=upAllMigrations
 ```
 
 
+Drop db file:
+```bash
+python3 CliRunInterface.py —manager=Db —action=dropDb
+```
+
+
 Drop dp and fill with test data:
 ```bash
 python3 CliRunInterface.py --manager=Db --action=resetDb 
