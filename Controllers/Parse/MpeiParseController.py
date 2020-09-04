@@ -1,4 +1,4 @@
-from ParseController import ParseController
+from Controllers.Parse.ParseController import ParseController
 
 import requests
 import json

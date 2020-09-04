@@ -3,8 +3,8 @@ from Migrations.UniversitiesTableMigration import UniversitiesTableMigration
 from Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
 from Migrations.UserMessagesTableMigration import UserMessagesTableMigration
 
-from DbQueriesController import DbQueriesController
-from SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.DbQueriesController import DbQueriesController
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class DbManager:

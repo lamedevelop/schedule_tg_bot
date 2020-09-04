@@ -1,6 +1,8 @@
-from MpeiParseController import MpeiParseController
-from BmstuParseController import BmstuParseController
 import time
+
+from Controllers.Parse.MpeiParseController import MpeiParseController
+from Controllers.Parse.BmstuParseController import BmstuParseController
+
 
 #url1 = "https://mpei.ru/Education/timetable/Pages/table.aspx?groupoid=10342&start=2020.08.31"
 #url2 = "https://mpei.ru/Education/timetable/Pages/table.aspx?groupoid=10342&start=2020.08.31"

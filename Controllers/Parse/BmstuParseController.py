@@ -1,4 +1,4 @@
-from ParseController import ParseController
+from Controllers.Parse.ParseController import ParseController
 
 from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
 import requests

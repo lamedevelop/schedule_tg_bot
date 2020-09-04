@@ -6,7 +6,7 @@ class CliController:
     """
     Class CliController to run managers from command line
     Usage: 
-        python3 CliController.py --manager={ManagerName without 'Manager'} --action={Action name}
+        python3 CliRunInterface.py --manager={ManagerName without 'Manager'} --action={Action name}
     """
 
     managerName = ""

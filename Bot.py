@@ -1,12 +1,10 @@
 import telebot
 # from telebot import types
 
-import cherrypy
-
 from Configs.tgConfig import *
 from DbManager import DbManager
-from TelegramViewController import TelegramViewController
-from UserController import UserController
+from Controllers.App.TelegramViewController import TelegramViewController
+from Controllers.User.UserController import UserController
 
 
 bot = telebot.TeleBot(BOT_TOKEN)

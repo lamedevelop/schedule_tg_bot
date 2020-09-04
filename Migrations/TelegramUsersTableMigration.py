@@ -1,4 +1,4 @@
-from SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 from Migrations.Migration import Migration
 
 
