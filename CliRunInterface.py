@@ -2,7 +2,7 @@ import argparse
 import importlib
 
 
-class CliController:
+class CliRunInterface:
     """
     Class CliController to run managers from command line
     Usage: 
@@ -45,5 +45,5 @@ class CliController:
 
 
 if __name__ == '__main__':
-    cli = CliController()
+    cli = CliRunInterface()
     cli.run()
