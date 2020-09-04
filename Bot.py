@@ -68,29 +68,33 @@ def sendHelp(message):
 def main(message):
     userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
 
-    if userController.CURR_STATUS == UserController().DEFAULT_STATUS:
-        universities = DbManager().getUniversities()
+    if userController.CURR_STATUS == userController.DEFAULT_STATUS:
+        universities = dbManager.getUniversities()
+
         for university in universities:
             if message == university[0]:
-                universityId = DbManager().getUniversityIdByName(message)
+                universityId = dbManager.getUniversityIdByName(message)
                 dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
-                userController.CURR_STATUS = UserController().UNIVERSITY_CHOSEN
+                userController.CURR_STATUS = userController.UNIVERSITY_CHOSEN
 
                 bot.send_message(
                     message.chat.id,
                     viewController.getUniversitySpecifiedMsg(),
-                    reply_markup=viewController.getGroupKeyboardMarkup(),
+                    reply_markup=viewController.getGroupKeyboardMarkup(universityId),
                     parse_mode="markdown"
                 )
 
-    elif userController.CURR_STATUS == UserController().UNIVERSITY_CHOSEN:
-        groups = DbManager().getGroupsByUniversityId()
+        print(userController.CURR_STATUS)
+
+    elif userController.CURR_STATUS == userController.UNIVERSITY_CHOSEN:
+        universityId = userController.getUserUniversityId(message.from_user.id)
+        groups = dbManager.getGroupsByUniversityId(universityId)
+
         for group in groups:
-            if message == group[0]:
-                universityId = userController.getUserUniversityId(message.from_user.id)
-                groupId = DbManager().getGroupIdByNameAndUniversityId(message, universityId)
+            if message == group[1]:
+                groupId = group[0]
                 dbManager.updateTgUser(message.from_user.id, "group_id", groupId)
-                userController.CURR_STATUS = UserController().GROUP_CHOSEN
+                userController.CURR_STATUS = userController.GROUP_CHOSEN
 
                 bot.send_message(
                     message.chat.id,
@@ -98,8 +102,9 @@ def main(message):
                     reply_markup=viewController.getScheduleKeyboardMarkup(),
                     parse_mode="markdown"
                 )
+        print(userController.CURR_STATUS)
 
-    elif userController.CURR_STATUS == UserController().GROUP_CHOSEN:
+    elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
         if message == "monday":
             bot.send_message(message.chat.id, "monday", parse_mode="markdown")
         if message == "tuesday":
@@ -113,6 +118,7 @@ def main(message):
         if message == "saturday":
             bot.send_message(message.chat.id, "saturday", parse_mode="markdown")
 
+    print(userController.CURR_STATUS)
 
 bot.remove_webhook()
 

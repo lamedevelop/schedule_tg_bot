@@ -26,3 +26,28 @@ class TelegramViewController:
             markup.row(university[0])
 
         return markup
+
+    def getGroupKeyboardMarkup(self, universityId):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        groups = DbManager().getGroupsByUniversityId(universityId)
+
+        for group in groups:
+            markup.row(group[1])
+
+        return markup
+
+    def getScheduleKeyboardMarkup(self):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        daysOfWeek = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday"
+        ]
+
+        for day in daysOfWeek:
+            markup.row(day)
+
+        return markup

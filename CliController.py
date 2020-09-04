@@ -11,6 +11,7 @@ class CliController:
 
     managerName = ""
     actionName = ""
+    param = ""
 
     manager = ""
     action = ""
@@ -19,9 +20,12 @@ class CliController:
         parser = argparse.ArgumentParser(description='Cli interface for schedule bot')
         parser.add_argument("--manager")
         parser.add_argument("--action")
+        parser.add_argument("--param")
         args = parser.parse_args()
         self.managerName= args.manager + "Manager"
         self.actionName = args.action
+        if args.param:
+            self.param = args.param
 
     def getManager(self):
         foo = importlib.import_module(self.managerName)
@@ -29,7 +33,10 @@ class CliController:
 
     def runAction(self):
         self.action = getattr(self.manager, self.actionName)
-        self.action(self.manager)
+        if self.param:
+            self.action(self.manager, self.param)
+        else:
+            self.action(self.manager)
 
     def run(self):
         self.parseCli()

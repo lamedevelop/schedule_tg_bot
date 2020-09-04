@@ -38,6 +38,7 @@ class DbQueriesController:
     def checkIfExist(self, source, subject, value):
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 
+    # Optimized queries
     def getUserInsertQuery(self, destination, userInfo):
         return """INSERT INTO {}
                     ('{}', '{}', '{}', '{}') 
@@ -51,4 +52,19 @@ class DbQueriesController:
             userInfo.get('first_name'),
             userInfo.get('last_name'),
             userInfo.get('username'),
+        )
+
+    def getGroupInsertQuery(self, groupInfo):
+        return """INSERT INTO groups
+                    ('{}', '{}', '{}', '{}') 
+                    VALUES ('{}', '{}', '{}', '{}')""".format(
+            "group_name",
+            "university_id",
+            "schedule_text",
+            "schedule_url",
+            groupInfo.get('group_name'),
+            groupInfo.get('university_id'),
+            groupInfo.get('schedule_text'),
+            groupInfo.get('schedule_url'),
+
         )

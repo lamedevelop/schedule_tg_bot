@@ -15,7 +15,7 @@ class DbManager:
         RandomMessagesTableMigration()
     ]
 
-    def addUniversity(self, university_name="МГТУ"):
+    def addUniversity(self, university_name):
         query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
         SqlLiteDbController().submitQuery(query)
 
@@ -25,6 +25,14 @@ class DbManager:
 
     def getUniversityIdByName(self, name):
         query = DbQueriesController().getSelectWithParamQuery("university_id", "universities", "university_name", name)
+        return SqlLiteDbController().fetchQuery(query)
+
+    def addGroup(self, groupInfo):
+        query = DbQueriesController().getGroupInsertQuery(groupInfo)
+        SqlLiteDbController().submitQuery(query)
+
+    def getGroupsByUniversityId(self, universityId):
+        query = DbQueriesController().getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
         return SqlLiteDbController().fetchQuery(query)
 
     def addTgUser(self, userInfo):
