@@ -6,19 +6,22 @@ class SqlLiteDbController:
 
     dbFilename = 'sqlite.db'
 
+    conn = ""
+    cursor = ""
+
     def openConnection(self):
-        self.sqliteConnection = sqlite3.connect(self.dbFilename)
-        self.cursor = self.sqliteConnection.cursor()
+        self.conn = sqlite3.connect(self.dbFilename)
+        self.cursor = self.conn.cursor()
 
     def executeQuery(self, query):
         self.cursor.execute(query)
 
     def commitQuery(self):
-        self.sqliteConnection.commit()
+        self.conn.commit()
 
     def closeConnection(self):
         self.cursor.close()
-        self.sqliteConnection.close()
+        self.conn.close()
 
     def fetchResult(self):
         rows = self.cursor.fetchall()
@@ -38,6 +41,7 @@ class SqlLiteDbController:
             
         except sqlite3.Error as error:
             print('Error while connecting to database {}'.format(error))
+            print('Problem query: ', query)
 
     def fetchQuery(self, query):
         try:
@@ -49,6 +53,7 @@ class SqlLiteDbController:
 
         except sqlite3.Error as error:
             print('Error while connecting to database {}'.format(error))
+            print('Problem query: ', query)
 
     def db_drop(self):
         try:

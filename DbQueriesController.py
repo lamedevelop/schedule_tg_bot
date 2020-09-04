@@ -10,7 +10,7 @@ class DbQueriesController:
         return "SELECT {} FROM {}".format(subject, source)
 
     def getSelectWithParamQuery(self, subject, source, paramName, value):
-        return "SELECT {} FROM {} WHERE {}={}".format(subject, source, paramName, value)
+        return "SELECT {} FROM {} WHERE {}=\"{}\"".format(subject, source, paramName, value)
 
     # For inserting several fields
     # use optimised queries
@@ -25,8 +25,8 @@ class DbQueriesController:
 
     def getUpdateQuery(self, destination, subject, value, condParam, condVal):
         return """UPDATE {}
-            SET {}={},
-            WHERE {}={};
+            SET {}={}
+            WHERE {}=\"{}\";
         """.format(
             destination,
             subject,

@@ -72,8 +72,8 @@ def main(message):
         universities = dbManager.getUniversities()
 
         for university in universities:
-            if message == university[0]:
-                universityId = dbManager.getUniversityIdByName(message)
+            if message.text == university[0]:
+                universityId = dbManager.getUniversityIdByName(message.text)[0][0]
                 dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
                 userController.CURR_STATUS = userController.UNIVERSITY_CHOSEN
 
@@ -84,11 +84,16 @@ def main(message):
                     parse_mode="markdown"
                 )
 
-        print(userController.CURR_STATUS)
-
     elif userController.CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
         groups = dbManager.getGroupsByUniversityId(universityId)
+
+
+        print(
+            "userController.CURR_STATUS: ", userController.CURR_STATUS,
+            "\nuniversityId: ", universityId,
+            "\ngroups: ", groups,
+        )
 
         for group in groups:
             if message == group[1]:
@@ -102,7 +107,6 @@ def main(message):
                     reply_markup=viewController.getScheduleKeyboardMarkup(),
                     parse_mode="markdown"
                 )
-        print(userController.CURR_STATUS)
 
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
         if message == "monday":
@@ -118,9 +122,9 @@ def main(message):
         if message == "saturday":
             bot.send_message(message.chat.id, "saturday", parse_mode="markdown")
 
-    print(userController.CURR_STATUS)
 
 bot.remove_webhook()
+
 
 try:
     bot.polling()
