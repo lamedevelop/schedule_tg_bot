@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 
@@ -27,5 +28,16 @@ class LogController:
         return datetime.now().strftime("%d_%m_%Y-%H:%M:%S")
 
     def writeToFile(self, message):
-        with open(self.log_filename % self.getCurrDate(), 'a') as file:
+        filepath = self.log_filename % self.getCurrDate()
+
+        if not os.path.exists(os.path.dirname(filepath)):
+            self.createPath(filepath)
+
+        with open(filepath, 'a') as file:
             file.write(message + '\n')
+
+    def createPath(self, filepath):
+        try:
+            os.makedirs(os.path.dirname(filepath))
+        except OSError as error:
+            print("Error while creating path to log file", error)

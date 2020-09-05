@@ -6,6 +6,8 @@ from DbManager import DbManager
 from Controllers.App.TelegramViewController import TelegramViewController
 from Controllers.User.UserController import UserController
 
+from Controllers.Log.LogController import LogController
+
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -13,6 +15,7 @@ dbManager = DbManager()
 viewController = TelegramViewController()
 userController = UserController()
 
+logger = LogController()
 
 # class WebhookServer(object):
 #     @cherrypy.expose
@@ -40,6 +43,12 @@ def chooseUniversity(message):
         'username': message.from_user.username,
     }
     dbManager.addTgUser(userInfo)
+
+    logger.info("Bot was started by the user id: {}, name: {}, username: {}".format(
+        message.from_user.id,
+        message.from_user.first_name,
+        message.from_user.username
+    ))
 
     bot.send_message(
         message.chat.id,

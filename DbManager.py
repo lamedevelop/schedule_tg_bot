@@ -6,14 +6,19 @@ from Migrations.UserMessagesTableMigration import UserMessagesTableMigration
 from Controllers.Db.DbQueriesController import DbQueriesController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
+from Controllers.Log.LogController import LogController
+
 
 class DbManager:
+
     migrations = {
         "groupsTable":          GroupsTableMigration(),
         "universitiesTable":    UniversitiesTableMigration(),
         "tgUsersTable":         TelegramUsersTableMigration(),
         "userMessagesTable":  UserMessagesTableMigration()
     }
+
+    logger = LogController()
 
     def addUniversity(self, university_name):
         query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
@@ -44,7 +49,7 @@ class DbManager:
         isExist = SqlLiteDbController().fetchQuery(query)[0][0]
 
         if (isExist):
-            print("user {} exist!".format(userInfo.get("username")))
+            self.logger.info("user {} exist!".format(userInfo.get("username")))
         else:
             query = DbQueriesController().getUserInsertQuery("telegramUsers", userInfo)
             SqlLiteDbController().submitQuery(query)
@@ -102,7 +107,7 @@ class DbManager:
         }
         self.addGroup(self, groupInfo)
 
-        print("Db written with test data. Delete before deploy!")
+        self.logger.info("Db written with test data. Delete before deploy!")
 
     def resetDb(self):
         self.downAllMigrations(self)

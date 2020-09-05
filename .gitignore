@@ -9,3 +9,4 @@ Configs/tgConfig.py
 *Config.py
 */*Config.py
 .idea/
+Logs/*
