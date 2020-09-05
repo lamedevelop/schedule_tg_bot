@@ -10,3 +10,4 @@ Configs/tgConfig.py
 */*Config.py
 .idea/
 Logs/*
+Logs/
