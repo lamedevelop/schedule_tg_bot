@@ -14,10 +14,11 @@ class FileController:
     def writeToFile(filepath, message):
         if not os.path.exists(os.path.dirname(filepath)):
             FileController._createPath(filepath)
-            if isinstance(message, str):
-                FileController._writeString(filepath, message)
-            elif isinstance(message, list):
-                FileController._writeArray(filepath, message)
+
+        if isinstance(message, str):
+            FileController._writeString(filepath, message)
+        elif isinstance(message, list):
+            FileController._writeArray(filepath, message)
 
     @staticmethod
     def _writeString(filepath, message: str):

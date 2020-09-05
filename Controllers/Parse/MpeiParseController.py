@@ -1,7 +1,6 @@
 from Controllers.Parse.ParseController import ParseController
 
 import requests
-import json
 
 
 class MpeiParseController(ParseController):
@@ -38,15 +37,19 @@ class MpeiParseController(ParseController):
 
         search_groupid_url = 'http://ts.mpei.ru/api/search?term=%s&type=group' % self.group_name
         search_groupid = requests.get(search_groupid_url)
+
         if search_groupid.status_code == 200:
             search_json = search_groupid.json()
+
             if len(search_json) == 1:
                 group_id = search_json[0]['id']
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%d?start=%s&lng=1' % (
                     group_id, self.date)
                 group_schedule = requests.get(group_schedule_url)
+
                 if group_schedule.status_code == 200:
                     group_schedule_json = group_schedule.json()
+
                     for item in group_schedule_json:
                         both = {'both': [
                             item['kindOfWork'], item['discipline'], item['auditorium'], item['lecturer']]}
@@ -54,5 +57,6 @@ class MpeiParseController(ParseController):
                         time = '%s-%s' % (item['beginLesson'],
                                           item['endLesson'])
                         week[day_of_week][time] = both
+
                     return {self.group_name: week}
         return {}
