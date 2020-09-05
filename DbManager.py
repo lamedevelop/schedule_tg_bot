@@ -20,7 +20,7 @@ class DbManager:
 
     logger = LogController()
 
-    def addUniversity(self, university_name):
+    def addUniversity(self, university_name: str):
         query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
         SqlLiteDbController().submitQuery(query)
 
@@ -28,15 +28,15 @@ class DbManager:
         query = DbQueriesController().getSelectQuery("university_name", "universities")
         return SqlLiteDbController().fetchQuery(query)
 
-    def getUniversityIdByName(self, name):
+    def getUniversityIdByName(self, name: str):
         query = DbQueriesController().getSelectWithParamQuery("university_id", "universities", "university_name", name)
         return SqlLiteDbController().fetchQuery(query)
 
-    def addGroup(self, groupInfo):
+    def addGroup(self, groupInfo: dict):
         query = DbQueriesController().getGroupInsertQuery(groupInfo)
         SqlLiteDbController().submitQuery(query)
 
-    def getGroupId(self, groupInfo):
+    def getGroupId(self, groupInfo: dict):
         query = DbQueriesController().getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
         return SqlLiteDbController().fetchQuery(query)[0][0]
 
@@ -44,7 +44,7 @@ class DbManager:
         query = DbQueriesController().getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
         return SqlLiteDbController().fetchQuery(query)
 
-    def addTgUser(self, userInfo):
+    def addTgUser(self, userInfo: dict):
         query = DbQueriesController().checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
         isExist = SqlLiteDbController().fetchQuery(query)[0][0]
 
@@ -54,7 +54,7 @@ class DbManager:
             query = DbQueriesController().getUserInsertQuery("telegramUsers", userInfo)
             SqlLiteDbController().submitQuery(query)
 
-    def updateTgUser(self, user_id, paramName, paramVal):
+    def updateTgUser(self, user_id, paramName: str, paramVal):
         query = DbQueriesController().getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
         SqlLiteDbController().submitQuery(query)
 
@@ -82,6 +82,7 @@ class DbManager:
     # Fill test data to db
     # Use only on empty db for testing
     # todo: Move to unit test later
+    @staticmethod
     def fillTestData(self):
         # Fill test 2 universities
         university_name = "MPEI"
@@ -109,10 +110,12 @@ class DbManager:
 
         self.logger.info("Db written with test data. Delete before deploy!")
 
+    @staticmethod
     def resetDb(self):
         self.downAllMigrations(self)
         self.upAllMigrations(self)
         self.fillTestData(self)
 
+    @staticmethod
     def dropDb(self):
         SqlLiteDbController().dropDb()

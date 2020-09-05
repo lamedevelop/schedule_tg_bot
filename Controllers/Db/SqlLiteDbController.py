@@ -17,7 +17,7 @@ class SqlLiteDbController:
         self.conn = sqlite3.connect(self.dbFilename)
         self.cursor = self.conn.cursor()
 
-    def executeQuery(self, query):
+    def executeQuery(self, query: str):
         self.cursor.execute(query)
 
     def commitQuery(self):
@@ -36,7 +36,7 @@ class SqlLiteDbController:
 
         return result
 
-    def submitQuery(self, query):
+    def submitQuery(self, query: str):
         try:
             self.openConnection()
             self.executeQuery(query)
@@ -47,7 +47,7 @@ class SqlLiteDbController:
             self.logger.alert('Error while connecting to database {}'.format(error))
             print('Problem query: ', query)
 
-    def fetchQuery(self, query):
+    def fetchQuery(self, query: str):
         try:
             self.openConnection()
             self.executeQuery(query)
