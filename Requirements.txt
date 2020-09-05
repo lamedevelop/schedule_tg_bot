@@ -1,0 +1,5 @@
+argparse
+importlib
+PyTelegramBotAPI==2.2.3
+sqlite3
+bs4
