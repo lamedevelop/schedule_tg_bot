@@ -40,7 +40,7 @@ class DbQueriesController:
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 
     def getGroupIdQuery(self, group_name, university_id):
-        return """SELECT grop_id 
+        return """SELECT group_id 
                 FROM groups 
                 WHERE group_name=\"{}\"
                 AND university_id=\"{}\"
