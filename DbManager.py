@@ -18,53 +18,56 @@ class DbManager:
         "userMessagesTable":  UserMessagesTableMigration()
     }
 
+    queriesController = DbQueriesController()
+    dbController = SqlLiteDbController()
+
     logger = LogController()
 
     def addUniversity(self, university_name: str):
-        query = DbQueriesController().getInsertQuery("universities", "university_name", university_name)
-        SqlLiteDbController().submitQuery(query)
+        query = self.queriesController.getInsertQuery("universities", "university_name", university_name)
+        self.dbController.submitQuery(query)
 
     def getUniversities(self):
-        query = DbQueriesController().getSelectQuery("university_name", "universities")
-        return SqlLiteDbController().fetchQuery(query)
+        query = self.queriesController.getSelectQuery("university_name", "universities")
+        return self.dbController.fetchQuery(query)
 
     def getUniversityIdByName(self, name: str):
-        query = DbQueriesController().getSelectWithParamQuery("university_id", "universities", "university_name", name)
-        return SqlLiteDbController().fetchQuery(query)
+        query = self.queriesController.getSelectWithParamQuery("university_id", "universities", "university_name", name)
+        return self.dbController.fetchQuery(query)
 
     def addGroup(self, groupInfo: dict):
-        query = DbQueriesController().getGroupInsertQuery(groupInfo)
-        SqlLiteDbController().submitQuery(query)
+        query = self.queriesController.getGroupInsertQuery(groupInfo)
+        self.dbController.submitQuery(query)
 
     def getGroupId(self, groupInfo: dict):
-        query = DbQueriesController().getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
-        return SqlLiteDbController().fetchQuery(query)[0][0]
+        query = self.queriesController.getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
+        return self.dbController.fetchQuery(query)[0][0]
 
     def getGroupsByUniversityId(self, universityId):
-        query = DbQueriesController().getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
-        return SqlLiteDbController().fetchQuery(query)
+        query = self.queriesController.getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
+        return self.dbController.fetchQuery(query)
 
     def addTgUser(self, userInfo: dict):
-        query = DbQueriesController().checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
-        isExist = SqlLiteDbController().fetchQuery(query)[0][0]
+        query = self.queriesController.checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
+        isExist = self.dbController.fetchQuery(query)[0][0]
 
         if (isExist):
             self.logger.info("user {} exist!".format(userInfo.get("username")))
         else:
-            query = DbQueriesController().getUserInsertQuery("telegramUsers", userInfo)
-            SqlLiteDbController().submitQuery(query)
+            query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
+            self.dbController.submitQuery(query)
 
     def updateTgUser(self, user_id, paramName: str, paramVal):
-        query = DbQueriesController().getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
-        SqlLiteDbController().submitQuery(query)
+        query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
+        self.dbController.submitQuery(query)
 
     def getTgUserInfo(self, user_id):
-        query = DbQueriesController().getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
-        return SqlLiteDbController().fetchQuery(query)
+        query = self.queriesController.getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
+        return self.dbController.fetchQuery(query)
 
     def writeUserMessage(self, user_id, message):
-        query = DbQueriesController().getMessageInsertQuery(user_id, message)
-        SqlLiteDbController().submitQuery(query)
+        query = self.queriesController.getMessageInsertQuery(user_id, message)
+        self.dbController.submitQuery(query)
 
     # Migrations methods
     def upAllMigrations(self):
@@ -118,4 +121,4 @@ class DbManager:
 
     @staticmethod
     def dropDb(self):
-        SqlLiteDbController().dropDb()
+        self.dbController.dropDb()
