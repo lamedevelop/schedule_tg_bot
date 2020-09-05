@@ -5,7 +5,7 @@ from Controllers.File.FileController import FileController
 
 
 class LogController:
-    log_filename = 'Logs/logfile_%s.txt'
+    log_filename = 'Logs/logfile_%s.log'
     toFile = True
 
     def __init__(self, to_file=True):
