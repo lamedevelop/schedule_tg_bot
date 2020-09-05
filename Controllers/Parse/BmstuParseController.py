@@ -1,9 +1,8 @@
-from Controllers.Parse.ParseController import ParseController
-
-from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
-import requests
+import re, requests
 import threading
-import re
+from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
+
+from Controllers.Parse.ParseController import ParseController
 
 
 class BmstuParseController(ParseController):
@@ -13,6 +12,7 @@ class BmstuParseController(ParseController):
 
     def _parse(self):
         get_list = requests.get(self.SCHEDULE_LIST_URL)
+
         if get_list.status_code == 200:
             html_list = get_list.text.replace('\n', '')
             soup_list = BeautifulSoup(html_list, 'html.parser')
@@ -20,6 +20,7 @@ class BmstuParseController(ParseController):
                 'a', class_='btn btn-sm btn-default text-nowrap')
             group_schedule_dict = {}
             active_threads = []
+
             for i, a in enumerate(a_tags):
                 t = threading.Thread(target=self._parseTask, args=(
                     a, group_schedule_dict))
@@ -28,8 +29,10 @@ class BmstuParseController(ParseController):
                 thread_count = threading.active_count()
                 if thread_count > self.MAX_TREADS:
                     t.join()
+
             for t in active_threads:
                 t.join()
+
             return group_schedule_dict
         else:
             return {}
@@ -38,17 +41,20 @@ class BmstuParseController(ParseController):
         group_name = item.get_text().strip()
         group_schedule_url = 'https://students.bmstu.ru/%s' % item.get('href')
         get_group_schedule = requests.get(group_schedule_url)
+
         if get_group_schedule.status_code == 200:
             days = {}
             html_group = get_group_schedule.text.replace('\n', '')
             soup_group = BeautifulSoup(html_group, 'html.parser')
             day_div = soup_group.find_all(
                 'div', class_='col-md-6 hidden-sm hidden-md hidden-lg')
+
             for div in day_div:
                 day = {}
                 day_shedule = div.find('tbody')
                 day_name = day_shedule.find('strong').get_text()
                 time_and_subject = day_shedule.find_all('tr')
+
                 for index, item in enumerate(time_and_subject):
                     if index > 1:
                         curr_time = item.find(
@@ -57,9 +63,9 @@ class BmstuParseController(ParseController):
                         curr_time = f'{time_groups.group(1)}-{time_groups.group(2)}'
 
                         both = item.find('td', colspan='2')
-                        subject = {}
                         subject_patt = re.compile(
                             r'<i>(.*?)</i> <span>(.*?)</span> <i>(.*?)</i> <i>(.*?)</i>')
+
                         if both:
                             both_turple = subject_patt.findall(
                                 str(both).replace('\xa0', ' '))
@@ -76,8 +82,9 @@ class BmstuParseController(ParseController):
                                 'numerator': [list(x) for x in numerator_turple][0] if numerator_turple else [''],
                                 'denominator': [list(x) for x in denominator_turple][0] if denominator_turple else ['']
                             }
+
                         day[curr_time] = subject
                 days[day_name] = day
             dict[group_name] = days
         else:
-            group_schedule_dict[group_name] = {}
+            dict[group_name] = {}
