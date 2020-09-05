@@ -147,8 +147,9 @@ bot.remove_webhook()
 
 try:
     bot.polling()
+    logger.info("Polling started")
 except Exception as e:
-    print('Error while polling: {}'.format(e))
+    logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 #
