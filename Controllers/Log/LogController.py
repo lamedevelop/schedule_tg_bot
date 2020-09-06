@@ -6,7 +6,7 @@ class LogController:
     log_filename = 'Logs/logfile_%s.log'
     toFile = True
 
-    def __init__(self, to_file = True):
+    def __init__(self, to_file=True):
         self.toFile = to_file
 
     def info(self, event: str):
