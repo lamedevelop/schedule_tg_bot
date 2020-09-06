@@ -26,7 +26,7 @@ class LogController:
             FileController.writeToFile(filepath, message)
 
     def getCurrDate(self):
-        return datetime.now().strftime("%d_%m_%Y")
+        return datetime.now().strftime("%d-%m-%Y")
 
     def getCurrDateAndTime(self):
-        return datetime.now().strftime("%d_%m_%Y-%H:%M:%S")
+        return datetime.now().strftime("%d-%m-%Y %H:%M:%S")
