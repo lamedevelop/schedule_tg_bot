@@ -30,7 +30,7 @@ For managing db in manual control you can go 2 ways:
 * Use RunManager.py and run methods of DbManager manually
 * Use RunManager.py with db_interact.py script
 
-Here are some commands for manual calling DbManager functions
+Here are some commands for manual calling DbManager functions.
 
 Create db file:
 ```bash
