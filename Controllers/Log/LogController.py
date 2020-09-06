@@ -1,7 +1,5 @@
-import os
-from datetime import datetime
-
 from Controllers.File.FileController import FileController
+from Controllers.Date.DateTimeController import DateTimeController
 
 
 class LogController:
@@ -12,21 +10,15 @@ class LogController:
         self.toFile = to_file
 
     def info(self, event: str):
-        message = "INFO | " + self.getCurrDateAndTime() + " | " + event
+        message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event
         print(message)
-        filepath = self.log_filename % self.getCurrDate()
+        filepath = self.log_filename % DateTimeController.getCurrDate()
         if self.toFile:
             FileController.writeToFile(filepath, message)
 
     def alert(self, event: str):
-        message = "ALERT | " + self.getCurrDateAndTime() + " | " + event
+        message = "ALERT | " + DateTimeController.getCurrDateAndTime() + " | " + event
         print(message)
-        filepath = self.log_filename % self.getCurrDate()
+        filepath = self.log_filename % DateTimeController.getCurrDate()
         if self.toFile:
             FileController.writeToFile(filepath, message)
-
-    def getCurrDate(self):
-        return datetime.now().strftime("%d-%m-%Y")
-
-    def getCurrDateAndTime(self):
-        return datetime.now().strftime("%d-%m-%Y %H:%M:%S")
