@@ -11,14 +11,14 @@ class LogController:
 
     def info(self, event: str):
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event
-        print(message)
-        filepath = self.log_filename % DateTimeController.getCurrDate()
-        if self.toFile:
-            FileController.writeToFile(filepath, message)
+        self.writeLog(message)
 
     def alert(self, event: str):
         message = "ALERT | " + DateTimeController.getCurrDateAndTime() + " | " + event
+        self.writeLog(message)
+
+    def writeLog(self, message):
         print(message)
-        filepath = self.log_filename % DateTimeController.getCurrDate()
         if self.toFile:
+            filepath = self.log_filename % DateTimeController.getCurrDate()
             FileController.writeToFile(filepath, message)
