@@ -44,7 +44,7 @@ class SqlLiteDbController:
             self.closeConnection()
             
         except sqlite3.Error as error:
-            self.logger.alert('Error while connecting to database {}'.format(error))
+            self.logger.alert('Error while connecting to database: {}'.format(error))
             print('Problem query: ', query)
 
     def fetchQuery(self, query: str):
@@ -56,7 +56,7 @@ class SqlLiteDbController:
             return result
 
         except sqlite3.Error as error:
-            self.logger.alert('Error while connecting to database {}'.format(error))
+            self.logger.alert('Error while connecting to database: {}'.format(error))
             print('Problem query: ', query)
 
 
@@ -65,4 +65,4 @@ class SqlLiteDbController:
             os.remove(self.dbFilename)
             self.logger.info('DB was deleted')
         except Exception as e:
-            self.logger.alert('Error while deleting db {}'.format(e))
+            self.logger.alert('Error while deleting db: {}'.format(e))
