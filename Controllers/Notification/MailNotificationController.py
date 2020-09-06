@@ -3,5 +3,5 @@ from Controllers.Notification.NotificationController import NotificationControll
 
 class MailNotificationController(NotificationController):
 
-    def notify(self, message):
+    def sendMessage(self, message):
         pass

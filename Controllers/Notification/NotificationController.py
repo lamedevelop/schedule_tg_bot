@@ -5,5 +5,5 @@ class NotificationController:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def notify(self, message):
+    def sendMessage(self, message):
         pass

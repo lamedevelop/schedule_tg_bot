@@ -11,9 +11,9 @@ class NotificationManager:
     DISASTER_LEVEL = 3
 
     problem_levels = {
-        INFO_LEVEL: "Info",
-        WARNING_LEVEL: "Warning",
-        DISASTER_LEVEL: "Disaster"
+        INFO_LEVEL: "INFO",
+        WARNING_LEVEL: "WARNING",
+        DISASTER_LEVEL: "DISASTER"
     }
 
     def __init__(self):
@@ -21,26 +21,13 @@ class NotificationManager:
             TelegramNotificationController(MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID),
         ]
 
-    def info(self, message, severity=None):
-        header = f'[INFO] {DateTimeController.getCurrDateAndTime()}\n' \
-                 + self.getSeverity(severity)
-        print(self.getSeverity(severity))
-        print(header)
-        message = header + message
-        self.notify(message)
-
-    def alert(self, message, severity=None):
-        header = f'[ALERT] {DateTimeController.getCurrDateAndTime()}\n' \
-                 + self.getSeverity(severity)
-        message = header + message
-        self.notify(message)
-
-    def notify(self, message):
+    def notify(self, message, severity=None):
+        message = self.getHeader(severity) + message
         for notifier in self.notifiers:
-            notifier.notify(message)
+            notifier.sendMessage(message)
 
-    def getSeverity(self, severity):
+    def getHeader(self, severity):
         if severity and severity in self.problem_levels.keys():
-            return f'Severity: {self.problem_levels.get(severity)}\n'
+            return f'[{self.problem_levels.get(severity)}] {DateTimeController.getCurrDateAndTime()}\n'
         else:
             return ""

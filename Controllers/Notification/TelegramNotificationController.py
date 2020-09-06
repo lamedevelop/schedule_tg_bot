@@ -9,7 +9,7 @@ class TelegramNotificationController(NotificationController):
         self.token = token
         self.chat_id = chat_id
 
-    def notify(self, message):
+    def sendMessage(self, message):
         command = self.buildCommand(message)
         os.system(command)
 

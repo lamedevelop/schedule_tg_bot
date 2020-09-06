@@ -150,15 +150,15 @@ def main(message):
 bot.remove_webhook()
 
 try:
-    notificator.info("Polling started", notificator.INFO_LEVEL)
+    notificator.notify("Polling started", notificator.INFO_LEVEL)
     logger.info("Polling started")
 
     bot.polling()
 
-    notificator.info("Polling stopped manually", notificator.INFO_LEVEL)
+    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
     logger.info("Polling stopped manually")
 except Exception as e:
-    notificator.alert('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
     logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
