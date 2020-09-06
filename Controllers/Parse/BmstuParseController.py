@@ -8,7 +8,6 @@ from Controllers.Parse.ParseController import ParseController
 class BmstuParseController(ParseController):
 
     SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
-    MAX_TREADS = 30
 
     def _parse(self, group_name: str):
         get_list = requests.get(self.SCHEDULE_LIST_URL)
@@ -19,7 +18,6 @@ class BmstuParseController(ParseController):
             a_tags = soup_list.find_all(
                 'a', class_='btn btn-sm btn-default text-nowrap')
             group_schedule_dict = {}
-            active_threads = []
 
             for i, item in enumerate(a_tags):
                 if item.get_text().strip() == group_name:
@@ -76,7 +74,6 @@ class BmstuParseController(ParseController):
                             }
 
                         day[curr_time] = subject
-                        break
                 week[day_name] = day
             group_schedule_dict[group_name] = week
         else:
