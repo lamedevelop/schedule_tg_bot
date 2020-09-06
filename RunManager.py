@@ -34,7 +34,7 @@ class RunManager:
         if args.manager:
             self.managerName = args.manager + "Manager"
         if args.action:
-            self.actionName = "action" + args.action
+            self.actionName = args.action
         if args.param:
             self.paramValue = args.param
         if args.script:

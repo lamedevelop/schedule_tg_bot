@@ -1,0 +1,4 @@
+class NotificationManager:
+    notifiers = {
+        "teleram":
+    }

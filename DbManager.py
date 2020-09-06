@@ -12,10 +12,10 @@ from Controllers.Log.LogController import LogController
 class DbManager:
 
     migrations = {
-        "groupsTableMigration":          GroupsTableMigration(),
-        "universitiesTableMigration":    UniversitiesTableMigration(),
-        "telegramUsersTableMigration":         TelegramUsersTableMigration(),
-        "userMessagesTableMigration":  UserMessagesTableMigration()
+        "groupsTableMigration": GroupsTableMigration(),
+        "universitiesTableMigration": UniversitiesTableMigration(),
+        "telegramUsersTableMigration": TelegramUsersTableMigration(),
+        "userMessagesTableMigration": UserMessagesTableMigration()
     }
 
     queriesController = DbQueriesController()
