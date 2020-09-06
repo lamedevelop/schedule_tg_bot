@@ -12,10 +12,10 @@ from Controllers.Log.LogController import LogController
 class DbManager:
 
     migrations = {
-        "groupsTable":          GroupsTableMigration(),
-        "universitiesTable":    UniversitiesTableMigration(),
-        "tgUsersTable":         TelegramUsersTableMigration(),
-        "userMessagesTable":  UserMessagesTableMigration()
+        "groupsTableMigration":          GroupsTableMigration(),
+        "universitiesTableMigration":    UniversitiesTableMigration(),
+        "telegramUsersTableMigration":         TelegramUsersTableMigration(),
+        "userMessagesTableMigration":  UserMessagesTableMigration()
     }
 
     queriesController = DbQueriesController()
@@ -70,29 +70,40 @@ class DbManager:
         self.dbController.submitQuery(query)
 
     # Migrations methods
-    def upAllMigrations(self):
-        for migration in self.migrations.items():
+    @staticmethod
+    def upMigration(migration):
+        DbManager.migrations.get(migration).up()
+
+    @staticmethod
+    def downMigration(migration):
+        DbManager.migrations.get(migration).down()
+
+    @staticmethod
+    def upAllMigrations():
+        for migration in DbManager.migrations.items():
             migration[1].up()
 
-    def downAllMigrations(self):
-        for migration in self.migrations.items():
+    @staticmethod
+    def downAllMigrations():
+        for migration in DbManager.migrations.items():
             migration[1].down()
 
-    def getDescriptionForAllMigrations(self):
-        for migration in self.migrations.items():
+    @staticmethod
+    def getDescriptionForAllMigrations():
+        for migration in DbManager.migrations.items():
             migration[1].getDescription()
 
     # Fill test data to db
     # Use only on empty db for testing
     # todo: Move to unit test later
     @staticmethod
-    def fillTestData(self):
+    def fillTestData():
         # Fill test 2 universities
         university_name = "MPEI"
-        self.addUniversity(self, university_name)
+        DbManager.addUniversity(DbManager(), university_name)
 
         university_name = "BMSTU"
-        self.addUniversity(self, university_name)
+        DbManager.addUniversity(DbManager(), university_name)
 
         # Fill test 2 groups
         groupInfo = {
@@ -101,7 +112,7 @@ class DbManager:
             "schedule_text": "Mpei schedule test",
             "schedule_url": "mpei.ru"
         }
-        self.addGroup(self, groupInfo)
+        DbManager.addGroup(DbManager(), groupInfo)
 
         groupInfo = {
             "group_name": "IU3-13B".lower(),
@@ -109,15 +120,15 @@ class DbManager:
             "schedule_text": "Bmstu schedule test",
             "schedule_url": "bmstu.ru"
         }
-        self.addGroup(self, groupInfo)
+        DbManager.addGroup(DbManager(), groupInfo)
 
-        self.logger.info("Db written with test data. Delete before deploy!")
+        DbManager.logger.info("Db written with test data. Delete before deploy!")
 
     @staticmethod
-    def resetDb(self):
-        self.downAllMigrations(self)
-        self.upAllMigrations(self)
-        self.fillTestData(self)
+    def resetDb():
+        DbManager.downAllMigrations()
+        DbManager.upAllMigrations()
+        DbManager.fillTestData()
 
     @staticmethod
     def dropDb(self):
