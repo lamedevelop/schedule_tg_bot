@@ -2,7 +2,6 @@
 
 Telegram bot for delivering university schedule to students
 
----
 
 ### Contents
 
@@ -11,7 +10,6 @@ Telegram bot for delivering university schedule to students
 - [Installation](#installation)
 - [About us](#about-us)
 
----
 
 ## Start the bot
 
@@ -23,7 +21,6 @@ python3 Bot.py
 
 [Up](#schedule-telegram-bot)
 
----
 
 ## Useful commands
 
@@ -51,7 +48,6 @@ python3 RunManager.py --manager=Db --action=resetDb
 
 [Up](#schedule-telegram-bot)
 
----
 
 ## Installation
 
@@ -73,7 +69,6 @@ telebot/util.py:141
 
 [Up](#schedule-telegram-bot)
 
----
 
 ## About us
 
