@@ -1,4 +1,5 @@
 BOT_TOKEN = "token must be here"
+MONITORING_BOT_TOKEN = "monitoring bot token must be here"
 
 #Config for web-server
 WEBHOOK_HOST = ''
