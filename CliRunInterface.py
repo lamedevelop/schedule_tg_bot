@@ -11,21 +11,34 @@ class CliRunInterface:
 
     managerName = ""
     actionName = ""
-    param = ""
+    paramValue = ""
+    scriptName = ""
 
-    manager = ""
-    action = ""
+    manager = None
+    action = None
+    script = None
+
+    interpreter = "python3"
+    scriptsFolder = "Scripts"
 
     def parseCli(self):
         parser = argparse.ArgumentParser(description='Cli interface for schedule bot')
+
         parser.add_argument("--manager")
         parser.add_argument("--action")
         parser.add_argument("--param")
+        parser.add_argument("--script")
+
         args = parser.parse_args()
-        self.managerName= args.manager + "Manager"
-        self.actionName = args.action
+
+        if args.manager:
+            self.managerName = args.manager + "Manager"
+        if args.action:
+            self.actionName = "action" + args.action
         if args.param:
-            self.param = args.param
+            self.paramValue = args.param
+        if args.script:
+            self.scriptName = args.script
 
     def getManager(self):
         foo = importlib.import_module(self.managerName)
@@ -33,15 +46,23 @@ class CliRunInterface:
 
     def runAction(self):
         self.action = getattr(self.manager, self.actionName)
-        if self.param:
-            self.action(self.manager, self.param)
+        if self.paramValue:
+            self.action(self.paramValue)
         else:
-            self.action(self.manager)
+            self.action()
+
+    def getScript(self):
+        foo = importlib.import_module(f'{self.scriptsFolder}.{self.scriptName}')
+        self.script = getattr(foo, "main")
 
     def run(self):
         self.parseCli()
-        self.getManager()
-        self.runAction()
+        if self.managerName:
+            self.getManager()
+            self.runAction()
+        elif self.scriptName:
+            self.getScript()
+            self.script()
 
 
 if __name__ == '__main__':
