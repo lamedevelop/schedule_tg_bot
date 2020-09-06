@@ -27,7 +27,10 @@ python3 Bot.py
 
 For managing db in manual control you can go 2 ways:
 
+* Use RunManager.py and run methods of DbManager manually
+* Use RunManager.py with db_interact.py script
 
+Here are some commands for manual calling DbManager functions
 
 Create db file:
 ```bash
@@ -44,6 +47,12 @@ python3 RunManager.py -—manager=Db —-action=dropDb
 Drop dp and fill with test data:
 ```bash
 python3 RunManager.py --manager=Db --action=resetDb 
+```
+
+
+Here is single command to run db_interact.py script. You can change action of the script insine of it's main function in the db_interact.py file.
+```bash
+python3 RunManager.py --script=db_interact
 ```
 
 [Up](#schedule-telegram-bot)
