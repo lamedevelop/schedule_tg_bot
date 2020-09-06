@@ -1,0 +1,3 @@
+
+class TelegramNotificationController:
+    pass

@@ -6,7 +6,7 @@ class DbQueriesController:
     using non-sql database management system
     """
 
-    def getSelectQuery(self, subject, source):
+    def getSelectQuery(self, subject: str, source: str):
         return "SELECT {} FROM {}".format(subject, source)
 
     def getSelectWithParamQuery(self, subject, source, paramName, value):
@@ -14,7 +14,7 @@ class DbQueriesController:
 
     # For inserting several fields
     # use optimised queries
-    def getInsertQuery(self, destination, subject, value):
+    def getInsertQuery(self, destination: str, subject: str, value):
         return """INSERT INTO {}
                 (\"{}\") 
                 VALUES (\"{}\")
@@ -24,7 +24,7 @@ class DbQueriesController:
             value
         )
 
-    def getUpdateQuery(self, destination, subject, value, condParam, condVal):
+    def getUpdateQuery(self, destination: str, subject: str, value, condParam: str, condVal):
         return """UPDATE {}
                 SET {}={}
                 WHERE {}=\"{}\";
@@ -36,7 +36,7 @@ class DbQueriesController:
             condVal
         )
 
-    def checkIfExist(self, source, subject, value):
+    def checkIfExist(self, source: str, subject: str, value):
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 
     def getGroupIdQuery(self, group_name, university_id):
@@ -50,7 +50,7 @@ class DbQueriesController:
         )
 
     # Optimized queries
-    def getUserInsertQuery(self, destination, userInfo):
+    def getUserInsertQuery(self, destination: str, userInfo: dict):
         return """INSERT INTO {}
                 ('{}', '{}', '{}', '{}') 
                 VALUES ('{}', '{}', '{}', '{}')
@@ -66,7 +66,7 @@ class DbQueriesController:
             userInfo.get('username'),
         )
 
-    def getGroupInsertQuery(self, groupInfo):
+    def getGroupInsertQuery(self, groupInfo: dict):
         return """INSERT INTO groups
                 ('{}', '{}', '{}', '{}') 
                 VALUES ('{}', '{}', '{}', '{}')
