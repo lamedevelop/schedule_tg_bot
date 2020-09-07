@@ -38,9 +38,9 @@ class TelegramViewController:
     def getScheduleKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         daysOfWeek = [
-            ["понедельник", "вторник"],
-            ["среда", "четверг"],
-            ["пятница", "суббота"]
+            ["Понедельник", "Вторник"],
+            ["Среда", "Четверг"],
+            ["Пятница", "Суббота"]
         ]
 
         for day in daysOfWeek:

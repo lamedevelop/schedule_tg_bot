@@ -14,6 +14,7 @@ class UserMessagesTableMigration(Migration):
         query = '''CREATE TABLE userMessages (
                 message_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
+                user_status INTEGER,
                 message TEXT,
                 creation_date DATETIME default current_timestamp);'''
 

@@ -18,22 +18,12 @@ class ParseManager(object):
         return self.comboBox[str(universityId)].makeJson(groupName.upper()).replace('\'', '\"')
 
     def getDaySchedule(self, dayName, jsonSchedule):
-
-        DaysName = {
-            'monday': 'Понедельник',
-            'tuesday': 'Вторник',
-            'wednesday': 'Среда',
-            'thursday': 'Четверг',
-            'friday': 'Пятница',
-            'saturday': 'Суббота'
-        }
-
         numWeek = int(datetime.today().strftime("%U"))
 
         outputText = ['Расписание на %s' %
-                      re.sub(r'а$', 'у', DaysName[dayName].lower())]
+                      re.sub(r'а$', 'у', dayName.lower())]
         jsonToDict = list(ast.literal_eval(jsonSchedule[0][0]).values())[0]
-        scheduleForDay = jsonToDict[DaysName[dayName]]
+        scheduleForDay = jsonToDict[dayName]
 
         for time, scheduleArr in scheduleForDay.items():
             nextLine = []
@@ -55,6 +45,6 @@ class ParseManager(object):
 
         activeSlots = list(filter(lambda x: bool(x), outputText))
         if len(activeSlots) == 1:
-            return '%s - выходной день' % DaysName[dayName]
+            return '%s - выходной день' % dayName
 
         return '\n\n'.join(activeSlots)

@@ -153,12 +153,12 @@ def main(message):
         userGroupId = userController.getUserGroupId(message.from_user.id)
         groupJsonText = dbManager.getGroupJsonById(userGroupId)
 
-        if message.text == "понедельник" \
-                or message.text == "вторник" \
-                or message.text == "среда" \
-                or message.text == "четверг" \
-                or message.text == "пятница" \
-                or message.text == "суббота":
+        if message.text == "Понедельник" \
+                or message.text == "Вторник" \
+                or message.text == "Среда" \
+                or message.text == "Четверг" \
+                or message.text == "Пятница" \
+                or message.text == "Суббота":
             bot.send_message(
                 message.chat.id,
                 parseManager.getDaySchedule(message.text, groupJsonText),
@@ -170,17 +170,17 @@ def main(message):
 
 bot.remove_webhook()
 
-try:
-    notificator.notify("Polling started", notificator.INFO_LEVEL)
-    logger.info("Polling started")
+# try:
+notificator.notify("Polling started", notificator.INFO_LEVEL)
+logger.info("Polling started")
 
-    bot.polling()
+bot.polling()
 
-    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
-    logger.info("Polling stopped manually")
-except Exception as e:
-    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
-    logger.alert('Error while polling: {}'.format(e))
+notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+logger.info("Polling stopped manually")
+# except Exception as e:
+#     notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+#     logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 #
