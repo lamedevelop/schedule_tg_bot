@@ -1,4 +1,5 @@
 import requests
+import re
 from datetime import datetime
 
 from Controllers.Parse.ParseController import ParseController
@@ -51,8 +52,14 @@ class MpeiParseController(ParseController):
                     group_schedule_json = group_schedule.json()
 
                     for item in group_schedule_json:
+                        lecturer = item['lecturer']
                         both = {'both': [
-                            item['kindOfWork'], item['discipline'], item['auditorium'], item['lecturer']]}
+                            item['kindOfWork'],
+                            item['discipline'],
+                            item['auditorium'],
+                            lecturer if re.match(
+                                r'!', lecturer) is None else ''
+                        ]}
                         day_of_week = days_name[item['dayOfWeekString']]
                         time = '%s-%s' % (item['beginLesson'],
                                           item['endLesson'])
