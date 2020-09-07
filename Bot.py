@@ -3,7 +3,7 @@ import telebot
 
 from Configs.tgConfig import *
 from DbManager import DbManager
-from Controllers.App.TelegramViewController import TelegramViewController
+from Controllers.View.TelegramViewController import TelegramViewController
 from Controllers.User.UserController import UserController
 
 from Controllers.Log.LogController import LogController
@@ -183,17 +183,18 @@ def main(message):
 
 bot.remove_webhook()
 
-# try:
-notificator.notify("Polling started", notificator.INFO_LEVEL)
-logger.info("Polling started")
 
-bot.polling()
+try:
+    notificator.notify("Polling started", notificator.INFO_LEVEL)
+    logger.info("Polling started")
 
-notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
-logger.info("Polling stopped manually")
-# except Exception as e:
-#     notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
-#     logger.alert('Error while polling: {}'.format(e))
+    bot.polling()
+
+    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+    logger.info("Polling stopped manually")
+except Exception as e:
+    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+    logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 #

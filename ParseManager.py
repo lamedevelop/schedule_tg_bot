@@ -4,6 +4,7 @@ from datetime import datetime
 
 from Controllers.Parse.MpeiParseController import MpeiParseController
 from Controllers.Parse.BmstuParseController import BmstuParseController
+from Controllers.View.TelegramViewController import TelegramViewController
 
 
 class ParseManager(object):
@@ -29,8 +30,16 @@ class ParseManager(object):
             nextLine = []
             for scheduleType, schedule in scheduleArr.items():
                 if len(schedule) > 1:
-                    params = [schedule[1], time, schedule[2],
-                              schedule[3], schedule[0]]
+                    params = [
+                        time,
+                        schedule[1],
+                        schedule[2],
+                        schedule[3],
+                        schedule[0]
+                    ]
+
+                    params = TelegramViewController.applyMarkup(params)
+
                     if scheduleType == 'both':
                         nextLine.extend(params)
                     elif numWeek % 2 == 0 and scheduleType == 'denominator':

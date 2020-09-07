@@ -6,6 +6,11 @@ from DbManager import DbManager
 
 class TelegramViewController:
 
+    icons = {
+        "snowman": u'\U000026C4',
+        "watches": u'\U0001F551'
+    }
+
     @staticmethod
     def getUniversityKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -47,3 +52,19 @@ class TelegramViewController:
             markup.row(day[0], day[1])
 
         return markup
+
+    @staticmethod
+    def applyMarkup(params: list):
+
+        watches = TelegramViewController.icons.get('watches')
+
+        result = [
+            # watches + " *" + params[0] + "*",       # time
+            " *" + params[0] + "*",     # time
+            "_" + params[1] + "_",      # lesson name
+            params[4],                  # type of lesson
+            params[2],                  # room
+            params[3]                   # teacher name
+        ]
+
+        return result
