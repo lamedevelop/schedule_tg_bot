@@ -1,5 +1,5 @@
-import re, requests
-import threading
+import re
+import requests
 from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
 
 from Controllers.Parse.ParseController import ParseController
@@ -8,9 +8,8 @@ from Controllers.Parse.ParseController import ParseController
 class BmstuParseController(ParseController):
 
     SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
-    MAX_TREADS = 30
 
-    def _parse(self):
+    def _parse(self, group_name: str):
         get_list = requests.get(self.SCHEDULE_LIST_URL)
 
         if get_list.status_code == 200:
@@ -19,31 +18,22 @@ class BmstuParseController(ParseController):
             a_tags = soup_list.find_all(
                 'a', class_='btn btn-sm btn-default text-nowrap')
             group_schedule_dict = {}
-            active_threads = []
 
-            for i, a in enumerate(a_tags):
-                t = threading.Thread(target=self._parseTask, args=(
-                    a, group_schedule_dict))
-                t.start()
-                active_threads.append(t)
-                thread_count = threading.active_count()
-                if thread_count > self.MAX_TREADS:
-                    t.join()
-
-            for t in active_threads:
-                t.join()
-
+            for i, item in enumerate(a_tags):
+                if item.get_text().strip() == group_name:
+                    self._parseTask(item, group_schedule_dict)
+                    break
             return group_schedule_dict
         else:
             return {}
 
-    def _parseTask(self, item, dict):
+    def _parseTask(self, item, group_schedule_dict):
         group_name = item.get_text().strip()
         group_schedule_url = 'https://students.bmstu.ru/%s' % item.get('href')
         get_group_schedule = requests.get(group_schedule_url)
 
         if get_group_schedule.status_code == 200:
-            days = {}
+            week = {}
             html_group = get_group_schedule.text.replace('\n', '')
             soup_group = BeautifulSoup(html_group, 'html.parser')
             day_div = soup_group.find_all(
@@ -84,7 +74,10 @@ class BmstuParseController(ParseController):
                             }
 
                         day[curr_time] = subject
-                days[day_name] = day
-            dict[group_name] = days
+                week[day_name] = day
+            group_schedule_dict[group_name] = week
         else:
-            dict[group_name] = {}
+            group_schedule_dict[group_name] = {}
+
+    def __str__(self):
+        return '2'
