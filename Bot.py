@@ -7,6 +7,7 @@ from Controllers.App.TelegramViewController import TelegramViewController
 from Controllers.User.UserController import UserController
 
 from Controllers.Log.LogController import LogController
+from NotificationManager import NotificationManager
 
 from ParseManager import ParseManager
 
@@ -17,6 +18,7 @@ viewController = TelegramViewController()
 userController = UserController()
 
 logger = LogController()
+notificator = NotificationManager()
 
 # class WebhookServer(object):
 #     @cherrypy.expose
@@ -45,11 +47,13 @@ def chooseUniversity(message):
     }
     dbManager.addTgUser(userInfo)
 
-    logger.info("Bot was started by the user id: {}, name: {}, username: {}".format(
+    log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
         message.from_user.id,
         message.from_user.first_name,
         message.from_user.username
-    ))
+    )
+    notificator.info(log_msg)
+    logger.info(log_msg)
 
     bot.send_message(
         message.chat.id,
@@ -176,9 +180,15 @@ def main(message):
 bot.remove_webhook()
 
 try:
-    bot.polling()
+    notificator.notify("Polling started", notificator.INFO_LEVEL)
     logger.info("Polling started")
+
+    bot.polling()
+
+    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+    logger.info("Polling stopped manually")
 except Exception as e:
+    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
     logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))

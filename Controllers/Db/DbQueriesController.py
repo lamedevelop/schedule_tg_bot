@@ -39,7 +39,7 @@ class DbQueriesController:
     def checkIfExist(self, source: str, subject: str, value):
         return "SELECT COUNT(1) FROM {} WHERE {}={}".format(source, subject, value)
 
-    def getGroupIdQuery(self, group_name, university_id):
+    def getGroupIdQuery(self, group_name: str, university_id):
         return """SELECT group_id 
                 FROM groups 
                 WHERE group_name=\"{}\"
