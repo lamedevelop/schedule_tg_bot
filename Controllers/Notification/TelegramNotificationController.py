@@ -1,9 +1,12 @@
 import os
 
+from Controllers.Date.DateTimeController import DateTimeController
 from Controllers.Notification.NotificationController import NotificationController
 
 
 class TelegramNotificationController(NotificationController):
+
+    log_filename = 'Logs/telegram_notification_%s.log'
 
     def __init__(self, token, chat_id):
         self.token = token
@@ -11,7 +14,9 @@ class TelegramNotificationController(NotificationController):
 
     def sendMessage(self, message):
         command = self.buildCommand(message)
-        os.system(command)
+        filepath = self.log_filename % DateTimeController.getCurrDate()
+        os.system(command + " >> " + filepath)
+        os.system("echo" + " >> " + filepath)  # used to prevent json reply in cmd
 
     def buildUrl(self):
         return f'https://api.telegram.org/bot{self.token}/sendMessage'
