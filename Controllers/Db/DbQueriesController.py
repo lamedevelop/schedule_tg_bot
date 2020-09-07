@@ -82,13 +82,15 @@ class DbQueriesController:
 
         )
 
-    def getMessageInsertQuery(self, user_id, message):
+    def getMessageInsertQuery(self, user_id, user_status, message):
         return """INSERT INTO userMessages
-                ('{}', '{}') 
-                VALUES ('{}', '{}')
+                ('{}', '{}', '{}') 
+                VALUES ('{}', '{}', '{}')
         """.format(
             "user_id",
+            "user_status",
             "message",
             user_id,
-            message,
+            user_status,
+            message
         )

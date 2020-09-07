@@ -92,7 +92,7 @@ def sendHelp(message):
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def main(message):
     userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
-    dbManager.writeUserMessage(message.from_user.id, message.text)
+    dbManager.writeUserMessage(message.from_user.id, userController.CURR_STATUS, message.text)
 
     if userController.CURR_STATUS == userController.DEFAULT_STATUS:
         universities = dbManager.getUniversities()
@@ -178,23 +178,21 @@ def main(message):
                 parse_mode="markdown"
             )
 
-        # todo: write rest messages to the db
-
 
 bot.remove_webhook()
 
 
-try:
-    notificator.notify("Polling started", notificator.INFO_LEVEL)
-    logger.info("Polling started")
+# try:
+notificator.notify("Polling started", notificator.INFO_LEVEL)
+logger.info("Polling started")
 
-    bot.polling()
+bot.polling()
 
-    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
-    logger.info("Polling stopped manually")
-except Exception as e:
-    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
-    logger.alert('Error while polling: {}'.format(e))
+notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+logger.info("Polling stopped manually")
+# except Exception as e:
+#     notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+#     logger.alert('Error while polling: {}'.format(e))
 
 # bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 #

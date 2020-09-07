@@ -69,8 +69,8 @@ class DbManager:
         query = self.queriesController.getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
         return self.dbController.fetchQuery(query)
 
-    def writeUserMessage(self, user_id, message):
-        query = self.queriesController.getMessageInsertQuery(user_id, message)
+    def writeUserMessage(self, user_id, user_status, message):
+        query = self.queriesController.getMessageInsertQuery(user_id, user_status, message)
         self.dbController.submitQuery(query)
 
     # Migrations methods
