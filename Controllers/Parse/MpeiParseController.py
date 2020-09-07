@@ -1,7 +1,8 @@
-from Controllers.Parse.ParseController import ParseController
-
 import requests
 from datetime import datetime
+
+from Controllers.Parse.ParseController import ParseController
+
 
 class MpeiParseController(ParseController):
 

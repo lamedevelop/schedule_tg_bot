@@ -55,7 +55,7 @@ class DbManager:
         query = self.queriesController.checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
         isExist = self.dbController.fetchQuery(query)[0][0]
 
-        if (isExist):
+        if isExist:
             self.logger.info("user {} exist!".format(userInfo.get("username")))
         else:
             query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
@@ -103,29 +103,10 @@ class DbManager:
     @staticmethod
     def fillTestData():
         # Fill test 2 universities
-        university_name = "MPEI"
+        university_name = "МЭИ"
         DbManager.addUniversity(DbManager(), university_name)
-
-        university_name = "BMSTU"
+        university_name = "МГТУ"
         DbManager.addUniversity(DbManager(), university_name)
-
-        # Fill test 2 groups
-        groupInfo = {
-            "group_name": "A-06M-20".lower(),
-            "university_id": 1,
-            "schedule_text": "Mpei schedule test",
-            "schedule_url": "mpei.ru"
-        }
-        DbManager.addGroup(DbManager(), groupInfo)
-
-        groupInfo = {
-            "group_name": "IU3-13B".lower(),
-            "university_id": 2,
-            "schedule_text": "Bmstu schedule test",
-            "schedule_url": "bmstu.ru"
-        }
-        DbManager.addGroup(DbManager(), groupInfo)
-
         DbManager.logger.info("Db written with test data. Delete before deploy!")
 
     @staticmethod
@@ -135,5 +116,5 @@ class DbManager:
         DbManager.fillTestData()
 
     @staticmethod
-    def dropDb(self):
-        self.dbController.dropDb()
+    def dropDb():
+        DbManager.dbController.dropDb()
