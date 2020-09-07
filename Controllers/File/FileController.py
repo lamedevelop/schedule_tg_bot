@@ -21,8 +21,8 @@ class FileController:
             FileController._writeArray(filepath, message)
 
     @staticmethod
-    def _writeString(filepath: str, message: str):
-        with open(filepath, 'a') as file:
+    def _writeString(filepath, message: str):
+        with open(filepath, 'a', encoding='utf-8') as file:
             file.write(message + '\n')
 
     @staticmethod

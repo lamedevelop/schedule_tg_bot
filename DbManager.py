@@ -43,6 +43,11 @@ class DbManager:
         query = self.queriesController.getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
         return self.dbController.fetchQuery(query)[0][0]
 
+    def getGroupJsonById(self, groupId):
+        query = DbQueriesController().getSelectWithParamQuery(
+            'schedule_text', 'groups', 'group_id', groupId)
+        return SqlLiteDbController().fetchQuery(query)
+
     def getGroupsByUniversityId(self, universityId):
         query = self.queriesController.getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
         return self.dbController.fetchQuery(query)

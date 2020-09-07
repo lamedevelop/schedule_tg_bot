@@ -8,17 +8,18 @@ class ParseController:
 
     logger = LogController()
 
-    def __init__(self):
-        pass
-
-    def run(self, name: str):
+    def writeToJsonFile(self, file_name: str, group_name: str):
         self.logger.info("Parser %s started" % self.__class__.__name__)
-        json = self.getJson(self._parse())
-        filepath = f'{name}.json'
+        json = self.getJson(self._parse(group_name))
+        filepath = f'{file_name}.json'
         FileController.writeToFile(filepath, json)
 
     def _parse(self):
         pass
 
-    def getJson(self, dict):
-        return json.dumps(dict, indent=4, ensure_ascii=False)
+    def makeJson(self, group_name: str):
+        # return json.dumps(self._parse(group_name), indent=0, ensure_ascii=False)
+        return str(self._parse(group_name))
+
+    def __str__(self):
+        return ''
