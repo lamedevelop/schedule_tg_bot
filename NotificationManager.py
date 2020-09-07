@@ -18,6 +18,7 @@ class NotificationManager:
 
     def __init__(self):
         self.notifiers = [
+            MailNotificationController(),
             TelegramNotificationController(MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID),
         ]
 
