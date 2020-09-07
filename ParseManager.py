@@ -1,13 +1,13 @@
+import re
+import ast
+from datetime import datetime
+
 from Controllers.Parse.MpeiParseController import MpeiParseController
 from Controllers.Parse.BmstuParseController import BmstuParseController
 
-from datetime import datetime
-import ast
-import re
-
 
 class ParseManager(object):
-    # let you choose concrete parse controller and provide base interface for parsing
+
     comboBox = {}
 
     def __init__(self):

@@ -22,6 +22,7 @@ userController = UserController()
 logger = LogController()
 notificator = NotificationManager()
 
+
 # class WebhookServer(object):
 #     @cherrypy.expose
 #     def index(self):
