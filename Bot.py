@@ -147,28 +147,30 @@ def main(message):
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
 
         # todo: Implement schedule choose from db
-        userGroupId = dbManager.getTgUserInfo(message.from_user.id)[0][8]
+        userGroupId = userController.getUserGroupId(message.from_user.id)
         groupJsonText = dbManager.getGroupJsonById(userGroupId)
-        pm = ParseManager()
+        parseManager = ParseManager()
 
         if message.text == "monday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
         if message.text == "tuesday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
         if message.text == "wednesday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
         if message.text == "thursday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
         if message.text == "friday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
         if message.text == "saturday":
-            bot.send_message(message.chat.id, pm.getDaySchedule(message.text, groupJsonText),
+            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
                              parse_mode="markdown")
+
+        # todo: write rest messages to the db
 
 
 bot.remove_webhook()

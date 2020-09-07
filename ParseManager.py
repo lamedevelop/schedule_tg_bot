@@ -20,9 +20,12 @@ class ParseManager(object):
     def getDaySchedule(self, dayName, jsonSchedule):
 
         DaysName = {
-            'monday': 'Понедельник', 'tuesday': 'Вторник',
-            'wednesday': 'Среда', 'thursday': 'Четверг',
-            'friday': 'Пятница', 'saturday': 'Суббота'
+            'monday': 'Понедельник',
+            'tuesday': 'Вторник',
+            'wednesday': 'Среда',
+            'thursday': 'Четверг',
+            'friday': 'Пятница',
+            'saturday': 'Суббота'
         }
 
         numWeek = int(datetime.today().strftime("%U"))

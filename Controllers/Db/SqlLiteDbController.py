@@ -5,7 +5,6 @@ from Controllers.Log.LogController import LogController
 
 
 class SqlLiteDbController:
-
     dbFilename = 'sqlite.db'
 
     conn = ""
@@ -42,7 +41,6 @@ class SqlLiteDbController:
             self.executeQuery(query)
             self.commitQuery()
             self.closeConnection()
-            
         except sqlite3.Error as error:
             self.logger.alert('Error while connecting to database: {}'.format(error))
             print('Problem query: ', query)
@@ -58,7 +56,6 @@ class SqlLiteDbController:
         except sqlite3.Error as error:
             self.logger.alert('Error while connecting to database: {}'.format(error))
             print('Problem query: ', query)
-
 
     def dropDb(self):
         try:
