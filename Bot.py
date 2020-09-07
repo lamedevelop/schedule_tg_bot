@@ -52,7 +52,7 @@ def chooseUniversity(message):
         message.from_user.first_name,
         message.from_user.username
     )
-    notificator.info(log_msg)
+    notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
     logger.info(log_msg)
 
     bot.send_message(
@@ -84,17 +84,15 @@ def main(message):
 
         for university in universities:
             if message.text == university[0]:
-                universityId = dbManager.getUniversityIdByName(message.text)[
-                    0][0]
+                universityId = dbManager.getUniversityIdByName(message.text)[0][0]
                 dbManager.updateTgUser(
                     message.from_user.id, "university_id", universityId)
 
                 bot.send_message(
                     message.chat.id,
                     "University *successfully specified*\nEnter your group",
-                    reply_markup=viewController.getGroupKeyboardMarkup(
-                        universityId),
-                    parse_mode="markdown"
+                    reply_markup=viewController.removeKeyboardMarkup(),
+                    parse_mode="markdown",
                 )
                 break
 
@@ -149,30 +147,21 @@ def main(message):
                 )
 
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
-
-        # todo: Implement schedule choose from db
         userGroupId = userController.getUserGroupId(message.from_user.id)
         groupJsonText = dbManager.getGroupJsonById(userGroupId)
         parseManager = ParseManager()
 
-        if message.text == "monday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
-        if message.text == "tuesday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
-        if message.text == "wednesday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
-        if message.text == "thursday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
-        if message.text == "friday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
-        if message.text == "saturday":
-            bot.send_message(message.chat.id, parseManager.getDaySchedule(message.text, groupJsonText),
-                             parse_mode="markdown")
+        if message.text == "monday" \
+                or message.text == "tuesday" \
+                or message.text == "wednesday" \
+                or message.text == "thursday" \
+                or message.text == "friday" \
+                or message.text == "saturday":
+            bot.send_message(
+                message.chat.id,
+                parseManager.getDaySchedule(message.text, groupJsonText),
+                parse_mode="markdown"
+            )
 
         # todo: write rest messages to the db
 
