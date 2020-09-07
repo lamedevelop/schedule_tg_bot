@@ -1,11 +1,14 @@
+import json
 from telebot import types
+
 from DbManager import DbManager
 
 
 class TelegramViewController:
 
-    def getUniversityKeyboardMarkup(self):
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    @staticmethod
+    def getUniversityKeyboardMarkup():
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         universities = DbManager().getUniversities()
 
         for university in universities:
@@ -13,7 +16,10 @@ class TelegramViewController:
 
         return markup
 
-    def getGroupKeyboardMarkup(self, universityId):
+    # old method
+    # probably should be removed
+    @staticmethod
+    def getGroupKeyboardMarkup(universityId):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         groups = DbManager().getGroupsByUniversityId(universityId)
 
@@ -22,7 +28,14 @@ class TelegramViewController:
 
         return markup
 
-    def getScheduleKeyboardMarkup(self):
+    @staticmethod
+    def removeKeyboardMarkup():
+        removeKeyboard = {'remove_keyboard': True}
+        removeKeyboardEncoded = json.dumps(removeKeyboard)
+        return removeKeyboardEncoded
+
+    @staticmethod
+    def getScheduleKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         daysOfWeek = [
             "monday",
