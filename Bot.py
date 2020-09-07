@@ -49,6 +49,8 @@ def chooseUniversity(message):
         'username': message.from_user.username,
     }
     dbManager.addTgUser(userInfo)
+    dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
+    dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
     log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
         message.from_user.id,
@@ -67,6 +69,17 @@ def chooseUniversity(message):
     )
 
 
+@bot.message_handler(commands=["changegroup"])
+def sendHelp(message):
+    dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+    bot.send_message(
+        message.chat.id,
+        'Введи новую *группу*',
+        reply_markup=viewController.removeKeyboardMarkup(),
+        parse_mode="markdown"
+    )
+
+
 @bot.message_handler(commands=["help"])
 def sendHelp(message):
     bot.send_message(
@@ -78,8 +91,7 @@ def sendHelp(message):
 
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def main(message):
-    userController.CURR_STATUS = userController.getCurrStatus(
-        message.from_user.id)
+    userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
     dbManager.writeUserMessage(message.from_user.id, message.text)
 
     if userController.CURR_STATUS == userController.DEFAULT_STATUS:
