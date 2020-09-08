@@ -52,10 +52,9 @@ def chooseUniversity(message):
     dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
-    log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
+    log_msg = "Bot was started by the user id: {}, name: {}".format(
         message.from_user.id,
         message.from_user.first_name,
-        message.from_user.username
     )
     notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
     logger.info(log_msg)
@@ -75,7 +74,7 @@ def sendHelp(message):
     bot.send_message(
         message.chat.id,
         'Введи новую *группу*',
-        reply_markup=viewController.removeKeyboardMarkup(),
+        reply_markup=viewController.inlineGroupChooseKeyboardMarkup(),
         parse_mode="markdown"
     )
 

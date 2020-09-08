@@ -1,6 +1,8 @@
 import json
 from telebot import types
 
+import telegram
+
 from DbManager import DbManager
 
 
@@ -38,6 +40,27 @@ class TelegramViewController:
         removeKeyboard = {'remove_keyboard': True}
         removeKeyboardEncoded = json.dumps(removeKeyboard)
         return removeKeyboardEncoded
+
+    @staticmethod
+    def inlineGroupChooseKeyboardMarkup():
+        keyboard = [["hello"], ["world"]]
+        markup = types.InlineKeyboardMarkup()
+
+        stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
+
+        for key, value in stringList.items():
+            markup.add(
+                types.InlineKeyboardButton(
+                    text=value,
+                    callback_data="['value', '" + value + "', '" + key + "']"
+                ),
+                types.InlineKeyboardButton(
+                    text="X",
+                    callback_data="['key', '" + key + "']"
+                )
+            )
+
+        return markup
 
     @staticmethod
     def getScheduleKeyboardMarkup():
