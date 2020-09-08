@@ -84,7 +84,21 @@ def sendHelp(message):
 def sendHelp(message):
     bot.send_message(
         message.chat.id,
-        'Default *help*',
+        '''
+Начало использования - /start
+Для смены *университета* - /changeuniversity
+Для смены *группы* - /changegroup
+Получить это сообщение - /help
+
+Номер группы вводится русскими буквами,
+например так:
+ИУ3-13б
+А-12м-20
+
+Контакты для связи:
+@kekmarakek
+@grit4in
+        ''',
         parse_mode="markdown"
     )
 
@@ -178,11 +192,11 @@ def main(message):
                 parse_mode="markdown"
             )
 
-        if message.text == TelegramViewController.applyLookHereFilter("Понедельник")\
-                or message.text == TelegramViewController.applyLookHereFilter("Вторник")\
-                or message.text == TelegramViewController.applyLookHereFilter("Среда")\
-                or message.text == TelegramViewController.applyLookHereFilter("Четверг")\
-                or message.text == TelegramViewController.applyLookHereFilter("Пятница")\
+        if message.text == TelegramViewController.applyLookHereFilter("Понедельник") \
+                or message.text == TelegramViewController.applyLookHereFilter("Вторник") \
+                or message.text == TelegramViewController.applyLookHereFilter("Среда") \
+                or message.text == TelegramViewController.applyLookHereFilter("Четверг") \
+                or message.text == TelegramViewController.applyLookHereFilter("Пятница") \
                 or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
             day = TelegramViewController.removeLookHereFilter(message.text)
             bot.send_message(
@@ -193,7 +207,6 @@ def main(message):
 
 
 bot.remove_webhook()
-
 
 # try:
 notificator.notify("Polling started", notificator.INFO_LEVEL)
