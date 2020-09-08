@@ -60,11 +60,11 @@ class TelegramViewController:
 
         result = [
             # watches + " *" + params[0] + "*",       # time
-            " *" + params[0] + "*",     # time
-            "_" + params[1] + "_",      # lesson name
-            params[4],                  # type of lesson
-            params[2],                  # room
-            params[3]                   # teacher name
+            "*" + params[0] + "*",     # time
+            "*" + params[1] + "*",     # lesson name
+            "_" + params[4] + "_",     # type of lesson
+            "_" + params[2] + "_",     # room
+            params[3]                  # teacher name
         ]
 
         return result

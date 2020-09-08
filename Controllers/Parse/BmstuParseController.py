@@ -58,18 +58,24 @@ class BmstuParseController(ParseController):
 
                         if both:
                             both_turple = subject_patt.findall(
-                                str(both).replace('\xa0', ' ').replace('Самостоятельная работа', ''))
+                                str(both).replace('\xa0', ' ').replace('Самостоятельная работа', '')
+                            )
                             both_schedule = [list(x) for x in both_turple][0]
 
-                            subject = {'both': both_schedule if list(filter(
-                                lambda x: bool(x), both_schedule)) else ['']}
+                            subject = {
+                                'both': both_schedule if list(
+                                    filter(lambda x: bool(x), both_schedule)
+                                ) else ['']
+                            }
                         else:
                             numerator = item.find('td', class_='text-success')
                             denominator = item.find('td', class_='text-info')
                             numerator_turple = subject_patt.findall(
-                                str(numerator).replace('\xa0', ' '))
+                                str(numerator).replace('\xa0', ' ')
+                            )
                             denominator_turple = subject_patt.findall(
-                                str(denominator).replace('\xa0', ' '))
+                                str(denominator).replace('\xa0', ' ')
+                            )
                             subject = {
                                 'numerator': [list(x) for x in numerator_turple][0] if numerator_turple else [''],
                                 'denominator': [list(x) for x in denominator_turple][0] if denominator_turple else ['']
