@@ -1,14 +1,16 @@
 import json
 from telebot import types
 
+from Controllers.Date.DateTimeController import DateTimeController
 from DbManager import DbManager
 
 
 class TelegramViewController:
-
     icons = {
         "snowman": u'\U000026C4',
-        "watches": u'\U0001F551'
+        "watches": u'\U0001F551',
+        "look_here_left": u'\U0001F449',
+        "look_here_right": u'\U0001F448'
     }
 
     @staticmethod
@@ -42,14 +44,19 @@ class TelegramViewController:
     @staticmethod
     def getScheduleKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        daysOfWeek = [
-            ["Понедельник", "Вторник"],
-            ["Среда", "Четверг"],
-            ["Пятница", "Суббота"]
+
+        day_id = DateTimeController.getCurrDayOfWeek()
+        days_of_week = DateTimeController.days_of_week
+        days_of_week[day_id] = TelegramViewController.applyLookHereFilter(days_of_week[day_id])
+
+        keyboard = [
+            [days_of_week[0], days_of_week[1]],
+            [days_of_week[2], days_of_week[3]],
+            [days_of_week[4], days_of_week[5]]
         ]
 
-        for day in daysOfWeek:
-            markup.row(day[0], day[1])
+        for keys in keyboard:
+            markup.row(keys[0], keys[1])
 
         return markup
 
@@ -68,3 +75,19 @@ class TelegramViewController:
         ]
 
         return result
+
+    @staticmethod
+    def applyLookHereFilter(word):
+        if TelegramViewController.icons["look_here_left"] in word \
+                or TelegramViewController.icons["look_here_right"] in word:
+            return word
+        else:
+            return TelegramViewController.icons["look_here_left"] \
+                   + word \
+                   + TelegramViewController.icons["look_here_right"]
+
+    @staticmethod
+    def removeLookHereFilter(word):
+        res = word.split(TelegramViewController.icons["look_here_left"])[1]
+        res = res.split(TelegramViewController.icons["look_here_right"])[0]
+        return res

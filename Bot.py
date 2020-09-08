@@ -74,7 +74,8 @@ def sendHelp(message):
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
     bot.send_message(
         message.chat.id,
-        'Введи новую *группу*',
+        'Введи новую *группу* русскими буквами\n'
+        'Например так: *а-12м-20* или *иу3-13б*',
         reply_markup=viewController.removeKeyboardMarkup(),
         parse_mode="markdown"
     )
@@ -84,7 +85,20 @@ def sendHelp(message):
 def sendHelp(message):
     bot.send_message(
         message.chat.id,
-        'Default *help*',
+        '''
+Начало использования - /start
+Для смены *университета* - /changeuniversity
+Для смены *группы* - /changegroup
+Получить это сообщение - /help
+
+Номер группы вводится *русскими буквами*,
+например так:
+ИУ3-13б
+А-12м-20
+
+Контакты для связи:
+@kekmarakek и @grit4in
+        ''',
         parse_mode="markdown"
     )
 
@@ -104,7 +118,9 @@ def main(message):
 
                 bot.send_message(
                     message.chat.id,
-                    "Университет *выбран*\nВведи группу, используя русские буквы",
+                    'Университет *выбран*\n'
+                    'Введи номер группы, *русскими буквами*\n'
+                    'Например так: *а-12м-20* или *иу3-13б*',
                     reply_markup=viewController.removeKeyboardMarkup(),
                     parse_mode="markdown",
                 )
@@ -113,9 +129,10 @@ def main(message):
     elif userController.CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
         groups = dbManager.getGroupsByUniversityId(universityId)
-        userGroupName = message.text.lower()
+        userGroupName = parseManager.filterGroup(message.text, universityId)
 
         isGroupFound = False
+
         for group in groups:
             if userGroupName == group[1]:
                 groupId = group[0]
@@ -178,9 +195,21 @@ def main(message):
                 parse_mode="markdown"
             )
 
+        if message.text == TelegramViewController.applyLookHereFilter("Понедельник") \
+                or message.text == TelegramViewController.applyLookHereFilter("Вторник") \
+                or message.text == TelegramViewController.applyLookHereFilter("Среда") \
+                or message.text == TelegramViewController.applyLookHereFilter("Четверг") \
+                or message.text == TelegramViewController.applyLookHereFilter("Пятница") \
+                or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
+            day = TelegramViewController.removeLookHereFilter(message.text)
+            bot.send_message(
+                message.chat.id,
+                parseManager.getDaySchedule(day, groupJsonText),
+                parse_mode="markdown"
+            )
+
 
 bot.remove_webhook()
-
 
 # try:
 notificator.notify("Polling started", notificator.INFO_LEVEL)
