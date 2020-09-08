@@ -6,7 +6,6 @@ from DbManager import DbManager
 
 
 class TelegramViewController:
-
     icons = {
         "snowman": u'\U000026C4',
         "watches": u'\U0001F551',
@@ -79,9 +78,13 @@ class TelegramViewController:
 
     @staticmethod
     def applyLookHereFilter(word):
-        return TelegramViewController.icons["look_here_left"] \
-               + word \
-               + TelegramViewController.icons["look_here_right"]
+        if TelegramViewController.icons["look_here_left"] in word \
+                or TelegramViewController.icons["look_here_right"] in word:
+            return word
+        else:
+            return TelegramViewController.icons["look_here_left"] \
+                   + word \
+                   + TelegramViewController.icons["look_here_right"]
 
     @staticmethod
     def removeLookHereFilter(word):

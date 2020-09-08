@@ -74,7 +74,8 @@ def sendHelp(message):
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
     bot.send_message(
         message.chat.id,
-        'Введи новую *группу*',
+        'Введи новую *группу* русскими буквами\n'
+        'Например так: *а-12м-20* или *иу3-13б*',
         reply_markup=viewController.removeKeyboardMarkup(),
         parse_mode="markdown"
     )
@@ -90,14 +91,13 @@ def sendHelp(message):
 Для смены *группы* - /changegroup
 Получить это сообщение - /help
 
-Номер группы вводится русскими буквами,
+Номер группы вводится *русскими буквами*,
 например так:
 ИУ3-13б
 А-12м-20
 
 Контакты для связи:
-@kekmarakek
-@grit4in
+@kekmarakek и @grit4in
         ''',
         parse_mode="markdown"
     )
@@ -118,7 +118,9 @@ def main(message):
 
                 bot.send_message(
                     message.chat.id,
-                    "Университет *выбран*\nВведи группу, используя русские буквы",
+                    'Университет *выбран*\n'
+                    'Введи номер группы, *русскими буквами*\n'
+                    'Например так: *а-12м-20* или *иу3-13б*',
                     reply_markup=viewController.removeKeyboardMarkup(),
                     parse_mode="markdown",
                 )
