@@ -178,6 +178,19 @@ def main(message):
                 parse_mode="markdown"
             )
 
+        if message.text == TelegramViewController.applyLookHereFilter("Понедельник")\
+                or message.text == TelegramViewController.applyLookHereFilter("Вторник")\
+                or message.text == TelegramViewController.applyLookHereFilter("Среда")\
+                or message.text == TelegramViewController.applyLookHereFilter("Четверг")\
+                or message.text == TelegramViewController.applyLookHereFilter("Пятница")\
+                or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
+            day = TelegramViewController.removeLookHereFilter(message.text)
+            bot.send_message(
+                message.chat.id,
+                parseManager.getDaySchedule(day, groupJsonText),
+                parse_mode="markdown"
+            )
+
 
 bot.remove_webhook()
 
