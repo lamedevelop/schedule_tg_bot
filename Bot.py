@@ -129,9 +129,10 @@ def main(message):
     elif userController.CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
         groups = dbManager.getGroupsByUniversityId(universityId)
-        userGroupName = message.text.lower()
+        userGroupName = parseManager.filterGroup(message.text, universityId)
 
         isGroupFound = False
+
         for group in groups:
             if userGroupName == group[1]:
                 groupId = group[0]
