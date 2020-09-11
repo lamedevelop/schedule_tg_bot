@@ -36,7 +36,12 @@ class MpeiParseController(ParseController):
         }
 
         search_groupid_url = 'http://ts.mpei.ru/api/search?term=%s&type=group' % group_name
-        search_groupid = requests.get(search_groupid_url)
+
+        try:
+            search_groupid = requests.get(search_groupid_url)
+        except requests.ConnectionError as e:
+            print(e)
+            return {}
 
         if search_groupid.status_code == 200:
             search_json = search_groupid.json()
@@ -46,7 +51,12 @@ class MpeiParseController(ParseController):
                 date = str(datetime.now())
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%d?start=%s&lng=1' % (
                     group_id, '.'.join(date[:10].split('-')))
-                group_schedule = requests.get(group_schedule_url)
+
+                try:
+                    group_schedule = requests.get(group_schedule_url)
+                except requests.ConnectionError as e:
+                    print(e)
+                    return {}
 
                 if group_schedule.status_code == 200:
                     group_schedule_json = group_schedule.json()
