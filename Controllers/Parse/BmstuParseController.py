@@ -7,10 +7,15 @@ from Controllers.Parse.ParseController import ParseController
 
 class BmstuParseController(ParseController):
 
-    SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
+    SCHEDULE_LIST_URL = 'https://77students.bmstu.ru/schedule/list'
 
     def _parse(self, group_name: str):
-        get_list = requests.get(self.SCHEDULE_LIST_URL)
+
+        try:
+            get_list = requests.get(self.SCHEDULE_LIST_URL)
+        except requests.ConnectionError as e:
+            print(e)
+            return {}
 
         if get_list.status_code == 200:
             html_list = get_list.text.replace('\n', '')
