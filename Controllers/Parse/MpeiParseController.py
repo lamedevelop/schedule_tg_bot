@@ -3,9 +3,12 @@ import re
 from datetime import datetime
 
 from Controllers.Parse.ParseController import ParseController
+from Controllers.Log.LogController import LogController
 
 
 class MpeiParseController(ParseController):
+
+    logger = LogController()
 
     def _parse(self, group_name: str):
 
@@ -40,7 +43,7 @@ class MpeiParseController(ParseController):
         try:
             search_groupid = requests.get(search_groupid_url)
         except requests.ConnectionError as e:
-            print(e)
+            logger.alert(e)
             return {}
 
         if search_groupid.status_code == 200:
@@ -55,7 +58,7 @@ class MpeiParseController(ParseController):
                 try:
                     group_schedule = requests.get(group_schedule_url)
                 except requests.ConnectionError as e:
-                    print(e)
+                    logger.alert(e)
                     return {}
 
                 if group_schedule.status_code == 200:
