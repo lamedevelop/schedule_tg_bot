@@ -51,15 +51,13 @@ class DbManager:
         query = self.queriesController.getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
         return self.dbController.fetchQuery(query)
 
-    def addTgUser(self, userInfo: dict):
-        query = self.queriesController.checkIfExist("telegramUsers", "user_id", userInfo.get("user_id"))
-        isExist = self.dbController.fetchQuery(query)[0][0]
+    def checkUserExist(self, user_id):
+        query = self.queriesController.checkIfExist("telegramUsers", "user_id", user_id)
+        return self.dbController.fetchQuery(query)[0][0]
 
-        if isExist:
-            self.logger.info("user {} exist!".format(userInfo.get("username")))
-        else:
-            query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
-            self.dbController.submitQuery(query)
+    def addTgUser(self, userInfo: dict):
+        query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
+        self.dbController.submitQuery(query)
 
     def updateTgUser(self, user_id, paramName: str, paramVal):
         query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)

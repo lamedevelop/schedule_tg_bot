@@ -51,20 +51,26 @@ def chooseUniversity(message):
         'is_alive': True
     }
 
-    # Необходимо выделить проверку существует ли пользователь в код здесь
-    # так имея запись пользователя в бд и видя что до этого он был неактивен
-    # мы сможем понять что это реинсталл
-    dbManager.addTgUser(userInfo)
-    dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
-    dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+    if not dbManager.checkUserExist(message.from_user.id):
+        dbManager.addTgUser(userInfo)
 
-    log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
-        message.from_user.id,
-        message.from_user.first_name,
-        message.from_user.username
-    )
-    notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
-    logger.info(log_msg)
+        log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
+            message.from_user.id,
+            message.from_user.first_name,
+            message.from_user.username
+        )
+        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        logger.info(log_msg)
+    else:
+        # probably reinstalled
+        # todo: add handler in user activity tracking task
+        dbManager.updateTgUser(message.from_user.id, "is_alive", True)
+        dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
+        dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+
+        log_msg = "User {} restarted the bot".format(userInfo.get("username"))
+        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        logger.info(log_msg)
 
     send_message_custom(
         message,
@@ -222,7 +228,7 @@ def send_message_custom(
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(message.from_user.id, "is_alive", False)
 
-            error_message = 'Send message error: user {} blocked bot'.format(message.from_user.id)
+            error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
             notificator.notify(error_message, notificator.WARNING_LEVEL)
             logger.alert(error_message)
         else:
