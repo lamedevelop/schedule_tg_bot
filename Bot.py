@@ -44,47 +44,56 @@ notificator = NotificationManager()
 def chooseUniversity(message):
     userInfo = {
         'user_id': message.from_user.id,
+        'chat_id': message.chat.id,
         'first_name': message.from_user.first_name,
         'last_name': message.from_user.last_name,
         'username': message.from_user.username,
+        'is_alive': True
     }
-    dbManager.addTgUser(userInfo)
-    dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
-    dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
-    log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
-        message.from_user.id,
-        message.from_user.first_name,
-        message.from_user.username
-    )
-    notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
-    logger.info(log_msg)
+    if not dbManager.checkUserExist(message.from_user.id):
+        dbManager.addTgUser(userInfo)
 
-    bot.send_message(
-        message.chat.id,
-        'Привет *{}*!\nВыбери свой *университет*'.format(
-            message.from_user.first_name),
-        reply_markup=viewController.getUniversityKeyboardMarkup(),
-        parse_mode="markdown"
+        log_msg = "Bot was started by the user id: {}, name: {}, username: {}".format(
+            message.from_user.id,
+            message.from_user.first_name,
+            message.from_user.username
+        )
+        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        logger.info(log_msg)
+    else:
+        # probably reinstalled
+        # todo: add handler in user activity tracking task
+        dbManager.updateTgUser(message.from_user.id, "is_alive", True)
+        dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
+        dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+
+        log_msg = "User {} restarted the bot".format(userInfo.get("username"))
+        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        logger.info(log_msg)
+
+    send_message_custom(
+        message,
+        'Привет *{}*!\nВыбери свой *университет*'.format(message.from_user.first_name),
+        reply_markup=viewController.getUniversityKeyboardMarkup()
     )
 
 
 @bot.message_handler(commands=["changegroup"])
 def sendHelp(message):
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
-    bot.send_message(
-        message.chat.id,
+    send_message_custom(
+        message,
         'Введи новую *группу* русскими буквами\n'
         'Например так: *а-12м-20* или *иу3-13б*',
-        reply_markup=viewController.removeKeyboardMarkup(),
-        parse_mode="markdown"
+        reply_markup=viewController.removeKeyboardMarkup()
     )
 
 
 @bot.message_handler(commands=["help"])
 def sendHelp(message):
-    bot.send_message(
-        message.chat.id,
+    send_message_custom(
+        message,
         '''
 Начало использования - /start
 Для смены *университета* - /changeuniversity
@@ -98,8 +107,7 @@ def sendHelp(message):
 
 Контакты для связи:
 @kekmarakek и @grit4in
-        ''',
-        parse_mode="markdown"
+        '''
     )
 
 
@@ -116,13 +124,12 @@ def main(message):
                 universityId = dbManager.getUniversityIdByName(message.text)[0][0]
                 dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
 
-                bot.send_message(
-                    message.chat.id,
+                send_message_custom(
+                    message,
                     'Университет *выбран*\n'
                     'Введи номер группы, *русскими буквами*\n'
                     'Например так: *а-12м-20* или *иу3-13б*',
-                    reply_markup=viewController.removeKeyboardMarkup(),
-                    parse_mode="markdown",
+                    reply_markup=viewController.removeKeyboardMarkup()
                 )
                 break
 
@@ -140,11 +147,10 @@ def main(message):
                     message.from_user.id, "group_id", groupId)
 
                 isGroupFound = True
-                bot.send_message(
-                    message.chat.id,
+                send_message_custom(
+                    message,
                     "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
-                    reply_markup=viewController.getScheduleKeyboardMarkup(),
-                    parse_mode="markdown"
+                    reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
                 break
 
@@ -166,17 +172,15 @@ def main(message):
                     groupId
                 )
 
-                bot.send_message(
-                    message.chat.id,
+                send_message_custom(
+                    message,
                     "Расписание *успешно загружено*!\nВыбери день, чтобы узнать *расписание*",
-                    reply_markup=viewController.getScheduleKeyboardMarkup(),
-                    parse_mode="markdown"
+                    reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
             else:
-                bot.send_message(
-                    message.chat.id,
-                    "Группа *не найдена*!\nПопробуйте другую группу",
-                    parse_mode="markdown"
+                send_message_custom(
+                    message,
+                    "Группа *не найдена*!\nПопробуйте другую группу"
                 )
 
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
@@ -189,10 +193,9 @@ def main(message):
                 or message.text == "Четверг" \
                 or message.text == "Пятница" \
                 or message.text == "Суббота":
-            bot.send_message(
-                message.chat.id,
-                parseManager.getDaySchedule(message.text, groupJsonText),
-                parse_mode="markdown"
+            send_message_custom(
+                message,
+                parseManager.getDaySchedule(message.text, groupJsonText)
             )
 
         if message.text == TelegramViewController.applyLookHereFilter("Понедельник") \
@@ -202,11 +205,36 @@ def main(message):
                 or message.text == TelegramViewController.applyLookHereFilter("Пятница") \
                 or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
             day = TelegramViewController.removeLookHereFilter(message.text)
-            bot.send_message(
-                message.chat.id,
-                parseManager.getDaySchedule(day, groupJsonText),
-                parse_mode="markdown"
+            send_message_custom(
+                message,
+                parseManager.getDaySchedule(day, groupJsonText)
             )
+
+
+def send_message_custom(
+        message,
+        text: str,
+        reply_markup=None,
+        parse_mode="markdown"
+):
+    try:
+        bot.send_message(
+            message.chat.id,
+            text,
+            reply_markup=reply_markup,
+            parse_mode=parse_mode
+        )
+    except Exception as e:
+        if "bot was blocked by the user" in str(e):
+            dbManager.updateTgUser(message.from_user.id, "is_alive", False)
+
+            error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
+            notificator.notify(error_message, notificator.WARNING_LEVEL)
+            logger.alert(error_message)
+        else:
+            error_message = 'Send message error: undefined error with user {}'.format(message.from_user.id)
+            notificator.notify(error_message, notificator.DISASTER_LEVEL)
+            logger.alert(error_message)
 
 
 bot.remove_webhook()
