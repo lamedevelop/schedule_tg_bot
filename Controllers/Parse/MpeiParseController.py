@@ -50,7 +50,8 @@ class MpeiParseController(ParseController):
                 group_id = search_json[0]['id']
                 date = str(datetime.now())
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%d?start=%s&lng=1' % (
-                    group_id, '.'.join(date[:10].split('-')))
+                    group_id, '.'.join(date[:10].split('-'))
+                )
 
                 try:
                     group_schedule = requests.get(group_schedule_url)
