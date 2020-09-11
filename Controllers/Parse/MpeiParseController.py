@@ -51,9 +51,11 @@ class MpeiParseController(ParseController):
 
             if len(search_json) == 1:
                 group_id = search_json[0]['id']
+
                 date = datetime.now()
                 date_start = '.'.join(str(date)[:10].split('-'))
-                date_finish = '.'.join(str(date+timedelta(days=6))[:10].split('-'))
+                date_finish = '.'.join(
+                    str(date+timedelta(days=6))[:10].split('-'))
 
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%dstart=%s&finish=%s&lng=1' % (
                     group_id, date_start, date_finish)
@@ -69,6 +71,7 @@ class MpeiParseController(ParseController):
 
                     for item in group_schedule_json:
                         lecturer = item['lecturer']
+
                         both = {'both': [
                             item['kindOfWork'],
                             item['discipline'],
@@ -77,8 +80,10 @@ class MpeiParseController(ParseController):
                                 r'!', lecturer) is None else ''
                         ]}
                         day_of_week = days_name[item['dayOfWeekString']]
-                        time = '%s-%s' % (item['beginLesson'],
-                                          item['endLesson'])
+                        time = '%s-%s' % (
+                            item['beginLesson'],
+                            item['endLesson']
+                        )
                         week[day_of_week][time] = both
 
                     return {group_name: week}
