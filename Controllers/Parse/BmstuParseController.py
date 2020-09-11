@@ -16,7 +16,7 @@ class BmstuParseController(ParseController):
         try:
             get_list = requests.get(self.SCHEDULE_LIST_URL)
         except requests.ConnectionError as e:
-            logger.alert(e)
+            self.logger.alert(str(e))
             return {}
 
         if get_list.status_code == 200:
@@ -41,7 +41,7 @@ class BmstuParseController(ParseController):
         try:
             get_group_schedule = requests.get(group_schedule_url)
         except requests.ConnectionError as e:
-            logger.alert(e)
+            self.logger.alert(str(e))
             return {}
 
         if get_group_schedule.status_code == 200:

@@ -43,7 +43,7 @@ class MpeiParseController(ParseController):
         try:
             search_groupid = requests.get(search_groupid_url)
         except requests.ConnectionError as e:
-            logger.alert(e)
+            self.logger.alert(str(e))
             return {}
 
         if search_groupid.status_code == 200:
@@ -63,7 +63,7 @@ class MpeiParseController(ParseController):
                 try:
                     group_schedule = requests.get(group_schedule_url)
                 except requests.ConnectionError as e:
-                    logger.alert(e)
+                    self.logger.alert(str(e))
                     return {}
 
                 if group_schedule.status_code == 200:
