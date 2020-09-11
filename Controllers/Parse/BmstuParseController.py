@@ -3,10 +3,12 @@ import requests
 from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
 
 from Controllers.Parse.ParseController import ParseController
+from Controllers.Log.LogController import LogController
 
 
 class BmstuParseController(ParseController):
 
+    logger = LogController()
     SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
 
     def _parse(self, group_name: str):
@@ -14,7 +16,7 @@ class BmstuParseController(ParseController):
         try:
             get_list = requests.get(self.SCHEDULE_LIST_URL)
         except requests.ConnectionError as e:
-            print(e)
+            logger.alert(e)
             return {}
 
         if get_list.status_code == 200:
@@ -35,7 +37,12 @@ class BmstuParseController(ParseController):
     def _parseTask(self, item, group_schedule_dict):
         group_name = item.get_text().strip()
         group_schedule_url = 'https://students.bmstu.ru/%s' % item.get('href')
-        get_group_schedule = requests.get(group_schedule_url)
+
+        try:
+            get_group_schedule = requests.get(group_schedule_url)
+        except requests.ConnectionError as e:
+            logger.alert(e)
+            return {}
 
         if get_group_schedule.status_code == 200:
             week = {}
