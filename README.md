@@ -32,20 +32,16 @@ For managing db in manual control you can go 2 ways:
 
 Here are some commands for manual calling DbManager functions.
 
-Create db file:
+Db interactions:
+
 ```bash
+# Create db file
 python3 RunManager.py --manager=Db --action=upAllMigrations
-```
 
-
-Drop db file:
-```bash
+# Drop db file
 python3 RunManager.py -—manager=Db —-action=dropDb
-```
 
-
-Drop dp and fill with test data:
-```bash
+# Drop dp and fill with test data
 python3 RunManager.py --manager=Db --action=resetDb 
 ```
 
@@ -53,6 +49,23 @@ python3 RunManager.py --manager=Db --action=resetDb
 Here is single command to run db_interact.py script. You can change action of the script insine of it's main function in the db_interact.py file.
 ```bash
 python3 RunManager.py --script=db_interact
+```
+
+
+Cron running:
+
+```bash
+# Install crons from config (also updates already existing crons)
+python3 RunManager.py --manager=Cron --action=installCrons
+
+# Disable all crons
+python3 RunManager.py --manager=Cron --action=disableCrontab
+
+# Enable all crons
+python3 RunManager.py --manager=Cron --action=enableCrontab
+
+# Removes crontab (delete all crons)
+python3 RunManager.py --manager=Cron --action=removeCrontab
 ```
 
 [Up](#schedule-telegram-bot)
