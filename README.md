@@ -41,7 +41,7 @@ python3 RunManager.py --manager=Db --action=upAllMigrations
 # Drop db file
 python3 RunManager.py -—manager=Db —-action=dropDb
 
-Drop dp and fill with test data
+# Drop dp and fill with test data
 python3 RunManager.py --manager=Db --action=resetDb 
 ```
 
