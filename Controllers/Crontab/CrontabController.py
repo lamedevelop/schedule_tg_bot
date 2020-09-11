@@ -1,28 +1,13 @@
-from crontab import CronTab
 import getpass
+from crontab import CronTab
 
 
 class CrontabController:
 
     @staticmethod
-    def installCron(command, comment=''):
-        cron = CronTab(user=getpass.getuser())
-        cron.new(command=command, comment=comment)
-        cron.write()
-
-    @staticmethod
     def installCrontab(crontab):
-        cron = CronTab(crontab)
-        cron.write()
-
-    @staticmethod
-    def updateCrontab(jobs):
-        cron = CronTab(user=getpass.getuser())
-        for my_job in jobs:
-            for job in cron:
-                if job.comment == my_job['comment']:
-                    job.command = my_job['command']
-                    cron.write()
+        cron = CronTab(tab=crontab)
+        cron.write_to_user(user=getpass.getuser())
 
     @staticmethod
     def enableCrontab():
