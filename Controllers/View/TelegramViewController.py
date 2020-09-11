@@ -42,6 +42,27 @@ class TelegramViewController:
         return removeKeyboardEncoded
 
     @staticmethod
+    def inlineGroupChooseKeyboardMarkup():
+        keyboard = [["hello"], ["world"]]
+        markup = types.InlineKeyboardMarkup()
+
+        stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
+
+        for key, value in stringList.items():
+            markup.add(
+                types.InlineKeyboardButton(
+                    text=value,
+                    callback_data="['value', '" + value + "', '" + key + "']"
+                ),
+                types.InlineKeyboardButton(
+                    text="X",
+                    callback_data="['key', '" + key + "']"
+                )
+            )
+
+        return markup
+
+    @staticmethod
     def getScheduleKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
@@ -67,11 +88,11 @@ class TelegramViewController:
 
         result = [
             # watches + " *" + params[0] + "*",       # time
-            " *" + params[0] + "*",     # time
-            "_" + params[1] + "_",      # lesson name
-            params[4],                  # type of lesson
-            params[2],                  # room
-            params[3]                   # teacher name
+            "*" + params[0] + "*",     # time
+            "*" + params[1] + "*",     # lesson name
+            "_" + params[4] + "_",     # type of lesson
+            "_" + params[2] + "_",     # room
+            params[3]                  # teacher name
         ]
 
         return result

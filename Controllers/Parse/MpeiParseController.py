@@ -1,5 +1,5 @@
-import requests
 import re
+import requests
 from datetime import datetime
 
 from Controllers.Parse.ParseController import ParseController
@@ -53,7 +53,8 @@ class MpeiParseController(ParseController):
                 group_id = search_json[0]['id']
                 date = str(datetime.now())
                 group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%d?start=%s&lng=1' % (
-                    group_id, '.'.join(date[:10].split('-')))
+                    group_id, '.'.join(date[:10].split('-'))
+                )
 
                 try:
                     group_schedule = requests.get(group_schedule_url)
@@ -66,16 +67,18 @@ class MpeiParseController(ParseController):
 
                     for item in group_schedule_json:
                         lecturer = item['lecturer']
+
                         both = {'both': [
                             item['kindOfWork'],
                             item['discipline'],
                             item['auditorium'],
-                            lecturer if re.match(
-                                r'!', lecturer) is None else ''
+                            lecturer if re.match(r'!', lecturer) is None else ''
                         ]}
                         day_of_week = days_name[item['dayOfWeekString']]
-                        time = '%s-%s' % (item['beginLesson'],
-                                          item['endLesson'])
+                        time = '%s-%s' % (
+                            item['beginLesson'],
+                            item['endLesson']
+                        )
                         week[day_of_week][time] = both
 
                     return {group_name: week}
