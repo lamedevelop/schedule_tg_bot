@@ -52,18 +52,22 @@ class DbQueriesController:
     # Optimized queries
     def getUserInsertQuery(self, destination: str, userInfo: dict):
         return """INSERT INTO {}
-                ('{}', '{}', '{}', '{}') 
-                VALUES ('{}', '{}', '{}', '{}')
+                ('{}', '{}', '{}', '{}', '{}', '{}') 
+                VALUES ('{}', '{}', '{}', '{}', '{}', '{}')
         """.format(
             destination,
             'user_id',
+            'chat_id',
             'first_name',
             'last_name',
             'username',
+            'is_alive',
             userInfo.get('user_id'),
+            userInfo.get('chat_id'),
             userInfo.get('first_name'),
             userInfo.get('last_name'),
             userInfo.get('username'),
+            userInfo.get('is_alive')
         )
 
     def getGroupInsertQuery(self, groupInfo: dict):

@@ -13,17 +13,17 @@ class UserController:
     def getCurrStatus(self, user_id):
         userInfo = DbManager().getTgUserInfo(user_id)[0]
 
-        if isinstance(userInfo[7], int) and isinstance(userInfo[8], int):
+        if isinstance(userInfo[9], int) and isinstance(userInfo[10], int):
             return self.GROUP_CHOSEN
-        elif isinstance(userInfo[7], int):
+        elif isinstance(userInfo[9], int):
             return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS
 
     def getUserUniversityId(self, user_id):
         userInfo = DbManager().getTgUserInfo(user_id)[0]
-        return userInfo[7]
+        return userInfo[9]
 
     def getUserGroupId(self, user_id):
         userInfo = DbManager().getTgUserInfo(user_id)[0]
-        return userInfo[8]
+        return userInfo[10]
