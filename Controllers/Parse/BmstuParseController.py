@@ -7,7 +7,7 @@ from Controllers.Parse.ParseController import ParseController
 
 class BmstuParseController(ParseController):
 
-    SCHEDULE_LIST_URL = 'https://77students.bmstu.ru/schedule/list'
+    SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
 
     def _parse(self, group_name: str):
 
