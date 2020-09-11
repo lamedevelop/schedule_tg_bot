@@ -5,3 +5,4 @@ sqlite3
 bs4
 requests~=2.7.0
 beautifulsoup4~=4.9.1
+python-crontab
