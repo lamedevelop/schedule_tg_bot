@@ -195,7 +195,8 @@ def main(message):
                 or message.text == "Суббота":
             send_message_custom(
                 message,
-                parseManager.getDaySchedule(message.text, groupJsonText)
+                parseManager.getDaySchedule(message.text, groupJsonText),
+                reply_markup=viewController.getScheduleKeyboardMarkup()
             )
 
         if message.text == TelegramViewController.applyLookHereFilter("Понедельник") \
@@ -207,7 +208,8 @@ def main(message):
             day = TelegramViewController.removeLookHereFilter(message.text)
             send_message_custom(
                 message,
-                parseManager.getDaySchedule(day, groupJsonText)
+                parseManager.getDaySchedule(day, groupJsonText),
+                reply_markup=viewController.getScheduleKeyboardMarkup()
             )
 
 
