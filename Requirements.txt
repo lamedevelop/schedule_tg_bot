@@ -1,7 +1,5 @@
 argparse
-importlib
-PyTelegramBotAPI==2.2.3
-sqlite3
+PyTelegramBotAPI
 bs4
 requests~=2.7.0
 beautifulsoup4~=4.9.1
