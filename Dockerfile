@@ -4,6 +4,9 @@ LABEL maintainer="oleg.gr@outlook.com"
 WORKDIR /Users/my_app
 COPY . .
 
+#RUN yum install -y curl
+CMD /bin/bash
+
 RUN pip install --upgrade pip
 #COPY Requirements.txt .
 RUN pip install --no-cache-dir -r Requirements.txt
