@@ -26,7 +26,7 @@ class DbQueriesController:
 
     def getUpdateQuery(self, destination: str, subject: str, value, condParam: str, condVal):
         return """UPDATE {}
-                SET {}={}
+                SET {}=\"{}\"
                 WHERE {}=\"{}\";
         """.format(
             destination,

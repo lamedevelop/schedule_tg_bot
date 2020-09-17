@@ -17,7 +17,7 @@ class CrontabController:
             cron.write()
 
     @staticmethod
-    def diasbleCrontab():
+    def disableCrontab():
         cron = CronTab(user=getpass.getuser())
         for job in cron:
             job.enable(False)

@@ -7,7 +7,7 @@ from Controllers.View.TelegramViewController import TelegramViewController
 from Controllers.User.UserController import UserController
 
 from Controllers.Log.LogController import LogController
-from NotificationManager import NotificationManager
+from MonitoringAlertManager import MonitoringAlertManager
 
 from ParseManager import ParseManager
 
@@ -20,7 +20,7 @@ viewController = TelegramViewController()
 userController = UserController()
 
 logger = LogController()
-notificator = NotificationManager()
+notificator = MonitoringAlertManager()
 
 
 # class WebhookServer(object):
@@ -59,17 +59,17 @@ def chooseUniversity(message):
             message.from_user.first_name,
             message.from_user.username
         )
-        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
         logger.info(log_msg)
     else:
         # probably reinstalled
         # todo: add handler in user activity tracking task
-        dbManager.updateTgUser(message.from_user.id, "is_alive", True)
+        dbManager.updateTgUser(message.from_user.id, "is_alive", "1")
         dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
         dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
         log_msg = "User {} restarted the bot".format(userInfo.get("username"))
-        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
         logger.info(log_msg)
 
     send_message_custom(
@@ -95,13 +95,19 @@ def sendHelp(message):
     send_message_custom(
         message,
         '''
-Начало использования - /start
-Для смены *университета* - /changeuniversity
-Для смены *группы* - /changegroup
-Получить это сообщение - /help
+Начало использования
+/start 
 
-Номер группы вводится *русскими буквами*,
-например так:
+Для смены *университета*
+/changeuniversity 
+
+Для смены *группы*
+/changegroup
+
+Получить это сообщение
+/help
+
+Номер группы вводится *русскими буквами*, например так:
 ИУ3-13б
 А-12м-20
 

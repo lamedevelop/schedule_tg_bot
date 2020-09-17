@@ -4,7 +4,7 @@ from Controllers.Notification.MailNotificationController import MailNotification
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
 
 
-class NotificationManager:
+class MonitoringAlertManager:
 
     INFO_LEVEL = 1
     WARNING_LEVEL = 2

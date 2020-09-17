@@ -4,18 +4,32 @@ from Controllers.Notification.NotificationController import NotificationControll
 
 class MailNotificationController(NotificationController):
 
+    def __init__(self):
+        self.port = 465
+        self.smtp_server = "smtp.mail.ru"
+        self.sender_email = "schedulebot@mail.ru"
+        self.receiver_email = "receiver@mail.ru"
+        self.password = "default_password"
+
     def sendMessage(self, message):
-        port = 465  # For SSL
-        smtp_server = "smtp.mail.ru"
-        sender_email = "schedulebot@mail.ru"  # Enter your address
-        receiver_email = "oleg.gr@outlook.com"  # Enter receiver address
-        password = "Ytndpkjvfv43"
         message = """\
-        Subject: Hi there
-
-        This message is sent from Python."""
-
+Subject: Hi there
+This message is sent from Python.
+"""
         context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
+        with smtplib.SMTP_SSL(
+                self.smtp_server,
+                self.port,
+                context=context
+        ) as server:
+
+            server.login(
+                self.sender_email,
+                self.password
+            )
+
+            server.sendmail(
+                self.sender_email,
+                self.receiver_email,
+                message
+            )

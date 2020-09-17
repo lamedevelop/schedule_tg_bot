@@ -11,6 +11,8 @@ from Controllers.Log.LogController import LogController
 
 class DbManager:
 
+    DEFAULT_GROUP_ID = 0
+
     migrations = {
         "groupsTableMigration": GroupsTableMigration(),
         "universitiesTableMigration": UniversitiesTableMigration(),
@@ -41,7 +43,11 @@ class DbManager:
 
     def getGroupId(self, groupInfo: dict):
         query = self.queriesController.getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
-        return self.dbController.fetchQuery(query)[0][0]
+
+        if self.dbController.fetchQuery(query):
+            return self.dbController.fetchQuery(query)[0][0]
+
+        return self.DEFAULT_GROUP_ID
 
     def getGroupJsonById(self, groupId: dict):
         query = DbQueriesController().getSelectWithParamQuery('schedule_text', 'groups', 'group_id', groupId)
@@ -53,13 +59,17 @@ class DbManager:
 
     def checkUserExist(self, user_id):
         query = self.queriesController.checkIfExist("telegramUsers", "user_id", user_id)
-        return self.dbController.fetchQuery(query)[0][0]
+
+        if self.dbController.fetchQuery(query):
+            return self.dbController.fetchQuery(query)[0][0]
+
+        return False
 
     def addTgUser(self, userInfo: dict):
         query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
         self.dbController.submitQuery(query)
 
-    def updateTgUser(self, user_id, paramName: str, paramVal):
+    def updateTgUser(self, user_id, paramName: str, paramVal: str):
         query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
         self.dbController.submitQuery(query)
 

@@ -1,8 +1,10 @@
 import json
 from telebot import types
 
-from Controllers.Date.DateTimeController import DateTimeController
 from DbManager import DbManager
+from MonitoringAlertManager import MonitoringAlertManager
+from Controllers.Log.LogController import LogController
+from Controllers.Date.DateTimeController import DateTimeController
 
 
 class TelegramViewController:
@@ -17,6 +19,14 @@ class TelegramViewController:
     def getUniversityKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         universities = DbManager().getUniversities()
+
+        if not universities:
+            LogController().alert("getUniversityKeyboardMarkup failed: universities empty")
+            MonitoringAlertManager().notify(
+                "getUniversityKeyboardMarkup failed: universities empty",
+                MonitoringAlertManager.WARNING_LEVEL
+            )
+            universities = [['Default']]
 
         for university in universities:
             markup.row(university[0])
@@ -41,6 +51,8 @@ class TelegramViewController:
         removeKeyboardEncoded = json.dumps(removeKeyboard)
         return removeKeyboardEncoded
 
+    # experimental method
+    # will be updated or removed later
     @staticmethod
     def inlineGroupChooseKeyboardMarkup():
         keyboard = [["hello"], ["world"]]
