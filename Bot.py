@@ -1,5 +1,6 @@
 import telebot
 # from telebot import types
+import cherrypy
 
 from Configs.tgConfig import *
 from DbManager import DbManager
@@ -23,21 +24,21 @@ logger = LogController()
 notificator = MonitoringAlertManager()
 
 
-# class WebhookServer(object):
-#     @cherrypy.expose
-#     def index(self):
-#         if 'content-length' in cherrypy.request.headers and \
-#                 'content-type' in cherrypy.request.headers and \
-#                 cherrypy.request.headers['content-type'] == 'application/json':
-#
-#             length = int(cherrypy.request.headers['content-length'])
-#             json_string = cherrypy.request.body.read(length).decode("utf-8")
-#             update = telebot.types.Update.de_json(json_string)
-#
-#             bot.process_new_updates([update])
-#             return ''
-#         else:
-#             raise cherrypy.HTTPError(403)
+class WebhookServer(object):
+    @cherrypy.expose
+    def index(self):
+        if 'content-length' in cherrypy.request.headers and \
+                'content-type' in cherrypy.request.headers and \
+                cherrypy.request.headers['content-type'] == 'application/json':
+
+            length = int(cherrypy.request.headers['content-length'])
+            json_string = cherrypy.request.body.read(length).decode("utf-8")
+            update = telebot.types.Update.de_json(json_string)
+
+            bot.process_new_updates([update])
+            return ''
+        else:
+            raise cherrypy.HTTPError(403)
 
 
 @bot.message_handler(commands=["start", "changeuniversity"])
@@ -234,7 +235,7 @@ def send_message_custom(
         )
     except Exception as e:
         if "bot was blocked by the user" in str(e):
-            dbManager.updateTgUser(message.from_user.id, "is_alive", False)
+            dbManager.updateTgUser(message.from_user.id, "is_alive", "0")
 
             error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
             notificator.notify(error_message, notificator.WARNING_LEVEL)
@@ -248,26 +249,33 @@ def send_message_custom(
 bot.remove_webhook()
 
 # try:
-notificator.notify("Polling started", notificator.INFO_LEVEL)
-logger.info("Polling started")
-
-bot.polling()
-
-notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
-logger.info("Polling stopped manually")
+#     notificator.notify("Polling started", notificator.INFO_LEVEL)
+#     logger.info("Polling started")
+#
+#     bot.polling()
+#
+#     notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+#     logger.info("Polling stopped manually")
 # except Exception as e:
 #     notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
 #     logger.alert('Error while polling: {}'.format(e))
 
-# bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
-#
-#
-# cherrypy.config.update({
-#     'server.socket_host': WEBHOOK_LISTEN,
-#     'server.socket_port': WEBHOOK_PORT,
-#     'server.ssl_module': 'builtin',
-#     'server.ssl_certificate': WEBHOOK_SSL_CERT,
-#     'server.ssl_private_key': WEBHOOK_SSL_PRIV
-# })
-#
-# cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
+
+notificator.notify("Webhook set", notificator.INFO_LEVEL)
+logger.info("Webhook set")
+
+bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
+
+
+cherrypy.config.update({
+    'server.socket_host': WEBHOOK_LISTEN,
+    'server.socket_port': WEBHOOK_PORT,
+    'server.ssl_module': 'builtin',
+    'server.ssl_certificate': WEBHOOK_SSL_CERT,
+    'server.ssl_private_key': WEBHOOK_SSL_PRIV
+})
+
+cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
+
+notificator.notify("Webhook dead", notificator.DISASTER_LEVEL)
+logger.info("Webhook dead")
