@@ -22,7 +22,10 @@ class TelegramViewController:
 
         if not universities:
             LogController().alert("getUniversityKeyboardMarkup failed: universities empty")
-            MonitoringAlertManager().notify("getUniversityKeyboardMarkup failed: universities empty")
+            MonitoringAlertManager().notify(
+                "getUniversityKeyboardMarkup failed: universities empty",
+                MonitoringAlertManager.WARNING_LEVEL
+            )
             universities = [['Default']]
 
         for university in universities:

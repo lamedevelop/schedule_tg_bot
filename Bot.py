@@ -64,7 +64,7 @@ def chooseUniversity(message):
     else:
         # probably reinstalled
         # todo: add handler in user activity tracking task
-        dbManager.updateTgUser(message.from_user.id, "is_alive", "True")
+        # dbManager.updateTgUser(message.from_user.id, "is_alive", "True")
         dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
         dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 

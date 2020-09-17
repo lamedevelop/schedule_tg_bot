@@ -21,7 +21,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getCurrStatus failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert)
+            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
 
         if isinstance(userInfo[9], int) and isinstance(userInfo[10], int):
@@ -37,7 +37,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserUniversityId failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert)
+            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_UNIVERSITY_ID
 
         return userInfo[9]
@@ -48,7 +48,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserGroupId failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert)
+            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_GROUP_ID
 
         return userInfo[10]
@@ -57,7 +57,7 @@ class UserController:
     def getUserInfo(user_id):
         userInfo = DbManager().getTgUserInfo(user_id)
 
-        if not userInfo or userInfo.size < 10:
+        if not userInfo or len(userInfo[0]) < 11:
             return []
 
         return userInfo[0]
