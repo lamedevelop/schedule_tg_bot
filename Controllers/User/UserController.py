@@ -1,5 +1,5 @@
 from DbManager import DbManager
-from NotificationManager import NotificationManager
+from MonitoringAlertManager import MonitoringAlertManager
 from Controllers.Log.LogController import LogController
 
 
@@ -21,7 +21,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getCurrStatus failed: user {user_id} info empty'
             LogController().alert(alert)
-            NotificationManager().notify(alert)
+            MonitoringAlertManager().notify(alert)
             return self.DEFAULT_STATUS
 
         if isinstance(userInfo[9], int) and isinstance(userInfo[10], int):
@@ -37,7 +37,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserUniversityId failed: user {user_id} info empty'
             LogController().alert(alert)
-            NotificationManager().notify(alert)
+            MonitoringAlertManager().notify(alert)
             return self.DEFAULT_UNIVERSITY_ID
 
         return userInfo[9]
@@ -48,7 +48,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserGroupId failed: user {user_id} info empty'
             LogController().alert(alert)
-            NotificationManager().notify(alert)
+            MonitoringAlertManager().notify(alert)
             return self.DEFAULT_GROUP_ID
 
         return userInfo[10]

@@ -7,7 +7,7 @@ from Controllers.View.TelegramViewController import TelegramViewController
 from Controllers.User.UserController import UserController
 
 from Controllers.Log.LogController import LogController
-from NotificationManager import NotificationManager
+from MonitoringAlertManager import MonitoringAlertManager
 
 from ParseManager import ParseManager
 
@@ -20,7 +20,7 @@ viewController = TelegramViewController()
 userController = UserController()
 
 logger = LogController()
-notificator = NotificationManager()
+notificator = MonitoringAlertManager()
 
 
 # class WebhookServer(object):
@@ -59,7 +59,7 @@ def chooseUniversity(message):
             message.from_user.first_name,
             message.from_user.username
         )
-        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
         logger.info(log_msg)
     else:
         # probably reinstalled
@@ -69,7 +69,7 @@ def chooseUniversity(message):
         dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
         log_msg = "User {} restarted the bot".format(userInfo.get("username"))
-        notificator.notify(log_msg, NotificationManager.INFO_LEVEL)
+        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
         logger.info(log_msg)
 
     send_message_custom(

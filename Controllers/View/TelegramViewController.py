@@ -2,7 +2,7 @@ import json
 from telebot import types
 
 from DbManager import DbManager
-from NotificationManager import NotificationManager
+from MonitoringAlertManager import MonitoringAlertManager
 from Controllers.Log.LogController import LogController
 from Controllers.Date.DateTimeController import DateTimeController
 
@@ -22,7 +22,7 @@ class TelegramViewController:
 
         if not universities:
             LogController().alert("getUniversityKeyboardMarkup failed: universities empty")
-            NotificationManager().notify("getUniversityKeyboardMarkup failed: universities empty")
+            MonitoringAlertManager().notify("getUniversityKeyboardMarkup failed: universities empty")
             universities = [['Default']]
 
         for university in universities:
