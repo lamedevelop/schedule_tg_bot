@@ -59,7 +59,7 @@ class DbManager:
         query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
         self.dbController.submitQuery(query)
 
-    def updateTgUser(self, user_id, paramName: str, paramVal):
+    def updateTgUser(self, user_id, paramName: str, paramVal: str):
         query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
         self.dbController.submitQuery(query)
 
