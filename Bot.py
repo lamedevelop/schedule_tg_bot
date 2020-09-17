@@ -64,7 +64,7 @@ def chooseUniversity(message):
     else:
         # probably reinstalled
         # todo: add handler in user activity tracking task
-        # dbManager.updateTgUser(message.from_user.id, "is_alive", "True")
+        dbManager.updateTgUser(message.from_user.id, "is_alive", "1")
         dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
         dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
 
@@ -95,13 +95,19 @@ def sendHelp(message):
     send_message_custom(
         message,
         '''
-Начало использования - /start
-Для смены *университета* - /changeuniversity
-Для смены *группы* - /changegroup
-Получить это сообщение - /help
+Начало использования
+/start 
 
-Номер группы вводится *русскими буквами*,
-например так:
+Для смены *университета*
+/changeuniversity 
+
+Для смены *группы*
+/changegroup
+
+Получить это сообщение
+/help
+
+Номер группы вводится *русскими буквами*, например так:
 ИУ3-13б
 А-12м-20
 
