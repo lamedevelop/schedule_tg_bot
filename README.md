@@ -51,6 +51,11 @@ Here is single command to run db_interact.py script. You can change action of th
 python3 RunManager.py --script=db_interact
 ```
 
+Also here is quickstart.sh script. It will run startup db set up commands. And then run command for creating private key and cert files for webhooks.
+```bash
+chmod +x ./Scripts/quickstart.sh
+./Script/quickstart.sh
+```
 
 Cron running:
 
@@ -74,19 +79,9 @@ python3 RunManager.py --manager=Cron --action=removeCrontab
 ## Installation
 
 
-Install correct version of telebot
+Install requirements from file
 ```bash
-sudo python3 -m pip install PyTelegramBotAPI==2.2.3
-```
-
-
-telebot startup manual:
-
-```bash
-telebot/__init__.py:816 
-    rename all dacorators from @util.async to @util.async_dec for example
-telebot/util.py:141 
-    rename function from async() to async_dec()
+sudo python3 -m pip install -r Requirements.txt
 ```
 
 [Up](#schedule-telegram-bot)
