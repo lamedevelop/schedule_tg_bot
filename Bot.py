@@ -233,6 +233,10 @@ def send_message_custom(
             reply_markup=reply_markup,
             parse_mode=parse_mode
         )
+
+        info = bot.get_webhook_info()
+        notificator.notify(f'Webhook info IN SEND MSG: {info}', notificator.INFO_LEVEL)
+
     except Exception as e:
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(message.from_user.id, "is_alive", "0")
@@ -241,7 +245,10 @@ def send_message_custom(
             notificator.notify(error_message, notificator.WARNING_LEVEL)
             logger.alert(error_message)
         else:
-            error_message = 'Send message error: undefined error with user {}'.format(message.from_user.id)
+            info = bot.get_webhook_info()
+            notificator.notify(f'Webhook info IN ELSE: {info}', notificator.INFO_LEVEL)
+
+            error_message = 'Send message error with user {}: {}'.format(message.from_user.id, e)
             notificator.notify(error_message, notificator.DISASTER_LEVEL)
             logger.alert(error_message)
 
@@ -266,6 +273,8 @@ logger.info("Webhook set")
 
 bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
 
+info = bot.get_webhook_info()
+notificator.notify(f'Webhook info: {info}', notificator.INFO_LEVEL)
 
 cherrypy.config.update({
     'server.socket_host': WEBHOOK_LISTEN,
