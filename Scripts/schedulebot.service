@@ -1,0 +1,19 @@
+# Place this file to /etc/systemd/system
+
+[Unit]
+Description=Telegram schedule bot
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=oleggr
+# replace working dir later
+# WorkingDirectory=/usr/local/bin/bot
+WorkingDirectory=/home/oleggr/schedule_tg_bot
+ExecStart=/usr/bin/python3 /home/oleggr/schedule_tg_bot/Bot.py
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
