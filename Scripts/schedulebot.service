@@ -7,7 +7,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=oleggr
+User=root
 # replace working dir later
 # WorkingDirectory=/usr/local/bin/bot
 WorkingDirectory=/home/oleggr/schedule_tg_bot
