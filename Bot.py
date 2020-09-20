@@ -234,9 +234,6 @@ def send_message_custom(
             parse_mode=parse_mode
         )
 
-        info = bot.get_webhook_info()
-        notificator.notify(f'Webhook info IN SEND MSG: {info}', notificator.INFO_LEVEL)
-
     except Exception as e:
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(message.from_user.id, "is_alive", "0")
@@ -245,9 +242,6 @@ def send_message_custom(
             notificator.notify(error_message, notificator.WARNING_LEVEL)
             logger.alert(error_message)
         else:
-            info = bot.get_webhook_info()
-            notificator.notify(f'Webhook info IN ELSE: {info}', notificator.INFO_LEVEL)
-
             error_message = 'Send message error with user {}: {}'.format(message.from_user.id, e)
             notificator.notify(error_message, notificator.DISASTER_LEVEL)
             logger.alert(error_message)
