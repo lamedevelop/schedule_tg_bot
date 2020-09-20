@@ -17,18 +17,18 @@ Telegram bot for delivering university schedule to students
 ## Startup guide
 
 ### Quickstart
-#####Step 1 - Install requirements
+####Step 1 - Install requirements
 Install requirements from file
 ```bash
 sudo python3 -m pip install -r Requirements.txt
 ```
 
-#####Step 2 - Fix config
+####Step 2 - Fix config
 Firstly manually edit Configs/tgConfig.py. You need to fill it with your bot token and server ip (port already specified but you also can personalize it for your case).
 
 Also you can provide your monitoring bot token and chat id (destination where you want to receive monitoring notifications). As chat id you can write your telegram id or your custom chat id (standard group chat).
 
-#####Step 3 - Configure db and get certificates for webhooks
+####Step 3 - Configure db and get certificates for webhooks
 
 Just run Scripts/quickstart.sh.
 ```bash
@@ -37,7 +37,7 @@ chmod +x ./Scripts/quickstart.sh
 ``` 
 Important thing is that when you will be asked to enter "Common Name" - enter your server id.
 
-#####Step 4 - Run daemon
+####Step 4 - Run daemon
 
 Copy schedulebot.service to the /etc/systemd/system for bot demonisation and then run commands to run the bot.
 ```bash
