@@ -125,6 +125,11 @@ class TelegramViewController:
 
     @staticmethod
     def removeLookHereFilter(word):
-        res = word.split(TelegramViewController.icons["look_here_left"])[1]
-        res = res.split(TelegramViewController.icons["look_here_right"])[0]
+        res = word
+
+        if TelegramViewController.icons["look_here_left"] in word \
+                or TelegramViewController.icons["look_here_right"] in word:
+            res = word.split(TelegramViewController.icons["look_here_left"])[1]
+            res = res.split(TelegramViewController.icons["look_here_right"])[0]
+
         return res
