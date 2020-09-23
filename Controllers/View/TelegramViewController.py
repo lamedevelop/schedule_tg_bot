@@ -78,8 +78,12 @@ class TelegramViewController:
     def getScheduleKeyboardMarkup():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-        day_id = DateTimeController.getCurrDayOfWeek()
         days_of_week = DateTimeController.days_of_week
+
+        for i in range(0, len(days_of_week)):
+            days_of_week[i] = TelegramViewController.removeLookHereFilter(days_of_week[i])
+
+        day_id = DateTimeController.getCurrDayOfWeek()
         days_of_week[day_id] = TelegramViewController.applyLookHereFilter(days_of_week[day_id])
 
         keyboard = [
