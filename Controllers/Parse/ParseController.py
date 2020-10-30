@@ -1,25 +1,28 @@
-import json, requests
+import json
+import requests
+from abc import abstractmethod
 
 from Controllers.Log.LogController import LogController
 from Controllers.File.FileController import FileController
-from abc import abstractmethod
+
 
 class ParseController:
 
     logger = LogController()
 
     def writeToJsonFile(self, file_name: str, group_name: str):
-        self.logger.info("Parser %s started" % self.__class__.__name__)
-        json = self.makeJson(self._parse(group_name))
+        self.logger.info(f"Parser {self.__class__.__name__} started for {group_name}")
+        json = self.makeJson(group_name)
         filepath = f'{file_name}.json'
         FileController.writeToFile(filepath, json)
 
     def makeJson(self, group_name: str):
+        self.logger.info(f"Parser {self.__class__.__name__} started for {group_name}")
         return str(self._parse(group_name))
 
-    def getUrl(self, url):
+    def _getUrl(self, url):
         try:
-            response = requests.get(url, timeout=30)            
+            response = requests.get(url, timeout=30)
         except requests.Timeout:
             self.logger.alert(f'Timeout error, url: {url}')
             return None
@@ -32,7 +35,7 @@ class ParseController:
             return None
         else:
             return response
-    
+
     @abstractmethod
     def _parse(self, group_name: str):
         pass

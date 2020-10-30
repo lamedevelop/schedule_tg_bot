@@ -1,5 +1,5 @@
 import re
-from bs4 import BeautifulSoup  # https://pypi.org/project/beautifulsoup4/
+from bs4 import BeautifulSoup
 
 from Controllers.Parse.ParseController import ParseController
 from Controllers.Log.LogController import LogController
@@ -12,7 +12,7 @@ class BmstuParseController(ParseController):
 
     def _parse(self, group_name: str):
 
-        get_list = self.getUrl(self.SCHEDULE_LIST_URL)
+        get_list = self._getUrl(self.SCHEDULE_LIST_URL)
         if get_list is None:
             return {}
 
@@ -32,7 +32,7 @@ class BmstuParseController(ParseController):
         group_name = item.get_text().strip()
         group_schedule_url = f"https://students.bmstu.ru/{item.get('href')}"
 
-        get_group_schedule = self.getUrl(group_schedule_url)
+        get_group_schedule = self._getUrl(group_schedule_url)
         if get_group_schedule is None:
             group_schedule_dict[group_name] = {}
 
@@ -48,44 +48,43 @@ class BmstuParseController(ParseController):
             day_name = day_shedule.find('strong').get_text()
             time_and_subject = day_shedule.find_all('tr')
 
-            for index, item in enumerate(time_and_subject):
-                if index > 1:
-                    curr_time = item.find(
-                        'td', class_='bg-grey text-nowrap').get_text()
-                    time_groups = re.match(r'(.{5})(.{5})', curr_time)
-                    curr_time = f'{time_groups.group(1)}-{time_groups.group(2)}'
+            for item in time_and_subject[2:]:
+                curr_time = item.find(
+                    'td', class_='bg-grey text-nowrap').get_text()
+                time_groups = re.match(r'(.{5})(.{5})', curr_time)
+                curr_time = f'{time_groups.group(1)}-{time_groups.group(2)}'
 
-                    both = item.find('td', colspan='2')
-                    subject_patt = re.compile(
-                        r'<i>(.*?)</i> <span>(.*?)</span> <i>(.*?)</i> <i>(.*?)</i>')
+                both = item.find('td', colspan='2')
+                subject_patt = re.compile(
+                    r'<i>(.*?)</i> <span>(.*?)</span> <i>(.*?)</i> <i>(.*?)</i>')
 
-                    if both:
-                        both_turple = subject_patt.findall(
-                            str(both).replace('\xa0', ' ').replace(
-                                'Самостоятельная работа', '')
-                        )
-                        both_schedule = [list(x) for x in both_turple][0]
+                if both:
+                    both_turple = subject_patt.findall(
+                        str(both).replace('\xa0', ' ').replace(
+                            'Самостоятельная работа', '')
+                    )
+                    both_schedule = [list(x) for x in both_turple][0]
 
-                        subject = {
-                            'both': both_schedule if list(
-                                filter(lambda x: bool(x), both_schedule)
-                            ) else ['']
-                        }
-                    else:
-                        numerator = item.find('td', class_='text-success')
-                        denominator = item.find('td', class_='text-info')
-                        numerator_turple = subject_patt.findall(
-                            str(numerator).replace('\xa0', ' ')
-                        )
-                        denominator_turple = subject_patt.findall(
-                            str(denominator).replace('\xa0', ' ')
-                        )
-                        subject = {
-                            'numerator': [list(x) for x in numerator_turple][0] if numerator_turple else [''],
-                            'denominator': [list(x) for x in denominator_turple][0] if denominator_turple else ['']
-                        }
+                    subject = {
+                        'both': both_schedule if list(
+                            filter(lambda x: bool(x), both_schedule)
+                        ) else ['']
+                    }
+                else:
+                    numerator = item.find('td', class_='text-success')
+                    denominator = item.find('td', class_='text-info')
+                    numerator_turple = subject_patt.findall(
+                        str(numerator).replace('\xa0', ' ')
+                    )
+                    denominator_turple = subject_patt.findall(
+                        str(denominator).replace('\xa0', ' ')
+                    )
+                    subject = {
+                        'numerator': [list(x) for x in numerator_turple][0] if numerator_turple else [''],
+                        'denominator': [list(x) for x in denominator_turple][0] if denominator_turple else ['']
+                    }
 
-                    day[curr_time] = subject
+                day[curr_time] = subject
             week[day_name] = day
         group_schedule_dict[group_name] = week
 

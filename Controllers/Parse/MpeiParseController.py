@@ -30,7 +30,7 @@ class MpeiParseController(ParseController):
 
         search_groupid_url = f'http://ts.mpei.ru/api/search?term={group_name}&type=group'
 
-        search_groupid = self.getUrl(search_groupid_url)
+        search_groupid = self._getUrl(search_groupid_url)
         if search_groupid is None:
             return {}
 
@@ -47,7 +47,7 @@ class MpeiParseController(ParseController):
 
             group_schedule_url = f'http://ts.mpei.ru/api/schedule/group/{group_id}start={start}&finish={finish}&lng=1'
 
-            group_schedule = self.getUrl(group_schedule_url)
+            group_schedule = self._getUrl(group_schedule_url)
             if group_schedule is None:
                 return {}
 
@@ -55,7 +55,7 @@ class MpeiParseController(ParseController):
 
             for item in group_schedule_json:
                 lect = item['lecturer']
-                if re.match(r'!', lect) is None:
+                if re.match(r'!', lect) is not None:
                     lect = ''
 
                 both = {
