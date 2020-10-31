@@ -6,7 +6,7 @@ from Controllers.Log.LogController import LogController
 from Controllers.File.FileController import FileController
 
 
-class ParseController:
+class ParseController(object):
 
     logger = LogController()
 
@@ -38,8 +38,4 @@ class ParseController:
 
     @abstractmethod
     def _parse(self, group_name: str):
-        pass
-
-    @abstractmethod
-    def __str__(self):
         pass

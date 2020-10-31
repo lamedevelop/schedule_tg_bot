@@ -2,18 +2,15 @@ import re
 import ast
 from datetime import datetime
 
-from Controllers.Parse.MpeiParseController import MpeiParseController
-from Controllers.Parse.BmstuParseController import BmstuParseController
 from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.Parse.ParseController import *
 
 
 class ParseManager(object):
 
-    comboBox = {}
-
     def __init__(self):
-        self.comboBox[str(MpeiParseController())] = MpeiParseController()
-        self.comboBox[str(BmstuParseController())] = BmstuParseController()
+        subs = ParseController.__subclasses__()
+        self.comboBox = {str(obj()): obj() for obj in subs}
 
     def getJson(self, universityId, groupName):
         return self.comboBox[str(universityId)].makeJson(groupName.upper()).replace('\'', '\"')
@@ -21,7 +18,8 @@ class ParseManager(object):
     def getDaySchedule(self, dayName, jsonSchedule):
         numWeek = int(datetime.today().strftime("%U"))
 
-        outputText = ['Расписание на *%s*' % re.sub(r'а$', 'у', dayName.lower())]
+        outputText = ['Расписание на *%s*' %
+                      re.sub(r'а$', 'у', dayName.lower())]
         jsonToDict = list(ast.literal_eval(jsonSchedule[0][0]).values())[0]
         scheduleForDay = jsonToDict[dayName]
 
