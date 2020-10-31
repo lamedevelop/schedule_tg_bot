@@ -1,4 +1,3 @@
-import requests
 import re
 from datetime import datetime, timedelta
 
@@ -12,22 +11,13 @@ class MpeiParseController(ParseController):
 
     def _parse(self, group_name: str):
 
-        day = {
-            '09:20-10:55': {'both': ['']},
-            '11:10-12:45': {'both': ['']},
-            '13:45-15:20': {'both': ['']},
-            '15:35-17:10': {'both': ['']},
-            '17:20-18:55': {'both': ['']}
-        }
+        day = {x: {'both': ['']} for x in [
+            '09:20-10:55', '11:10-12:45', '13:45-15:20', '15:35-17:10', '17:20-18:55'
+        ]}
 
-        week = {
-            'Понедельник': day.copy(),
-            'Вторник': day.copy(),
-            'Среда': day.copy(),
-            'Четверг': day.copy(),
-            'Пятница': day.copy(),
-            'Суббота': day.copy(),
-        }
+        week = {x: day.copy() for x in [
+            'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
+        ]}
 
         days_name = {
             'Пн': 'Понедельник',
@@ -38,56 +28,49 @@ class MpeiParseController(ParseController):
             'Сб': 'Суббота',
         }
 
-        search_groupid_url = 'http://ts.mpei.ru/api/search?term=%s&type=group' % group_name
+        search_groupid_url = f'http://ts.mpei.ru/api/search?term={group_name}&type=group'
 
-        try:
-            search_groupid = requests.get(search_groupid_url)
-        except requests.ConnectionError as e:
-            self.logger.alert(str(e))
+        search_groupid = self._getUrl(search_groupid_url)
+        if search_groupid is None:
             return {}
 
-        if search_groupid.status_code == 200:
-            search_json = search_groupid.json()
+        search_json = search_groupid.json()
 
-            if len(search_json) == 1:
-                group_id = search_json[0]['id']
+        if search_json:
+            group_id = search_json[0]['id']
 
-                date = datetime.now()
-                date_start = '.'.join(str(date)[:10].split('-'))
-                date_finish = '.'.join(
-                    str(date+timedelta(days=6))[:10].split('-'))
+            date = datetime.now()
+            start = date + timedelta(days=-date.isoweekday())
+            finish = start + timedelta(days=6)
+            start = str(start)[:10].replace('-', '.')
+            finish = str(finish)[:10].replace('-', '.')
 
-                group_schedule_url = 'http://ts.mpei.ru/api/schedule/group/%dstart=%s&finish=%s&lng=1' % (
-                    group_id, date_start, date_finish)
+            group_schedule_url = f'http://ts.mpei.ru/api/schedule/group/{group_id}start={start}&finish={finish}&lng=1'
 
-                try:
-                    group_schedule = requests.get(group_schedule_url)
-                except requests.ConnectionError as e:
-                    self.logger.alert(str(e))
-                    return {}
+            group_schedule = self._getUrl(group_schedule_url)
+            if group_schedule is None:
+                return {}
 
-                if group_schedule.status_code == 200:
-                    group_schedule_json = group_schedule.json()
+            group_schedule_json = group_schedule.json()
 
-                    for item in group_schedule_json:
-                        lecturer = item['lecturer']
+            for item in group_schedule_json:
+                lect = item['lecturer']
+                if re.match(r'!', lect) is not None:
+                    lect = ''
 
-                        both = {'both': [
-                            item['kindOfWork'],
-                            item['discipline'],
-                            item['auditorium'],
-                            lecturer if re.match(
-                                r'!', lecturer) is None else ''
-                        ]}
-                        day_of_week = days_name[item['dayOfWeekString']]
-                        time = '%s-%s' % (
-                            item['beginLesson'],
-                            item['endLesson']
-                        )
-                        week[day_of_week][time] = both
+                both = {
+                    'both': [
+                        item['kindOfWork'],
+                        item['discipline'],
+                        item['auditorium'],
+                        lect
+                    ]
+                }
+                day_of_week = days_name[item['dayOfWeekString']]
+                time = f"{item['beginLesson']}-{item['endLesson']}"
+                week[day_of_week][time] = both
 
-                    return {group_name: week}
-        return {}
+            return {group_name: week}
 
     def __str__(self):
         return '1'
