@@ -1,4 +1,6 @@
-import telebot
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher
+from aiogram.utils import executor
 # from telebot import types
 # import cherrypy
 
@@ -12,7 +14,8 @@ from MonitoringAlertManager import MonitoringAlertManager
 
 from ParseManager import ParseManager
 
-bot = telebot.TeleBot(BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher(bot)
 
 dbManager = DbManager()
 parseManager = ParseManager()
@@ -41,8 +44,8 @@ notificator = MonitoringAlertManager()
 #             raise cherrypy.HTTPError(403)
 
 
-@bot.message_handler(commands=["start", "changeuniversity"])
-def chooseUniversity(message):
+@dp.message_handler(commands=["start", "changeuniversity"])
+async def chooseUniversity(message):
     userInfo = {
         'user_id': message.from_user.id,
         'chat_id': message.chat.id,
@@ -73,17 +76,17 @@ def chooseUniversity(message):
         notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
         logger.info(log_msg)
 
-    send_message_custom(
+    await send_message_custom(
         message,
         'Привет *{}*!\nВыбери свой *университет*'.format(message.from_user.first_name),
         reply_markup=viewController.getUniversityKeyboardMarkup()
     )
 
 
-@bot.message_handler(commands=["changegroup"])
-def sendHelp(message):
+@dp.message_handler(commands=["changegroup"])
+async def sendHelp(message):
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
-    send_message_custom(
+    await send_message_custom(
         message,
         'Введи новую *группу* русскими буквами\n'
         'Например так: *а-12м-20* или *иу3-13б*',
@@ -91,16 +94,16 @@ def sendHelp(message):
     )
 
 
-@bot.message_handler(commands=["help"])
-def sendHelp(message):
-    send_message_custom(
+@dp.message_handler(commands=["help"])
+async def sendHelp(message):
+    await send_message_custom(
         message,
         '''
 Начало использования
-/start 
+/start
 
 Для смены *университета*
-/changeuniversity 
+/changeuniversity
 
 Для смены *группы*
 /changegroup
@@ -118,8 +121,8 @@ def sendHelp(message):
     )
 
 
-@bot.message_handler(func=lambda message: True, content_types=["text"])
-def main(message):
+@dp.message_handler()
+async def main(message):
     userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
     dbManager.writeUserMessage(message.from_user.id, userController.CURR_STATUS, message.text)
 
@@ -131,7 +134,7 @@ def main(message):
                 universityId = dbManager.getUniversityIdByName(message.text)[0][0]
                 dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
 
-                send_message_custom(
+                await send_message_custom(
                     message,
                     'Университет *выбран*\n'
                     'Введи номер группы, *русскими буквами*\n'
@@ -154,7 +157,7 @@ def main(message):
                     message.from_user.id, "group_id", groupId)
 
                 isGroupFound = True
-                send_message_custom(
+                await send_message_custom(
                     message,
                     "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
                     reply_markup=viewController.getScheduleKeyboardMarkup()
@@ -179,13 +182,13 @@ def main(message):
                     groupId
                 )
 
-                send_message_custom(
+                await send_message_custom(
                     message,
                     "Расписание *успешно загружено*!\nВыбери день, чтобы узнать *расписание*",
                     reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
             else:
-                send_message_custom(
+                await send_message_custom(
                     message,
                     "Группа *не найдена*!\nПопробуйте другую группу"
                 )
@@ -200,7 +203,7 @@ def main(message):
                 or message.text == "Четверг" \
                 or message.text == "Пятница" \
                 or message.text == "Суббота":
-            send_message_custom(
+            await send_message_custom(
                 message,
                 parseManager.getDaySchedule(message.text, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup()
@@ -213,21 +216,21 @@ def main(message):
                 or message.text == TelegramViewController.applyLookHereFilter("Пятница") \
                 or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
             day = TelegramViewController.removeLookHereFilter(message.text)
-            send_message_custom(
+            await send_message_custom(
                 message,
                 parseManager.getDaySchedule(day, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup()
             )
 
 
-def send_message_custom(
+async def send_message_custom(
         message,
         text: str,
         reply_markup=None,
         parse_mode="markdown"
 ):
     try:
-        bot.send_message(
+        await bot.send_message(
             message.chat.id,
             text,
             reply_markup=reply_markup,
@@ -247,21 +250,18 @@ def send_message_custom(
             logger.alert(error_message)
 
 
-bot.remove_webhook()
+#bot.remove_webhook()
+try:
+    notificator.notify("Polling started", notificator.INFO_LEVEL)
+    logger.info("Polling started")
 
-while True:
-    try:
-        notificator.notify("Polling started", notificator.INFO_LEVEL)
-        logger.info("Polling started")
+    executor.start_polling(dp)
 
-        bot.polling()
-
-        notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
-        logger.info("Polling stopped manually")
-    except Exception as e:
-        notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
-        logger.alert('Error while polling: {}'.format(e))
-
+    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+    logger.info("Polling stopped manually")
+except Exception as e:
+    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+    logger.alert('Error while polling: {}'.format(e))
 
 # notificator.notify("Webhook set", notificator.INFO_LEVEL)
 # logger.info("Webhook set")

@@ -1,8 +1,11 @@
-FROM python:3.7.2-alpine3.8
+FROM python:3.7-slim-buster
 LABEL maintainer="oleg.gr@outlook.com"
 
 WORKDIR /Users/my_app
 COPY . .
+
+RUN apt-get update
+RUN apt-get install -y curl
 
 #RUN yum install -y curl
 CMD /bin/bash
