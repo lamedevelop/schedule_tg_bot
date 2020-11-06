@@ -1,4 +1,6 @@
 from Database.Migrations.Migration import Migration
+from Database.Models.TelegramUserModel import TelegramUserModel
+
 from Controllers.Log.LogController import LogController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
@@ -13,7 +15,7 @@ class TelegramUsersTableMigration(Migration):
     # If you will change amount of fields here
     # do not forget to update new indices at Controllers/UserController
     def up(self):
-        query = '''CREATE TABLE telegramUsers (
+        query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
                 user_id INTEGER PRIMARY KEY,
                 chat_id INTEGER NOT NULL,
                 first_name TEXT,
@@ -30,6 +32,6 @@ class TelegramUsersTableMigration(Migration):
         self.logger.info("TelegramUsersTableMigration up")
 
     def down(self):
-        query = '''DROP TABLE telegramUsers;'''
+        query = 'DROP TABLE ' + TelegramUserModel.table_name + ';'
         SqlLiteDbController().submitQuery(query)
         self.logger.info("TelegramUsersTableMigration down")
