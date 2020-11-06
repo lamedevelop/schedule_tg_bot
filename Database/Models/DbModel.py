@@ -51,7 +51,7 @@ class DbModel(ABC):
         for field_name in self.fields:
             if field_name != self.primary_key[0]:
                 set_fields['names'].append(field_name)
-                set_fields['values'].append('\"' + self.fields[field_name] + '\"')
+                set_fields['values'].append('\"' + str(self.fields[field_name]) + '\"')
 
         SqlLiteDbController().submitQuery(
             f'''INSERT INTO {self.table_name} ({', '.join(set_fields['names'])}) 
@@ -65,10 +65,19 @@ class DbModel(ABC):
         for field in new_fields:
             if field['name'] in self.fields:
                 self.fields[field['name']] = field['value']
-                update_fields.append(field['name'] + '=\"' + field['value'] + '\"')
+                update_fields.append(field['name'] + '=\"' + str(field['value']) + '\"')
 
         SqlLiteDbController().submitQuery(
             f'''UPDATE {self.table_name}
                 SET {', '.join(update_fields)}
                 WHERE {self.primary_key[0]}=\"{self.fields[self.primary_key[0]]}\"'''
         )
+
+    def getSelfFields(self):
+        res = []
+        for field_name in self.fields:
+            res.append({
+                'name': field_name,
+                'value': self.fields[field_name]
+            })
+        return res

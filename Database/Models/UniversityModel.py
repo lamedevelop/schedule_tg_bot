@@ -1,5 +1,4 @@
 from Database.Models.DbModel import DbModel
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class UniversityModel(DbModel):
@@ -15,7 +14,6 @@ class UniversityModel(DbModel):
 
     def get(self, primary_key):
         return super(UniversityModel, self).get(primary_key)
-        # return UniversityModel(super(UniversityModel, self).get(primary_key))
 
     def set(self):
         super(UniversityModel, self).set()
