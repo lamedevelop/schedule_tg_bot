@@ -3,13 +3,15 @@ from Database.Migrations.UniversitiesTableMigration import UniversitiesTableMigr
 from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
 from Database.Migrations.UserMessagesTableMigration import UserMessagesTableMigration
 
+from Database.Models.GroupModel import GroupModel
+from Database.Models.TelegramUserModel import TelegramUserModel
+from Database.Models.UniversityModel import UniversityModel
+from Database.Models.UserMessageModel import UserMessageModel
+
 from Controllers.Db.DbQueriesController import DbQueriesController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 from Controllers.Log.LogController import LogController
-from Database.Models.GroupModel import GroupModel
-from Database.Models.UniversityModel import UniversityModel
-from Database.Models.UserMessageModel import UserMessageModel
 
 
 class DbManager:
@@ -30,37 +32,53 @@ class DbManager:
 
     @staticmethod
     def run():
-        message_to_add = [
-            {
-                'name': 'user_id',
-                'value': 11111111
-            },
-            {
-                'name': 'user_status',
-                'value': 1
-            },
-            {
-                'name': 'message',
-                'value': 'aaa bbb ccc'
-            }
-        ]
-
-        message = UserMessageModel(message_to_add)
-        print(message)
-        print()
-
-        message.set()
-
-        new_message = UserMessageModel().get(15)
-        print(new_message)
-        print()
-
-        new_message.fields['user_status'] = 2
-        new_message.update(new_message.getSelfFields())
-
-        print(new_message)
-        print()
-
+        pass
+        # message_to_add = [
+        #     {
+        #         'name': 'user_id',
+        #         'value': 11111111
+        #     },
+        #     {
+        #         'name': 'user_status',
+        #         'value': 1
+        #     },
+        #     {
+        #         'name': 'message',
+        #         'value': 'aaa bbb ccc'
+        #     }
+        # ]
+        #
+        # message = UserMessageModel(message_to_add)
+        # print(message)
+        # print()
+        #
+        # # message.set()
+        #
+        # message = UserMessageModel().get(12)
+        # print(message)
+        # print()
+        #
+        # user.fields['is_bot'] = 0
+        # user.update(user.getSelfFields())
+        #
+        # user.fields['user_id'] = 123513513513
+        # user.fields['chat_id'] = 11
+        # print(user.getSelfFields())
+        # new_user = TelegramUserModel(user.getSelfFields())
+        #
+        # print(new_user)
+        # new_user.set()
+        # new_user.update(
+        # [
+        #     {
+        #         'name': 'is_bot',
+        #         'value': 0
+        #     }
+        # ]
+        # )
+        #
+        # print(new_user)
+        # print()
 
     def addUniversity(self, university_name: str):
         query = self.queriesController.getInsertQuery("universities", "university_name", university_name)

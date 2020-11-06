@@ -1,9 +1,7 @@
-from abc import ABC, abstractmethod
-
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
-class DbModel(ABC):
+class DbModel:
 
     table_name = ''
 
@@ -25,24 +23,19 @@ class DbModel(ABC):
         return f'Object <{self.__class__.__name__}> with fields:\n> ' + \
                '\n> '.join(self_fields)
 
-    @abstractmethod
     def get(self, primary_key):
         fields = SqlLiteDbController().fetchQuery(
             f'''SELECT {", ".join(self.fields.keys())} 
                 FROM {self.table_name} 
-                WHERE {self.primary_key[0]}=\"{primary_key}\"'''
+                WHERE {self.primary_key[0]}="{primary_key}"'''
         )
 
         if len(fields) > 0 and len(fields[0]) == len(self.fields):
-            fields_count = 0
-
-            for field_name in self.fields:
-                self.fields[field_name] = fields[0][fields_count]
-                fields_count += 1
+            for field in enumerate(self.fields):
+                self.fields[field[1]] = fields[0][field[0]]
 
         return self
 
-    @abstractmethod
     def set(self):
         set_fields = {
             'names': [],
@@ -58,7 +51,6 @@ class DbModel(ABC):
                 VALUES ({', '.join(set_fields['values'])})'''
         )
 
-    @abstractmethod
     def update(self, new_fields):
         update_fields = []
 
@@ -70,7 +62,7 @@ class DbModel(ABC):
         SqlLiteDbController().submitQuery(
             f'''UPDATE {self.table_name}
                 SET {', '.join(update_fields)}
-                WHERE {self.primary_key[0]}=\"{self.fields[self.primary_key[0]]}\"'''
+                WHERE {self.primary_key[0]}="{self.fields[self.primary_key[0]]}"'''
         )
 
     def getSelfFields(self):
