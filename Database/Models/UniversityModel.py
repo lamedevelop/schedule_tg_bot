@@ -1,24 +1,24 @@
 from Database.Models.DbModel import DbModel
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class UniversityModel(DbModel):
 
     table_name = 'universities'
 
-    primary_key = ['']
+    primary_key = ['university_id']
 
     fields = {
-        primary_key[0]: int
+        primary_key[0]: '',
+        'university_name': '',
     }
 
-    def __init__(self):
-        super().__init__()
-
-    def get(self):
-        pass
+    def get(self, primary_key):
+        return super(UniversityModel, self).get(primary_key)
+        # return UniversityModel(super(UniversityModel, self).get(primary_key))
 
     def set(self):
-        pass
+        super(UniversityModel, self).set()
 
-    def update(self):
-        pass
+    def update(self, new_fields):
+        super(UniversityModel, self).update(new_fields)
