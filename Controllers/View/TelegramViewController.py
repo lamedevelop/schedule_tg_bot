@@ -1,5 +1,7 @@
 import json
-from telebot import types
+from aiogram.types import InlineKeyboardButton, \
+    ReplyKeyboardMarkup, KeyboardButton, \
+    InlineKeyboardMarkup
 
 from DbManager import DbManager
 from MonitoringAlertManager import MonitoringAlertManager
@@ -17,7 +19,7 @@ class TelegramViewController:
 
     @staticmethod
     def getUniversityKeyboardMarkup():
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         universities = DbManager().getUniversities()
 
         if not universities:
@@ -37,7 +39,7 @@ class TelegramViewController:
     # probably should be removed
     @staticmethod
     def getGroupKeyboardMarkup(universityId):
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
         groups = DbManager().getGroupsByUniversityId(universityId)
 
         for group in groups:
@@ -56,17 +58,17 @@ class TelegramViewController:
     @staticmethod
     def inlineGroupChooseKeyboardMarkup():
         keyboard = [["hello"], ["world"]]
-        markup = types.InlineKeyboardMarkup()
+        markup = InlineKeyboardMarkup()
 
         stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
 
         for key, value in stringList.items():
             markup.add(
-                types.InlineKeyboardButton(
+                InlineKeyboardButton(
                     text=value,
                     callback_data="['value', '" + value + "', '" + key + "']"
                 ),
-                types.InlineKeyboardButton(
+                InlineKeyboardButton(
                     text="X",
                     callback_data="['key', '" + key + "']"
                 )
@@ -76,7 +78,7 @@ class TelegramViewController:
 
     @staticmethod
     def getScheduleKeyboardMarkup():
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
 
         days_of_week = DateTimeController.days_of_week
 
