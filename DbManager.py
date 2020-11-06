@@ -7,6 +7,9 @@ from Controllers.Db.DbQueriesController import DbQueriesController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 from Controllers.Log.LogController import LogController
+from Database.Models.GroupModel import GroupModel
+from Database.Models.UniversityModel import UniversityModel
+from Database.Models.UserMessageModel import UserMessageModel
 
 
 class DbManager:
@@ -24,6 +27,40 @@ class DbManager:
     dbController = SqlLiteDbController()
 
     logger = LogController()
+
+    @staticmethod
+    def run():
+        message_to_add = [
+            {
+                'name': 'user_id',
+                'value': 11111111
+            },
+            {
+                'name': 'user_status',
+                'value': 1
+            },
+            {
+                'name': 'message',
+                'value': 'aaa bbb ccc'
+            }
+        ]
+
+        message = UserMessageModel(message_to_add)
+        print(message)
+        print()
+
+        message.set()
+
+        new_message = UserMessageModel().get(15)
+        print(new_message)
+        print()
+
+        new_message.fields['user_status'] = 2
+        new_message.update(new_message.getSelfFields())
+
+        print(new_message)
+        print()
+
 
     def addUniversity(self, university_name: str):
         query = self.queriesController.getInsertQuery("universities", "university_name", university_name)
