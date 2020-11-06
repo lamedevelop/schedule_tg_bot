@@ -3,11 +3,11 @@ import ast
 from datetime import datetime
 
 from Controllers.View.TelegramViewController import TelegramViewController
-from Controllers.Parse.ParseController import *
-
+from Controllers.Parse.ParseController import ParseController
+from Controllers.Parse.MpeiParseController import MpeiParseController
+from Controllers.Parse.BmstuParseController import BmstuParseController
 
 class ParseManager(object):
-
     def __init__(self):
         subs = ParseController.__subclasses__()
         self.comboBox = {str(obj()): obj() for obj in subs}
@@ -58,5 +58,7 @@ class ParseManager(object):
     def filterGroup(self, message, university_id):
         if message[-1:] == ".":
             message = message[:-1]
-
         return message.lower()
+    
+    def parseScheduleText(self):
+        pass
