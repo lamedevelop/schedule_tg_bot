@@ -1,4 +1,4 @@
-from Migrations.Migration import Migration
+from Database.Migrations.Migration import Migration
 from Controllers.Log.LogController import LogController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 

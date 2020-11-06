@@ -1,7 +1,7 @@
-from Migrations.GroupsTableMigration import GroupsTableMigration
-from Migrations.UniversitiesTableMigration import UniversitiesTableMigration
-from Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
-from Migrations.UserMessagesTableMigration import UserMessagesTableMigration
+from Database.Migrations.GroupsTableMigration import GroupsTableMigration
+from Database.Migrations.UniversitiesTableMigration import UniversitiesTableMigration
+from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
+from Database.Migrations.UserMessagesTableMigration import UserMessagesTableMigration
 
 from Controllers.Db.DbQueriesController import DbQueriesController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
