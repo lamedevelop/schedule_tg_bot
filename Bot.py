@@ -130,7 +130,7 @@ async def main(message):
         universities = dbManager.getUniversities()
 
         for university in universities:
-            if message.text == university[0]:
+            if message.text == university:
                 universityId = dbManager.getUniversityIdByName(message.text)[0][0]
                 dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
 

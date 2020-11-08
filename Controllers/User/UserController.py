@@ -24,9 +24,9 @@ class UserController:
             MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
 
-        if isinstance(userInfo[9], int) and isinstance(userInfo[10], int):
+        if isinstance(userInfo['group_id'], int) and isinstance(userInfo['university_id'], int):
             return self.GROUP_CHOSEN
-        elif isinstance(userInfo[9], int):
+        elif isinstance(userInfo['university_id'], int):
             return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS
@@ -40,7 +40,7 @@ class UserController:
             MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_UNIVERSITY_ID
 
-        return userInfo[9]
+        return userInfo['university_id']
 
     def getUserGroupId(self, user_id):
         userInfo = UserController.getUserInfo(user_id)
@@ -51,13 +51,13 @@ class UserController:
             MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_GROUP_ID
 
-        return userInfo[10]
+        return userInfo['group_id']
 
     @staticmethod
     def getUserInfo(user_id):
         userInfo = DbManager().getTgUserInfo(user_id)
 
-        if not userInfo or len(userInfo[0]) < 11:
+        if not userInfo or len(userInfo) < 11:
             return []
 
-        return userInfo[0]
+        return userInfo

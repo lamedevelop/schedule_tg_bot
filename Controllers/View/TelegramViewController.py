@@ -31,7 +31,7 @@ class TelegramViewController:
             universities = [['Default']]
 
         for university in universities:
-            markup.row(university[0])
+            markup.row(university)
 
         return markup
 

@@ -16,7 +16,7 @@ class TelegramUsersTableMigration(Migration):
     # do not forget to update new indices at Controllers/UserController
     def up(self):
         query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
-                user_id INTEGER PRIMARY KEY,
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 chat_id INTEGER NOT NULL,
                 first_name TEXT,
                 last_name TEXT,

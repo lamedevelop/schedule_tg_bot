@@ -8,6 +8,9 @@ from Database.Models.TelegramUserModel import TelegramUserModel
 from Database.Models.UniversityModel import UniversityModel
 from Database.Models.UserMessageModel import UserMessageModel
 
+from Database.ListModels.GroupListModel import GroupListModel
+from Database.ListModels.UniversityListModel import UniversityListModel
+
 from Controllers.Db.DbQueriesController import DbQueriesController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
@@ -32,6 +35,7 @@ class DbManager:
 
     @staticmethod
     def run():
+        print(GroupListModel().getList())
         pass
         # message_to_add = [
         #     {
@@ -81,20 +85,21 @@ class DbManager:
         # print()
 
     def addUniversity(self, university_name: str):
-        query = self.queriesController.getInsertQuery("universities", "university_name", university_name)
-        self.dbController.submitQuery(query)
+        UniversityModel({'university_name': university_name}).set()
 
     def getUniversities(self):
-        query = self.queriesController.getSelectQuery("university_name", "universities")
-        return self.dbController.fetchQuery(query)
+        universities = []
+        records = UniversityListModel().getList()
+        for record in records:
+            universities.append(record.fields['university_name'])
+        return universities
 
     def getUniversityIdByName(self, name: str):
         query = self.queriesController.getSelectWithParamQuery("university_id", "universities", "university_name", name)
         return self.dbController.fetchQuery(query)
 
     def addGroup(self, groupInfo: dict):
-        query = self.queriesController.getGroupInsertQuery(groupInfo)
-        self.dbController.submitQuery(query)
+        GroupModel(groupInfo).set()
 
     def getGroupId(self, groupInfo: dict):
         query = self.queriesController.getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
@@ -121,20 +126,20 @@ class DbManager:
         return False
 
     def addTgUser(self, userInfo: dict):
-        query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
-        self.dbController.submitQuery(query)
+        TelegramUserModel(userInfo).set()
 
     def updateTgUser(self, user_id, paramName: str, paramVal: str):
-        query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
-        self.dbController.submitQuery(query)
+        TelegramUserModel().get(user_id).update({paramName: paramVal})
 
     def getTgUserInfo(self, user_id):
-        query = self.queriesController.getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
-        return self.dbController.fetchQuery(query)
+        return TelegramUserModel().get(user_id).fields
 
     def writeUserMessage(self, user_id, user_status, message):
-        query = self.queriesController.getMessageInsertQuery(user_id, user_status, message)
-        self.dbController.submitQuery(query)
+        UserMessageModel({
+            'user_id': user_id,
+            'user_status': user_status,
+            'message': message
+        }).set()
 
     # Migrations methods
     @staticmethod

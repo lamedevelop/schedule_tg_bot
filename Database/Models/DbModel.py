@@ -11,10 +11,14 @@ class DbModel:
         primary_key[0]: ''
     }
 
-    def __init__(self, fields=[]):
-        for field in fields:
-            if field['name'] in self.fields:
-                self.fields[field['name']] = field['value']
+    def __init__(self, fields={}):
+        for field_name in fields:
+            if field_name in self.fields:
+                self.fields[field_name] = fields[field_name]
+
+        # Just a costyl, but without this line
+        # new objects will rewrite old objects
+        self.fields = self.fields.copy()
 
     def __repr__(self):
         self_fields = []
@@ -54,22 +58,13 @@ class DbModel:
     def update(self, new_fields):
         update_fields = []
 
-        for field in new_fields:
-            if field['name'] in self.fields:
-                self.fields[field['name']] = field['value']
-                update_fields.append(field['name'] + '=\"' + str(field['value']) + '\"')
+        for field_name in new_fields:
+            if field_name in self.fields:
+                self.fields[field_name] = new_fields[field_name]
+                update_fields.append(field_name + '=\"' + str(new_fields[field_name]) + '\"')
 
         SqlLiteDbController().submitQuery(
             f'''UPDATE {self.table_name}
                 SET {', '.join(update_fields)}
                 WHERE {self.primary_key[0]}="{self.fields[self.primary_key[0]]}"'''
         )
-
-    def getSelfFields(self):
-        res = []
-        for field_name in self.fields:
-            res.append({
-                'name': field_name,
-                'value': self.fields[field_name]
-            })
-        return res
