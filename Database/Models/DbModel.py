@@ -50,10 +50,12 @@ class DbModel:
                 set_fields['names'].append(field_name)
                 set_fields['values'].append('\"' + str(self.fields[field_name]) + '\"')
 
-        SqlLiteDbController().submitQuery(
+        record_id = SqlLiteDbController().submitQuery(
             f'''INSERT INTO {self.table_name} ({', '.join(set_fields['names'])}) 
                 VALUES ({', '.join(set_fields['values'])})'''
         )
+
+        return record_id
 
     def update(self, new_fields):
         update_fields = []

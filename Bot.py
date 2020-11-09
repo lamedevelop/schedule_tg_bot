@@ -174,8 +174,8 @@ async def main(message):
                     "schedule_url": "default url"
                 }
 
-                dbManager.addGroup(groupInfo)
-                groupId = dbManager.getGroupId(groupInfo)
+                groupId = dbManager.addGroup(groupInfo)
+                # groupId = dbManager.getGroupId(groupInfo)
                 dbManager.updateTgUser(
                     message.from_user.id,
                     "group_id",
@@ -195,7 +195,7 @@ async def main(message):
 
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
         userGroupId = userController.getUserGroupId(message.from_user.id)
-        groupJsonText = dbManager.getGroupJsonById(userGroupId)
+        groupJsonText = dbManager.getScheduleByGroupId(userGroupId)
 
         if message.text == "Понедельник" \
                 or message.text == "Вторник" \
