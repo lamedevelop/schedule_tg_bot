@@ -25,10 +25,10 @@ class UserController:
             return self.DEFAULT_STATUS
 
         # if isinstance(userInfo['group_id'], int) and isinstance(userInfo['university_id'], int):
-        if userInfo['group_id'] != 'NULL' and userInfo['university_id'] != 'NULL':
+        if userInfo['group_id'] != '' and userInfo['university_id'] != '':
             return self.GROUP_CHOSEN
         # elif isinstance(userInfo['university_id'], int):
-        elif userInfo['university_id'] != 'NULL':
+        elif userInfo['university_id'] != '':
             return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS
