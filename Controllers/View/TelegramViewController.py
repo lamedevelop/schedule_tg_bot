@@ -20,7 +20,7 @@ class TelegramViewController:
     @staticmethod
     def getUniversityKeyboardMarkup():
         markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        universities = DbManager().getUniversities()
+        universities = DbManager.getUniversities()
 
         if not universities:
             LogController().alert("getUniversityKeyboardMarkup failed: universities empty")
@@ -31,7 +31,7 @@ class TelegramViewController:
             universities = [['Default']]
 
         for university in universities:
-            markup.row(university)
+            markup.row(university['university_name'])
 
         return markup
 

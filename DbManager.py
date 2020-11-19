@@ -86,7 +86,8 @@ class DbManager:
     def addUniversity(self, university_name: str):
         UniversityModel({'university_name': university_name}).set()
 
-    def getUniversities(self):
+    @staticmethod
+    def getUniversities():
         records = UniversityListModel().getList()
         return [
             {
