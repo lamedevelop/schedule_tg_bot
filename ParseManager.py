@@ -55,7 +55,8 @@ class ParseManager(object):
 
         return '\n\n'.join(activeSlots)
 
-    def filterGroup(self, message, university_id):
+    @staticmethod
+    def filterGroup(message):
         if message[-1:] == ".":
             message = message[:-1]
         return message.lower()

@@ -88,7 +88,12 @@ class DbManager:
 
     def getUniversities(self):
         records = UniversityListModel().getList()
-        return [record.fields['university_name'] for record in records]
+        return [
+            {
+                'university_id': record.fields['university_id'],
+                'university_name': record.fields['university_name'],
+            } for record in records
+        ]
         # universities = []
         # for record in records:
         #     universities.append(record.fields['university_name'])
@@ -117,7 +122,13 @@ class DbManager:
         # return SqlLiteDbController().fetchQuery(query)
 
     def getGroupsByUniversityId(self, universityId):
-        return GroupListModel().getListByParams({'university_id': universityId})
+        records = GroupListModel().getListByParams({'university_id': universityId})
+        return [
+            {
+                'group_id': record.fields['group_id'],
+                'group_name': record.fields['group_name'],
+            } for record in records
+        ]
         # query = self.queriesController.getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
         # return self.dbController.fetchQuery(query)
 
@@ -134,10 +145,11 @@ class DbManager:
     def addTgUser(self, userInfo: dict):
         TelegramUserModel(userInfo).set()
 
-    def updateTgUser(self, user_id, paramName: str, paramVal: str):
-        TelegramUserModel().get(user_id).update({paramName: paramVal})
+    def updateTgUser(self, user_id, newFields: dict):
+        TelegramUserModel().get(user_id).update(newFields)
 
-    def getTgUserInfo(self, user_id):
+    @staticmethod
+    def getTgUserInfo(user_id):
         return TelegramUserModel().get(user_id).fields
 
     def writeUserMessage(self, user_id, user_status, message):

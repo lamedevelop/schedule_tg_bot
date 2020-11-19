@@ -12,11 +12,11 @@ class UserController:
     DEFAULT_UNIVERSITY_ID = 0
     DEFAULT_GROUP_ID = 0
 
-    def __init__(self):
-        self.CURR_STATUS = self.DEFAULT_STATUS
+    # def __init__(self):
+    #     self.CURR_STATUS = self.DEFAULT_STATUS
 
     def getCurrStatus(self, user_id):
-        userInfo = UserController.getUserInfo(user_id)
+        userInfo = DbManager.getTgUserInfo(user_id)
 
         if not userInfo:
             alert = f'UserController.getCurrStatus failed: user {user_id} info empty'
@@ -24,15 +24,17 @@ class UserController:
             MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
 
-        if isinstance(userInfo['group_id'], int) and isinstance(userInfo['university_id'], int):
+        # if isinstance(userInfo['group_id'], int) and isinstance(userInfo['university_id'], int):
+        if userInfo['group_id'] != 'NULL' and userInfo['university_id'] != 'NULL':
             return self.GROUP_CHOSEN
-        elif isinstance(userInfo['university_id'], int):
+        # elif isinstance(userInfo['university_id'], int):
+        elif userInfo['university_id'] != 'NULL':
             return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS
 
     def getUserUniversityId(self, user_id):
-        userInfo = UserController.getUserInfo(user_id)
+        userInfo = DbManager.getTgUserInfo(user_id)
 
         if not userInfo:
             alert = f'UserController.getUserUniversityId failed: user {user_id} info empty'
@@ -43,7 +45,7 @@ class UserController:
         return userInfo['university_id']
 
     def getUserGroupId(self, user_id):
-        userInfo = UserController.getUserInfo(user_id)
+        userInfo = DbManager.getTgUserInfo(user_id)
 
         if not userInfo:
             alert = f'UserController.getUserGroupId failed: user {user_id} info empty'
@@ -53,11 +55,11 @@ class UserController:
 
         return userInfo['group_id']
 
-    @staticmethod
-    def getUserInfo(user_id):
-        userInfo = DbManager().getTgUserInfo(user_id)
-
-        if not userInfo or len(userInfo) < 11:
-            return []
-
-        return userInfo
+    # @staticmethod
+    # def getUserInfo(user_id):
+    #     userInfo = DbManager().getTgUserInfo(user_id)
+    #
+    #     if not userInfo or len(userInfo) < 11:
+    #         return []
+    #
+    #     return userInfo

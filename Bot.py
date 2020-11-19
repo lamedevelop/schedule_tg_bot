@@ -68,9 +68,14 @@ async def chooseUniversity(message):
     else:
         # probably reinstalled
         # todo: add handler in user activity tracking task
-        dbManager.updateTgUser(message.from_user.id, "is_alive", "1")
-        dbManager.updateTgUser(message.from_user.id, "university_id", "NULL")
-        dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+        dbManager.updateTgUser(
+            message.from_user.id,
+            {
+                "is_alive": "1",
+                "university_id": "NULL",
+                "group_id": "NULL",
+            }
+        )
 
         log_msg = "User {} restarted the bot".format(userInfo.get("username"))
         notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
@@ -85,7 +90,11 @@ async def chooseUniversity(message):
 
 @dp.message_handler(commands=["changegroup"])
 async def sendHelp(message):
-    dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
+    dbManager.updateTgUser(
+        message.from_user.id,
+        {"group_id": "NULL"}
+    )
+
     await send_message_custom(
         message,
         'Введи новую *группу* русскими буквами\n'
@@ -123,16 +132,24 @@ async def sendHelp(message):
 
 @dp.message_handler()
 async def main(message):
-    userController.CURR_STATUS = userController.getCurrStatus(message.from_user.id)
-    dbManager.writeUserMessage(message.from_user.id, userController.CURR_STATUS, message.text)
+    CURR_STATUS = userController.getCurrStatus(message.from_user.id)
 
-    if userController.CURR_STATUS == userController.DEFAULT_STATUS:
+    dbManager.writeUserMessage(
+        message.from_user.id,
+        CURR_STATUS,
+        message.text
+    )
+
+    if CURR_STATUS == userController.DEFAULT_STATUS:
         universities = dbManager.getUniversities()
 
         for university in universities:
-            if message.text == university:
-                universityId = dbManager.getUniversityIdByName(message.text)[0][0]
-                dbManager.updateTgUser(message.from_user.id, "university_id", universityId)
+            if message.text == university['university_name']:
+                # universityId = dbManager.getUniversityIdByName(message.text)[0][0]
+                dbManager.updateTgUser(
+                    message.from_user.id,
+                    {"university_id": university['university_id']}
+                )
 
                 await send_message_custom(
                     message,
@@ -143,43 +160,43 @@ async def main(message):
                 )
                 break
 
-    elif userController.CURR_STATUS == userController.UNIVERSITY_CHOSEN:
+    elif CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
         groups = dbManager.getGroupsByUniversityId(universityId)
-        userGroupName = parseManager.filterGroup(message.text, universityId)
-
+        userGroupName = parseManager.filterGroup(message.text)
         isGroupFound = False
 
         for group in groups:
-            if userGroupName == group[1]:
-                groupId = group[0]
+            if userGroupName == group['group_name']:
+                groupId = group['group_id']
                 dbManager.updateTgUser(
-                    message.from_user.id, "group_id", groupId)
+                    message.from_user.id,
+                    {"group_id": groupId}
+                )
 
-                isGroupFound = True
                 await send_message_custom(
                     message,
                     "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
                     reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
+
+                isGroupFound = True
                 break
 
         if not isGroupFound:
-            json_text = parseManager.getJson(universityId, userGroupName)
-            if len(json_text) > 2:
+            jsonSchedule = parseManager.getJson(universityId, userGroupName)
+            if len(jsonSchedule) > 2:
                 groupInfo = {
                     "group_name": userGroupName,
                     "university_id": universityId,
-                    "schedule_text": json_text,
+                    "schedule_text": jsonSchedule,
                     "schedule_url": "default url"
                 }
 
                 groupId = dbManager.addGroup(groupInfo)
-                # groupId = dbManager.getGroupId(groupInfo)
                 dbManager.updateTgUser(
                     message.from_user.id,
-                    "group_id",
-                    groupId
+                    {"group_id": groupId}
                 )
 
                 await send_message_custom(
@@ -193,41 +210,31 @@ async def main(message):
                     "Группа *не найдена*!\nПопробуйте другую группу"
                 )
 
-    elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
+    elif CURR_STATUS == userController.GROUP_CHOSEN:
         userGroupId = userController.getUserGroupId(message.from_user.id)
         groupJsonText = dbManager.getScheduleByGroupId(userGroupId)
+        userChoice = TelegramViewController.removeLookHereFilter(message.text)
 
-        if message.text == "Понедельник" \
-                or message.text == "Вторник" \
-                or message.text == "Среда" \
-                or message.text == "Четверг" \
-                or message.text == "Пятница" \
-                or message.text == "Суббота":
+        if message.text in [
+            "Понедельник",
+            "Вторник",
+            "Среда",
+            "Четверг",
+            "Пятница",
+            "Суббота"
+        ]:
             await send_message_custom(
                 message,
-                parseManager.getDaySchedule(message.text, groupJsonText),
-                reply_markup=viewController.getScheduleKeyboardMarkup()
-            )
-
-        if message.text == TelegramViewController.applyLookHereFilter("Понедельник") \
-                or message.text == TelegramViewController.applyLookHereFilter("Вторник") \
-                or message.text == TelegramViewController.applyLookHereFilter("Среда") \
-                or message.text == TelegramViewController.applyLookHereFilter("Четверг") \
-                or message.text == TelegramViewController.applyLookHereFilter("Пятница") \
-                or message.text == TelegramViewController.applyLookHereFilter("Суббота"):
-            day = TelegramViewController.removeLookHereFilter(message.text)
-            await send_message_custom(
-                message,
-                parseManager.getDaySchedule(day, groupJsonText),
+                parseManager.getDaySchedule(userChoice, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup()
             )
 
 
 async def send_message_custom(
-        message,
-        text: str,
-        reply_markup=None,
-        parse_mode="markdown"
+    message,
+    text: str,
+    reply_markup=None,
+    parse_mode="markdown"
 ):
     try:
         await bot.send_message(
@@ -239,7 +246,10 @@ async def send_message_custom(
 
     except Exception as e:
         if "bot was blocked by the user" in str(e):
-            dbManager.updateTgUser(message.from_user.id, "is_alive", "0")
+            dbManager.updateTgUser(
+                message.from_user.id,
+                {"is_alive": "0"}
+            )
 
             error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
             notificator.notify(error_message, notificator.WARNING_LEVEL)
