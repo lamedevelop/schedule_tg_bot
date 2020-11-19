@@ -134,7 +134,7 @@ class DbManager:
         # return self.dbController.fetchQuery(query)
 
     def checkUserExist(self, user_id):
-        return bool(TelegramUserModel().get({'user_id': user_id}))
+        return bool(TelegramUserModel().get({'user_id': user_id}).fields['user_id'])
 
         # query = self.queriesController.checkIfExist("telegramUsers", "user_id", user_id)
         #
