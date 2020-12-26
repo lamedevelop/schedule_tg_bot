@@ -74,7 +74,7 @@ async def chooseUniversity(message):
 async def sendHelp(message):
     dbManager.updateTgUser(
         message.from_user.id,
-        {"group_id": "NULL"}
+        {"group_id": ''}
     )
 
     await send_message_custom(
