@@ -7,6 +7,7 @@ from aiogram.utils import executor
 from Configs.tgConfig import *
 from DbManager import DbManager
 from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.Translation.TranslationController import TranslationController
 from Controllers.User.UserController import UserController
 
 from Controllers.Log.LogController import LogController
@@ -26,6 +27,7 @@ userController = UserController()
 logger = LogController()
 notificator = MonitoringAlertManager()
 
+translator = TranslationController()
 
 # class WebhookServer(object):
 #     @cherrypy.expose
@@ -78,7 +80,10 @@ async def chooseUniversity(message):
 
     await send_message_custom(
         message,
-        'Привет *{}*!\nВыбери свой *университет*'.format(message.from_user.first_name),
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.ENTER_UNIVERSITY
+        ).format(message.from_user.first_name),
         reply_markup=viewController.getUniversityKeyboardMarkup()
     )
 
@@ -88,8 +93,10 @@ async def sendHelp(message):
     dbManager.updateTgUser(message.from_user.id, "group_id", "NULL")
     await send_message_custom(
         message,
-        'Введи новую *группу* русскими буквами\n'
-        'Например так: *а-12м-20* или *иу3-13б*',
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.CHANGE_GROUP
+        ).format(message.from_user.first_name),
         reply_markup=viewController.removeKeyboardMarkup()
     )
 
@@ -98,26 +105,10 @@ async def sendHelp(message):
 async def sendHelp(message):
     await send_message_custom(
         message,
-        '''
-Начало использования
-/start
-
-Для смены *университета*
-/changeuniversity
-
-Для смены *группы*
-/changegroup
-
-Получить это сообщение
-/help
-
-Номер группы вводится *русскими буквами*, например так:
-ИУ3-13б
-А-12м-20
-
-Контакты для связи:
-@kekmarakek и @grit4in
-        '''
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.HELP
+        ).format(message.from_user.first_name),
     )
 
 
@@ -136,9 +127,10 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    'Университет *выбран*\n'
-                    'Введи номер группы, *русскими буквами*\n'
-                    'Например так: *а-12м-20* или *иу3-13б*',
+                    translator.getMessage(
+                        message.from_user.language_code,
+                        translator.FIRST_ENTER_GROUP
+                    ).format(message.from_user.first_name),
                     reply_markup=viewController.removeKeyboardMarkup()
                 )
                 break
@@ -159,7 +151,10 @@ async def main(message):
                 isGroupFound = True
                 await send_message_custom(
                     message,
-                    "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
+                    translator.getMessage(
+                        message.from_user.language_code,
+                        translator.SCHEDULE_WAS_FOUND
+                    ).format(message.from_user.first_name),
                     reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
                 break
@@ -184,13 +179,19 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    "Расписание *успешно загружено*!\nВыбери день, чтобы узнать *расписание*",
+                    translator.getMessage(
+                        message.from_user.language_code,
+                        translator.SCHEDULE_DOWNLOADED
+                    ).format(message.from_user.first_name),
                     reply_markup=viewController.getScheduleKeyboardMarkup()
                 )
             else:
                 await send_message_custom(
                     message,
-                    "Группа *не найдена*!\nПопробуйте другую группу"
+                    translator.getMessage(
+                        message.from_user.language_code,
+                        translator.SCHEDULE_WAS_NOT_FOUND
+                    ).format(message.from_user.first_name),
                 )
 
     elif userController.CURR_STATUS == userController.GROUP_CHOSEN:
