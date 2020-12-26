@@ -16,7 +16,7 @@ class UniversityModel(AbstractModel):
         return super(UniversityModel, self).get(primary_key)
 
     def set(self):
-        super(UniversityModel, self).set()
+        return super(UniversityModel, self).set()
 
     def update(self, new_fields):
         super(UniversityModel, self).update(new_fields)

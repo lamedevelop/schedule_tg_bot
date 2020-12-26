@@ -20,7 +20,7 @@ class GroupModel(AbstractModel):
         return super(GroupModel, self).get(primary_key)
 
     def set(self):
-        super(GroupModel, self).set()
+        return super(GroupModel, self).set()
 
     def update(self, new_fields):
         super(GroupModel, self).update(new_fields)

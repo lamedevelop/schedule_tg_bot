@@ -39,7 +39,7 @@ class TelegramUserModel(AbstractModel):
         return self
 
     def set(self):
-        super(TelegramUserModel, self).set()
+        return super(TelegramUserModel, self).set()
 
     def update(self, new_fields):
         super(TelegramUserModel, self).update(new_fields)

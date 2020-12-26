@@ -19,7 +19,7 @@ class UserMessageModel(AbstractModel):
         return super(UserMessageModel, self).get(primary_key)
 
     def set(self):
-        super(UserMessageModel, self).set()
+        return super(UserMessageModel, self).set()
 
     def update(self, new_fields):
         super(UserMessageModel, self).update(new_fields)
