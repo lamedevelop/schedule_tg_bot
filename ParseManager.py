@@ -21,7 +21,7 @@ class ParseManager(object):
 
         outputText = ['Расписание на *%s*' %
                       re.sub(r'а$', 'у', dayName.lower())]
-        jsonToDict = list(ast.literal_eval(jsonSchedule[0][0]).values())[0]
+        jsonToDict = list(ast.literal_eval(jsonSchedule).values())[0]
         scheduleForDay = jsonToDict[dayName]
 
         for time, scheduleArr in scheduleForDay.items():
