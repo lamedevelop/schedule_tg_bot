@@ -1,7 +1,7 @@
-from Database.Models.DbModel import DbModel
+from Database.Models.AbstractModel import AbstractModel
 
 
-class GroupModel(DbModel):
+class GroupModel(AbstractModel):
 
     table_name = 'groups'
 

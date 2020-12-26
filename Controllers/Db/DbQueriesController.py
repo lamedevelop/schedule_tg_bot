@@ -1,3 +1,8 @@
+"""
+Deprecated controller
+"""
+
+
 class DbQueriesController:
     """
     SQL queries controller

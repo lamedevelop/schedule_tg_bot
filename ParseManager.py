@@ -7,6 +7,7 @@ from Controllers.Parse.ParseController import ParseController
 from Controllers.Parse.MpeiParseController import MpeiParseController
 from Controllers.Parse.BmstuParseController import BmstuParseController
 
+
 class ParseManager(object):
     def __init__(self):
         subs = ParseController.__subclasses__()

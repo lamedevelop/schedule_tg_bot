@@ -1,7 +1,7 @@
-from Database.Models.DbModel import DbModel
+from Database.Models.AbstractModel import AbstractModel
 
 
-class UserMessageModel(DbModel):
+class UserMessageModel(AbstractModel):
 
     table_name = 'userMessages'
 
@@ -9,7 +9,7 @@ class UserMessageModel(DbModel):
 
     fields = {
         primary_key[0]: '',
-        'user_id': '',
+        'chat_id': '',
         'user_status': '',
         'message': '',
         'creation_date': ''

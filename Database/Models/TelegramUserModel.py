@@ -1,7 +1,8 @@
-from Database.Models.DbModel import DbModel
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from Database.Models.AbstractModel import AbstractModel
 
 
-class TelegramUserModel(DbModel):
+class TelegramUserModel(AbstractModel):
 
     table_name = 'telegramUsers'
 
@@ -23,6 +24,19 @@ class TelegramUserModel(DbModel):
 
     def get(self, primary_key):
         return super(TelegramUserModel, self).get(primary_key)
+
+    def getByChatId(self, chat_id):
+        fields = SqlLiteDbController().fetchQuery(
+            f'''SELECT {", ".join(TelegramUserModel.fields.keys())} 
+                FROM {TelegramUserModel.table_name} 
+                WHERE chat_id={chat_id}'''
+        )
+
+        if len(fields) > 0 and len(fields[0]) == len(self.fields):
+            for field in enumerate(self.fields):
+                self.fields[field[1]] = fields[0][field[0]]
+
+        return self
 
     def set(self):
         super(TelegramUserModel, self).set()

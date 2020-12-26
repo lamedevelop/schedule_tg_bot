@@ -1,7 +1,7 @@
-from Database.Models.DbModel import DbModel
+from Database.Models.AbstractModel import AbstractModel
 
 
-class UniversityModel(DbModel):
+class UniversityModel(AbstractModel):
 
     table_name = 'universities'
 

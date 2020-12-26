@@ -1,7 +1,7 @@
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
-class DbListModel:
+class AbstractListModel:
 
     def getList(self, model_class):
         models = []

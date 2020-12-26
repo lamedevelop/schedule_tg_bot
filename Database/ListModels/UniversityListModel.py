@@ -1,8 +1,8 @@
-from Database.ListModels.DbListModel import DbListModel
+from Database.ListModels.AbstractListModel import AbstractListModel
 from Database.Models.UniversityModel import UniversityModel
 
 
-class UniversityListModel(DbListModel):
+class UniversityListModel(AbstractListModel):
 
     def getList(self, model_class=UniversityModel):
         return super(UniversityListModel, self).getList(model_class)

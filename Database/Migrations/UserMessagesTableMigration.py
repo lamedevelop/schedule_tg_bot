@@ -15,7 +15,7 @@ class UserMessagesTableMigration(Migration):
     def up(self):
         query = '''CREATE TABLE ''' + UserMessageModel.table_name + ''' (
                 message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
+                chat_id INTEGER,
                 user_status INTEGER,
                 message TEXT,
                 creation_date DATETIME default current_timestamp);'''

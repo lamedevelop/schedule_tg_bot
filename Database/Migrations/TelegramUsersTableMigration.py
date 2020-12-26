@@ -16,7 +16,7 @@ class TelegramUsersTableMigration(Migration):
     # do not forget to update new indices at Controllers/UserController
     def up(self):
         query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
-                user_id INTEGER PRIMARY KEY,
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 chat_id INTEGER NOT NULL,
                 first_name TEXT,
                 last_name TEXT,
@@ -26,7 +26,8 @@ class TelegramUsersTableMigration(Migration):
                 is_alive BOOLEAN,
                 registration_date DATETIME default current_timestamp,
                 university_id INTEGER,
-                group_id INTEGER);'''
+                group_id INTEGER,
+                CONSTRAINT AK_chat_id UNIQUE(chat_id));'''
 
         SqlLiteDbController().submitQuery(query)
         self.logger.info("TelegramUsersTableMigration up")

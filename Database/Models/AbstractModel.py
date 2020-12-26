@@ -1,7 +1,7 @@
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
-class DbModel:
+class AbstractModel:
 
     table_name = ''
 
@@ -48,7 +48,7 @@ class DbModel:
         for field_name in self.fields:
             if field_name != self.primary_key[0]:
                 set_fields['names'].append(field_name)
-                set_fields['values'].append('\"' + str(self.fields[field_name]) + '\"')
+                set_fields['values'].append('\'' + str(self.fields[field_name]) + '\'')
 
         record_id = SqlLiteDbController().submitQuery(
             f'''INSERT INTO {self.table_name} ({', '.join(set_fields['names'])}) 
