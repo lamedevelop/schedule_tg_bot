@@ -1,4 +1,6 @@
-from Migrations.Migration import Migration
+from Database.Migrations.Migration import Migration
+from Database.Models.GroupModel import GroupModel
+
 from Controllers.Log.LogController import LogController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
@@ -11,7 +13,7 @@ class GroupsTableMigration(Migration):
         print("Create GroupsTable migration")
 
     def up(self):
-        query = '''CREATE TABLE groups (
+        query = '''CREATE TABLE ''' + GroupModel.table_name + ''' (
                 group_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 group_name TEXT NOT NULL,
                 university_id INTEGER,
@@ -23,6 +25,6 @@ class GroupsTableMigration(Migration):
         self.logger.info("GroupsTableMigration up")
 
     def down(self):
-        query = '''DROP TABLE groups;'''
+        query = 'DROP TABLE ' + GroupModel.table_name + ';'
         SqlLiteDbController().submitQuery(query)
         self.logger.info("GroupsTableMigration down")

@@ -23,7 +23,7 @@ def downAllMigrations(dbManager):
 
 
 def fillTestData(dbManager):
-    dbManager.fillTestData()
+    dbManager.fillGroups()
 
 
 def resetDb(dbManager):
@@ -60,7 +60,6 @@ def main():
         "downUserMessagesTableMigration"    : 10,
 
         "resetDb"                           : 11,
-        "dropDb"                            : 12,
     }
 
     # Change operation by changing requested
@@ -116,10 +115,6 @@ def main():
     elif command_id == 11:
         logger.info(f'db_interact script run with command {command_name}')
         resetDb(dbManager)
-
-    elif command_id == 12:
-        logger.info(f'db_interact script run with command {command_name}')
-        dropDb(dbManager)
 
     else:
         logger.alert(f'db_interact script run with unrecognized command {command_name}')
