@@ -7,6 +7,7 @@ from DbManager import DbManager
 from MonitoringAlertManager import MonitoringAlertManager
 from Controllers.Log.LogController import LogController
 from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.Translation.TranslationController import TranslationController
 
 
 class TelegramViewController:
@@ -37,15 +38,15 @@ class TelegramViewController:
 
     # old method
     # probably should be removed
-    @staticmethod
-    def getGroupKeyboardMarkup(universityId):
-        markup = ReplyKeyboardMarkup(resize_keyboard=True)
-        groups = DbManager().getGroupsByUniversityId(universityId)
-
-        for group in groups:
-            markup.row(group[1])
-
-        return markup
+    # @staticmethod
+    # def getGroupKeyboardMarkup(universityId):
+    #     markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    #     groups = DbManager().getGroupsByUniversityId(universityId)
+    #
+    #     for group in groups:
+    #         markup.row(group[1])
+    #
+    #     return markup
 
     @staticmethod
     def removeKeyboardMarkup():
@@ -55,35 +56,38 @@ class TelegramViewController:
 
     # experimental method
     # will be updated or removed later
+    # @staticmethod
+    # def inlineGroupChooseKeyboardMarkup():
+    #     keyboard = [["hello"], ["world"]]
+    #     markup = InlineKeyboardMarkup()
+    #
+    #     stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
+    #
+    #     for key, value in stringList.items():
+    #         markup.add(
+    #             InlineKeyboardButton(
+    #                 text=value,
+    #                 callback_data="['value', '" + value + "', '" + key + "']"
+    #             ),
+    #             InlineKeyboardButton(
+    #                 text="X",
+    #                 callback_data="['key', '" + key + "']"
+    #             )
+    #         )
+    #
+    #     return markup
+
     @staticmethod
-    def inlineGroupChooseKeyboardMarkup():
-        keyboard = [["hello"], ["world"]]
-        markup = InlineKeyboardMarkup()
-
-        stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
-
-        for key, value in stringList.items():
-            markup.add(
-                InlineKeyboardButton(
-                    text=value,
-                    callback_data="['value', '" + value + "', '" + key + "']"
-                ),
-                InlineKeyboardButton(
-                    text="X",
-                    callback_data="['key', '" + key + "']"
-                )
-            )
-
-        return markup
-
-    @staticmethod
-    def getScheduleKeyboardMarkup():
+    def getScheduleKeyboardMarkup(lang):
         markup = ReplyKeyboardMarkup(resize_keyboard=True)
 
-        days_of_week = DateTimeController.days_of_week
+        days_of_week = TranslationController().getMessage(
+            lang,
+            TranslationController.WEEK_DAYS
+        )
 
         for i in range(0, len(days_of_week)):
-            days_of_week[i] = TelegramViewController.removeLookHereFilter(days_of_week[i])
+            days_of_week[i] = TelegramViewController.removeFilters(days_of_week[i])
 
         day_id = DateTimeController.getCurrDayOfWeek()
         days_of_week[day_id] = TelegramViewController.applyLookHereFilter(days_of_week[day_id])
@@ -98,6 +102,13 @@ class TelegramViewController:
             markup.row(keys[0], keys[1])
 
         return markup
+
+    @staticmethod
+    def isDayOfWeek(day):
+        if day in DateTimeController.days_of_week.values():
+            return True
+
+        return False
 
     @staticmethod
     def applyMarkup(params: list):
@@ -126,12 +137,16 @@ class TelegramViewController:
                    + TelegramViewController.icons["look_here_right"]
 
     @staticmethod
-    def removeLookHereFilter(word):
-        res = word
+    def removeFilters(word):
+        day = word
+
+        for key in DateTimeController.days_of_week:
+            if day == DateTimeController.days_of_week_eng[key]:
+                day = DateTimeController.days_of_week[key]
 
         if TelegramViewController.icons["look_here_left"] in word \
                 or TelegramViewController.icons["look_here_right"] in word:
-            res = word.split(TelegramViewController.icons["look_here_left"])[1]
-            res = res.split(TelegramViewController.icons["look_here_right"])[0]
+            day = word.split(TelegramViewController.icons["look_here_left"])[1]
+            day = day.split(TelegramViewController.icons["look_here_right"])[0]
 
-        return res
+        return day

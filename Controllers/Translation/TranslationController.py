@@ -15,7 +15,7 @@ class TranslationController:
     WEEK_DAYS_SHORT = 9
 
     messages = {
-        ru: {
+        'ru': {
             ENTER_UNIVERSITY:       ru.ENTER_UNIVERSITY,
             FIRST_ENTER_GROUP:      ru.FIRST_ENTER_GROUP,
             CHANGE_GROUP:           ru.CHANGE_GROUP,
@@ -27,7 +27,7 @@ class TranslationController:
             WEEK_DAYS_SHORT:        ru.WEEK_DAYS_SHORT,
         },
 
-        en: {
+        'en': {
             ENTER_UNIVERSITY:       en.ENTER_UNIVERSITY,
             FIRST_ENTER_GROUP:      en.FIRST_ENTER_GROUP,
             CHANGE_GROUP:           en.CHANGE_GROUP,
@@ -41,4 +41,9 @@ class TranslationController:
     }
 
     def getMessage(self, language, index):
+        # currently we not sure if english language code is en
+        # and we can't expect this right now, so we left this here
+        # todo: fix language tags
+        if language != 'ru':
+            language = 'en'
         return self.messages[language][index]

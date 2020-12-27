@@ -1,18 +1,16 @@
 from aiogram import Bot
-from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+from aiogram.dispatcher import Dispatcher
 
 from Configs.tgConfig import *
-from DbManager import DbManager
-from Controllers.View.TelegramViewController import TelegramViewController
-from Controllers.Translation.TranslationController import TranslationController
-from Controllers.User.UserController import UserController
 
+from DbManager import DbManager
+from ParseManager import ParseManager
 from Controllers.Log.LogController import LogController
 from MonitoringAlertManager import MonitoringAlertManager
-
-from ParseManager import ParseManager
-
+from Controllers.User.UserController import UserController
+from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.Translation.TranslationController import TranslationController
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -27,6 +25,7 @@ logger = LogController()
 notificator = MonitoringAlertManager()
 
 translator = TranslationController()
+
 
 @dp.message_handler(commands=["start", "changeuniversity"])
 async def chooseUniversity(message):
@@ -51,7 +50,7 @@ async def chooseUniversity(message):
         logger.info(log_msg)
     else:
         # probably reinstalled
-        # todo: add handler in user activity tracking task
+        # todo: add handler in user activity tracking task SB-61
         dbManager.updateTgUser(
             message.from_user.id,
             {
@@ -106,6 +105,7 @@ async def sendHelp(message):
 @dp.message_handler()
 async def main(message):
     CURR_STATUS = userController.getCurrStatus(message.from_user.id)
+    lang = message.from_user.language_code
 
     dbManager.writeUserMessage({
         'chat_id': message.from_user.id,
@@ -126,7 +126,7 @@ async def main(message):
                 await send_message_custom(
                     message,
                     translator.getMessage(
-                        message.from_user.language_code,
+                        lang,
                         translator.FIRST_ENTER_GROUP
                     ).format(message.from_user.first_name),
                     reply_markup=viewController.removeKeyboardMarkup()
@@ -149,8 +149,11 @@ async def main(message):
             )
             await send_message_custom(
                 message,
-                "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
-                reply_markup=viewController.getScheduleKeyboardMarkup()
+                translator.getMessage(
+                    lang,
+                    translator.SCHEDULE_WAS_FOUND
+                ).format(message.from_user.first_name),
+                reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
         else:
@@ -172,45 +175,39 @@ async def main(message):
                 await send_message_custom(
                     message,
                     translator.getMessage(
-                        message.from_user.language_code,
+                        lang,
                         translator.SCHEDULE_DOWNLOADED
                     ).format(message.from_user.first_name),
-                    reply_markup=viewController.getScheduleKeyboardMarkup()
+                    reply_markup=viewController.getScheduleKeyboardMarkup(lang)
                 )
             else:
                 await send_message_custom(
                     message,
                     translator.getMessage(
-                        message.from_user.language_code,
+                        lang,
                         translator.SCHEDULE_WAS_NOT_FOUND
                     ).format(message.from_user.first_name),
                 )
 
     elif CURR_STATUS == userController.GROUP_CHOSEN:
-        if message.text in [
-            "Понедельник",
-            "Вторник",
-            "Среда",
-            "Четверг",
-            "Пятница",
-            "Суббота"
-        ]:
+        userChoice = TelegramViewController.removeFilters(message.text)
+
+        if viewController.isDayOfWeek(userChoice):
             userGroupId = userController.getUserGroupId(message.from_user.id)
             groupJsonText = dbManager.getScheduleByGroupId(userGroupId)
-            userChoice = TelegramViewController.removeLookHereFilter(message.text)
 
             await send_message_custom(
                 message,
                 parseManager.getDaySchedule(userChoice, groupJsonText),
-                reply_markup=viewController.getScheduleKeyboardMarkup()
+                reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
 
 async def send_message_custom(
-    message,
-    text: str,
-    reply_markup=None,
-    parse_mode="markdown"
+        message,
+        text: str,
+        reply_markup=None,
+        parse_mode="markdown"
 ):
     try:
         await bot.send_message(

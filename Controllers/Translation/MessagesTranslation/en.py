@@ -1,10 +1,10 @@
-ENTER_UNIVERSITY = 'Hello *{}*!\nCurrently we support only 2 russian universities.' \
+ENTER_UNIVERSITY = 'Hello *{}*!\nCurrently we support only 2 russian universities. ' \
                    'But we glad to see you here. You can continue now and check this bot functionality.\n' \
                    'Choose your *university*'
 
 FIRST_ENTER_GROUP = 'University *chosen*\n' \
                     'Enter your group number, *in russian language*\n' \
-                    'Example: *а-12м-20* in case МЭИ' \
+                    'Example: *а-12м-20* in case МЭИ\n' \
                     'or *иу3-13б* in case МГТУ'
 
 CHANGE_GROUP = 'Enter new *group* in russian language\n' \
@@ -39,21 +39,21 @@ Dev team contacts:
 '''
 
 WEEK_DAYS = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday',
+    0: 'Monday',
+    1: 'Tuesday',
+    2: 'Wednesday',
+    3: 'Thursday',
+    4: 'Friday',
+    5: 'Saturday',
+    6: 'Sunday',
 }
 
 WEEK_DAYS_SHORT = {
-    1: 'Mo',
-    2: 'Tu',
-    3: 'We',
-    4: 'Th',
-    5: 'Fr',
-    6: 'Sa',
-    7: 'Su',
+    0: 'Mo',
+    1: 'Tu',
+    2: 'We',
+    3: 'Th',
+    4: 'Fr',
+    5: 'Sa',
+    6: 'Su',
 }
