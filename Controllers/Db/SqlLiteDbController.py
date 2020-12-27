@@ -18,6 +18,7 @@ class SqlLiteDbController:
 
     def executeQuery(self, query: str):
         self.cursor.execute(query)
+        return self.cursor.lastrowid
 
     def commitQuery(self):
         self.conn.commit()
@@ -38,9 +39,10 @@ class SqlLiteDbController:
     def submitQuery(self, query: str):
         try:
             self.openConnection()
-            self.executeQuery(query)
+            record_id = self.executeQuery(query)
             self.commitQuery()
             self.closeConnection()
+            return record_id
         except sqlite3.Error as error:
             self.logger.alert('Error while connecting to database: {}'.format(error))
             print('Problem query: ', query)

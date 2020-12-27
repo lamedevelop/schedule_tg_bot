@@ -7,6 +7,7 @@ from Controllers.Parse.ParseController import ParseController
 from Controllers.Parse.MpeiParseController import MpeiParseController
 from Controllers.Parse.BmstuParseController import BmstuParseController
 
+
 class ParseManager(object):
     def __init__(self):
         subs = ParseController.__subclasses__()
@@ -20,7 +21,7 @@ class ParseManager(object):
 
         outputText = ['Расписание на *%s*' %
                       re.sub(r'а$', 'у', dayName.lower())]
-        jsonToDict = list(ast.literal_eval(jsonSchedule[0][0]).values())[0]
+        jsonToDict = list(ast.literal_eval(jsonSchedule).values())[0]
         scheduleForDay = jsonToDict[dayName]
 
         for time, scheduleArr in scheduleForDay.items():
@@ -55,7 +56,8 @@ class ParseManager(object):
 
         return '\n\n'.join(activeSlots)
 
-    def filterGroup(self, message, university_id):
+    @staticmethod
+    def filterGroup(message):
         if message[-1:] == ".":
             message = message[:-1]
         return message.lower()

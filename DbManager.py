@@ -1,10 +1,19 @@
-from Migrations.GroupsTableMigration import GroupsTableMigration
-from Migrations.UniversitiesTableMigration import UniversitiesTableMigration
-from Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
-from Migrations.UserMessagesTableMigration import UserMessagesTableMigration
+from Database.ListModels.TelegramUserListModel import TelegramUserListModel
+from Database.Migrations.GroupsTableMigration import GroupsTableMigration
+from Database.Migrations.UniversitiesTableMigration import UniversitiesTableMigration
+from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
+from Database.Migrations.UserMessagesTableMigration import UserMessagesTableMigration
 
-from Controllers.Db.DbQueriesController import DbQueriesController
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from Database.Models.GroupModel import GroupModel
+from Database.Models.TelegramUserModel import TelegramUserModel
+from Database.Models.UniversityModel import UniversityModel
+from Database.Models.UserMessageModel import UserMessageModel
+
+from Database.ListModels.GroupListModel import GroupListModel
+from Database.ListModels.UniversityListModel import UniversityListModel
+
+# from Controllers.Db.DbQueriesController import DbQueriesController
+# from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 from Controllers.Log.LogController import LogController
 
@@ -20,66 +29,68 @@ class DbManager:
         "userMessagesTableMigration": UserMessagesTableMigration()
     }
 
-    queriesController = DbQueriesController()
-    dbController = SqlLiteDbController()
-
     logger = LogController()
 
-    def addUniversity(self, university_name: str):
-        query = self.queriesController.getInsertQuery("universities", "university_name", university_name)
-        self.dbController.submitQuery(query)
+    @staticmethod
+    def run():
+        print('empty method')
 
-    def getUniversities(self):
-        query = self.queriesController.getSelectQuery("university_name", "universities")
-        return self.dbController.fetchQuery(query)
+    @staticmethod
+    def addUniversity(university_name: str):
+        UniversityModel({'university_name': university_name}).set()
 
-    def getUniversityIdByName(self, name: str):
-        query = self.queriesController.getSelectWithParamQuery("university_id", "universities", "university_name", name)
-        return self.dbController.fetchQuery(query)
+    @staticmethod
+    def getUniversities():
+        return [university.fields for university in UniversityListModel().getList()]
 
-    def addGroup(self, groupInfo: dict):
-        query = self.queriesController.getGroupInsertQuery(groupInfo)
-        self.dbController.submitQuery(query)
+    @staticmethod
+    def addGroup(groupInfo: dict):
+        return GroupModel(groupInfo).set()
 
-    def getGroupId(self, groupInfo: dict):
-        query = self.queriesController.getGroupIdQuery(groupInfo.get('group_name'), groupInfo.get('university_id'))
+    @staticmethod
+    def getScheduleByGroupId(groupId):
+        group = GroupModel().get(groupId)
+        return group.fields['schedule_text']
 
-        if self.dbController.fetchQuery(query):
-            return self.dbController.fetchQuery(query)[0][0]
+    @staticmethod
+    def getGroup(groupInfo):
+        group = GroupListModel().getListByParams(groupInfo)
 
-        return self.DEFAULT_GROUP_ID
+        if bool(group):
+            return group[0].fields
+        else:
+            return []
 
-    def getGroupJsonById(self, groupId: dict):
-        query = DbQueriesController().getSelectWithParamQuery('schedule_text', 'groups', 'group_id', groupId)
-        return SqlLiteDbController().fetchQuery(query)
+    # Should be fixed before using
+    # @staticmethod
+    # def getGroupsByUniversityId(universityId):
+    #     records = GroupListModel().getListByParams({'university_id': universityId})
+    #     return [
+    #         {
+    #             'group_id': record.fields['group_id'],
+    #             'group_name': record.fields['group_name'],
+    #         } for record in records
+    #     ]
 
-    def getGroupsByUniversityId(self, universityId):
-        query = self.queriesController.getSelectWithParamQuery("group_id, group_name", "groups", "university_id", universityId)
-        return self.dbController.fetchQuery(query)
+    @staticmethod
+    def checkUserExist(chat_id):
+        return bool(TelegramUserListModel().getListByParams({'chat_id': chat_id}))
 
-    def checkUserExist(self, user_id):
-        query = self.queriesController.checkIfExist("telegramUsers", "user_id", user_id)
+    @staticmethod
+    def addTgUser(userInfo: dict):
+        TelegramUserModel(userInfo).set()
 
-        if self.dbController.fetchQuery(query):
-            return self.dbController.fetchQuery(query)[0][0]
+    @staticmethod
+    def updateTgUser(chat_id, newFields: dict):
+        TelegramUserModel().getByChatId(chat_id).update(newFields)
 
-        return False
+    @staticmethod
+    def getTgUserInfo(chat_id):
+        return TelegramUserModel().getByChatId(chat_id).fields
 
-    def addTgUser(self, userInfo: dict):
-        query = self.queriesController.getUserInsertQuery("telegramUsers", userInfo)
-        self.dbController.submitQuery(query)
-
-    def updateTgUser(self, user_id, paramName: str, paramVal: str):
-        query = self.queriesController.getUpdateQuery("telegramUsers", paramName, paramVal, "user_id", user_id)
-        self.dbController.submitQuery(query)
-
-    def getTgUserInfo(self, user_id):
-        query = self.queriesController.getSelectWithParamQuery("*", "telegramUsers", "user_id", user_id)
-        return self.dbController.fetchQuery(query)
-
-    def writeUserMessage(self, user_id, user_status, message):
-        query = self.queriesController.getMessageInsertQuery(user_id, user_status, message)
-        self.dbController.submitQuery(query)
+    @staticmethod
+    def writeUserMessage(messageInfo):
+        UserMessageModel(messageInfo).set()
 
     # Migrations methods
     @staticmethod
@@ -105,24 +116,13 @@ class DbManager:
         for migration in DbManager.migrations.items():
             migration[1].getDescription()
 
-    # Fill test data to db
-    # Use only on empty db for testing
-    # todo: Move to unit test later
     @staticmethod
-    def fillTestData():
-        # Fill test 2 universities
-        university_name = "МЭИ"
-        DbManager.addUniversity(DbManager(), university_name)
-        university_name = "МГТУ"
-        DbManager.addUniversity(DbManager(), university_name)
-        DbManager.logger.info("Db written with test data. Delete before deploy!")
+    def fillGroups():
+        UniversityModel({'university_name': 'МЭИ'}).set()
+        UniversityModel({'university_name': 'МГТУ'}).set()
 
     @staticmethod
     def resetDb():
         DbManager.downAllMigrations()
         DbManager.upAllMigrations()
-        DbManager.fillTestData()
-
-    @staticmethod
-    def dropDb():
-        DbManager.dbController.dropDb()
+        DbManager.fillGroups()
