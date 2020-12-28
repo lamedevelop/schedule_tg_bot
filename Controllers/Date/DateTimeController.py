@@ -1,17 +1,12 @@
 from datetime import datetime
+import Controllers.Translation.MessagesTranslation.ru as ru
+import Controllers.Translation.MessagesTranslation.en as en
 
 
 class DateTimeController:
 
-    days_of_week = {
-        0: "Понедельник",
-        1: "Вторник",
-        2: "Среда",
-        3: "Четверг",
-        4: "Пятница",
-        5: "Суббота",
-        6: "Воскресенье",
-    }
+    days_of_week = ru.WEEK_DAYS
+    days_of_week_eng = en.WEEK_DAYS
 
     @staticmethod
     def getCurrDate():

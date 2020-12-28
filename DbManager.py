@@ -103,18 +103,18 @@ class DbManager:
 
     @staticmethod
     def upAllMigrations():
-        for migration in DbManager.migrations.items():
-            migration[1].up()
+        for migration in DbManager.migrations:
+            DbManager.migrations[migration].up()
 
     @staticmethod
     def downAllMigrations():
-        for migration in DbManager.migrations.items():
-            migration[1].down()
+        for migration in DbManager.migrations:
+            DbManager.migrations[migration].down()
 
     @staticmethod
     def getDescriptionForAllMigrations():
-        for migration in DbManager.migrations.items():
-            migration[1].getDescription()
+        for migration in DbManager.migrations:
+            DbManager.migrations[migration].getDescription()
 
     @staticmethod
     def fillGroups():

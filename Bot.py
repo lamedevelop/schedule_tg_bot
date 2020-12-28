@@ -1,17 +1,16 @@
 from aiogram import Bot
-from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+from aiogram.dispatcher import Dispatcher
 
 from Configs.tgConfig import *
-from DbManager import DbManager
-from Controllers.View.TelegramViewController import TelegramViewController
-from Controllers.User.UserController import UserController
 
+from DbManager import DbManager
+from ParseManager import ParseManager
 from Controllers.Log.LogController import LogController
 from MonitoringAlertManager import MonitoringAlertManager
-
-from ParseManager import ParseManager
-
+from Controllers.User.UserController import UserController
+from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.Translation.TranslationController import TranslationController
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -24,6 +23,8 @@ userController = UserController()
 
 logger = LogController()
 notificator = MonitoringAlertManager()
+
+translator = TranslationController()
 
 
 @dp.message_handler(commands=["start", "changeuniversity"])
@@ -49,7 +50,7 @@ async def chooseUniversity(message):
         logger.info(log_msg)
     else:
         # probably reinstalled
-        # todo: add handler in user activity tracking task
+        # todo: add handler in user activity tracking task SB-61
         dbManager.updateTgUser(
             message.from_user.id,
             {
@@ -65,7 +66,10 @@ async def chooseUniversity(message):
 
     await send_message_custom(
         message,
-        'Привет *{}*!\nВыбери свой *университет*'.format(message.from_user.first_name),
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.ENTER_UNIVERSITY
+        ).format(message.from_user.first_name),
         reply_markup=viewController.getUniversityKeyboardMarkup()
     )
 
@@ -79,8 +83,10 @@ async def sendHelp(message):
 
     await send_message_custom(
         message,
-        'Введи новую *группу* русскими буквами\n'
-        'Например так: *а-12м-20* или *иу3-13б*',
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.CHANGE_GROUP
+        ),
         reply_markup=viewController.removeKeyboardMarkup()
     )
 
@@ -89,32 +95,17 @@ async def sendHelp(message):
 async def sendHelp(message):
     await send_message_custom(
         message,
-        '''
-Начало использования
-/start
-
-Для смены *университета*
-/changeuniversity
-
-Для смены *группы*
-/changegroup
-
-Получить это сообщение
-/help
-
-Номер группы вводится *русскими буквами*, например так:
-ИУ3-13б
-А-12м-20
-
-Контакты для связи:
-@kekmarakek и @grit4in
-        '''
+        translator.getMessage(
+            message.from_user.language_code,
+            translator.HELP
+        ),
     )
 
 
 @dp.message_handler()
 async def main(message):
     CURR_STATUS = userController.getCurrStatus(message.from_user.id)
+    lang = message.from_user.language_code
 
     dbManager.writeUserMessage({
         'chat_id': message.from_user.id,
@@ -134,9 +125,10 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    'Университет *выбран*\n'
-                    'Введи номер группы, *русскими буквами*\n'
-                    'Например так: *а-12м-20* или *иу3-13б*',
+                    translator.getMessage(
+                        lang,
+                        translator.FIRST_ENTER_GROUP
+                    ),
                     reply_markup=viewController.removeKeyboardMarkup()
                 )
                 break
@@ -157,8 +149,11 @@ async def main(message):
             )
             await send_message_custom(
                 message,
-                "Группа *найдена*!\nВыбери день, чтобы узнать *расписание*",
-                reply_markup=viewController.getScheduleKeyboardMarkup()
+                translator.getMessage(
+                    lang,
+                    translator.SCHEDULE_WAS_FOUND
+                ),
+                reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
         else:
@@ -179,40 +174,40 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    "Расписание *успешно загружено*!\nВыбери день, чтобы узнать *расписание*",
-                    reply_markup=viewController.getScheduleKeyboardMarkup()
+                    translator.getMessage(
+                        lang,
+                        translator.SCHEDULE_DOWNLOADED
+                    ),
+                    reply_markup=viewController.getScheduleKeyboardMarkup(lang)
                 )
             else:
                 await send_message_custom(
                     message,
-                    "Группа *не найдена*!\nПопробуйте другую группу"
+                    translator.getMessage(
+                        lang,
+                        translator.SCHEDULE_WAS_NOT_FOUND
+                    ).format(message.from_user.first_name),
                 )
 
     elif CURR_STATUS == userController.GROUP_CHOSEN:
-        if message.text in [
-            "Понедельник",
-            "Вторник",
-            "Среда",
-            "Четверг",
-            "Пятница",
-            "Суббота"
-        ]:
+        userChoice = TelegramViewController.removeFilters(message.text)
+
+        if viewController.isDayOfWeek(userChoice):
             userGroupId = userController.getUserGroupId(message.from_user.id)
             groupJsonText = dbManager.getScheduleByGroupId(userGroupId)
-            userChoice = TelegramViewController.removeLookHereFilter(message.text)
 
             await send_message_custom(
                 message,
                 parseManager.getDaySchedule(userChoice, groupJsonText),
-                reply_markup=viewController.getScheduleKeyboardMarkup()
+                reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
 
 async def send_message_custom(
-    message,
-    text: str,
-    reply_markup=None,
-    parse_mode="markdown"
+        message,
+        text: str,
+        reply_markup=None,
+        parse_mode="markdown"
 ):
     try:
         await bot.send_message(
