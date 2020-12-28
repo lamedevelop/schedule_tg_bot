@@ -105,10 +105,7 @@ class TelegramViewController:
 
     @staticmethod
     def isDayOfWeek(day):
-        if day in DateTimeController.days_of_week.values():
-            return True
-
-        return False
+        return day in DateTimeController.days_of_week.values()
 
     @staticmethod
     def applyMarkup(params: list):
