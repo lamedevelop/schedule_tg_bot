@@ -138,7 +138,7 @@ class TelegramViewController:
 
     @staticmethod
     def removeFilters(word):
-        day = word
+        day = word.title()
 
         for key in DateTimeController.days_of_week:
             if day == DateTimeController.days_of_week_eng[key]:

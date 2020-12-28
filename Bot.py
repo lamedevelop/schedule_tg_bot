@@ -86,7 +86,7 @@ async def sendHelp(message):
         translator.getMessage(
             message.from_user.language_code,
             translator.CHANGE_GROUP
-        ).format(message.from_user.first_name),
+        ),
         reply_markup=viewController.removeKeyboardMarkup()
     )
 
@@ -98,7 +98,7 @@ async def sendHelp(message):
         translator.getMessage(
             message.from_user.language_code,
             translator.HELP
-        ).format(message.from_user.first_name),
+        ),
     )
 
 
@@ -128,7 +128,7 @@ async def main(message):
                     translator.getMessage(
                         lang,
                         translator.FIRST_ENTER_GROUP
-                    ).format(message.from_user.first_name),
+                    ),
                     reply_markup=viewController.removeKeyboardMarkup()
                 )
                 break
@@ -152,7 +152,7 @@ async def main(message):
                 translator.getMessage(
                     lang,
                     translator.SCHEDULE_WAS_FOUND
-                ).format(message.from_user.first_name),
+                ),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
@@ -177,7 +177,7 @@ async def main(message):
                     translator.getMessage(
                         lang,
                         translator.SCHEDULE_DOWNLOADED
-                    ).format(message.from_user.first_name),
+                    ),
                     reply_markup=viewController.getScheduleKeyboardMarkup(lang)
                 )
             else:
