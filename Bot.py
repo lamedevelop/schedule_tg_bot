@@ -16,7 +16,6 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
 dbManager = DbManager()
-parseManager = ParseManager()
 
 viewController = TelegramViewController()
 userController = UserController()
@@ -135,7 +134,7 @@ async def main(message):
 
     elif CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
-        userGroupName = parseManager.filterGroup(message.text)
+        userGroupName = ParseManager.filterGroup(message.text)
         group = dbManager.getGroup({
             'group_name': userGroupName,
             'university_id': universityId
@@ -157,7 +156,7 @@ async def main(message):
             )
 
         else:
-            jsonSchedule = parseManager.getJson(universityId, userGroupName)
+            jsonSchedule = ParseManager.downloadSchedule(universityId, userGroupName)
             if len(jsonSchedule) > 2:
                 groupInfo = {
                     "group_name": userGroupName,
@@ -198,7 +197,7 @@ async def main(message):
 
             await send_message_custom(
                 message,
-                parseManager.getDaySchedule(userChoice, groupJsonText),
+                ParseManager.getDaySchedule(userChoice, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 

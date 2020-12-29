@@ -1,28 +1,48 @@
+from Scripts.db_interact import main
+from datetime import datetime
 import re
 import ast
-from datetime import datetime
+
+from DbManager import DbManager
 
 from Controllers.View.TelegramViewController import TelegramViewController
+
 from Controllers.Parse.ParseController import ParseController
 from Controllers.Parse.MpeiParseController import MpeiParseController
 from Controllers.Parse.BmstuParseController import BmstuParseController
 
 
 class ParseManager(object):
-    def __init__(self):
-        subs = ParseController.__subclasses__()
-        self.comboBox = {str(obj()): obj() for obj in subs}
 
-    def getJson(self, universityId, groupName):
-        return self.comboBox[str(universityId)].makeJson(groupName.upper()).replace('\'', '\"')
+    parse_controllers = {
+        str(parse_controller()): parse_controller()
+        for parse_controller in ParseController.__subclasses__()
+    }
 
-    def getDaySchedule(self, dayName, jsonSchedule):
+    @staticmethod
+    def downloadSchedule(university_id: int, group_name: str) -> str:
+        return ParseManager.parse_controllers[str(university_id)] \
+                           .makeJson(group_name.upper()) \
+                           .replace('\'', '\"')
+
+    @staticmethod
+    def filterGroup(message) -> str:
+        if message[-1:] == ".":
+            message = message[:-1]
+        return message.lower()
+
+    @staticmethod
+    def updateUserSchedule() -> None:
+        pass
+
+    @staticmethod
+    def getDaySchedule(day_name: str, json_schedule: str) -> str:
         numWeek = int(datetime.today().strftime("%U"))
 
-        outputText = ['Расписание на *%s*' %
-                      re.sub(r'а$', 'у', dayName.lower())]
-        jsonToDict = list(ast.literal_eval(jsonSchedule).values())[0]
-        scheduleForDay = jsonToDict[dayName]
+        output_text = ['Расписание на *%s*' %
+                       re.sub(r'а$', 'у', day_name.lower())]
+        dict_schedule = list(ast.literal_eval(json_schedule).values())[0]
+        scheduleForDay = dict_schedule[day_name]
 
         for time, scheduleArr in scheduleForDay.items():
             nextLine = []
@@ -47,20 +67,60 @@ class ParseManager(object):
                         nextLine.extend(params)
                         break
 
-            outputText.append(
-                '\n'.join(list(filter(lambda x: bool(x), nextLine))))
+            output_text.append(
+                '\n'.join(list(filter(bool, nextLine))))
 
-        activeSlots = list(filter(lambda x: bool(x), outputText))
+        activeSlots = list(filter(bool, output_text))
         if len(activeSlots) == 1:
-            return '*%s* - выходной день' % dayName
+            return '*%s* - выходной день' % day_name
 
         return '\n\n'.join(activeSlots)
 
-    @staticmethod
-    def filterGroup(message):
-        if message[-1:] == ".":
-            message = message[:-1]
-        return message.lower()
-    
-    def parseScheduleText(self):
-        pass
+
+if __name__ == "__main__":
+    out_put = '''{"А-06М-20": {"Понедельник": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Вторник": {"09:20-10:55": {"both": ["Зачет с оценкой", "Иностранный язык", "ЭО и ДОТ", ""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Среда": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Четверг": {"09:20-10:55": {"both": ["Зачет с оценкой", "Современные проблемы информатики и вычислительной техники", "ЭО и ДОТ", "ст.преп. Коротких Т.Н."]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Пятница": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Суббота": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}}}'''
+    group_name = 'а-06м-20'
+    unic_id = '1'
+    day_name = 'Вторник'
+    res = '''Расписание на *вторник*
+
+*09:20-10:55*
+*Иностранный язык*
+_Зачет с оценкой_
+_ЭО и ДОТ_'''
+
+    lol = ParseManager.getJson(unic_id, group_name)
+    if lol == out_put:
+        print(f'getJson: Good')
+
+    lol = ParseManager.getDaySchedule(day_name, lol)
+    if res == lol:
+        print(f'getDaySchedule: Good')
+
+    group_name = 'иу3-52б'
+    unic_id = '2'
+    day_name = 'Понедельник'
+    res = '''Расписание на *понедельник*
+
+*13:50-15:25*
+*Основы теории управления и цифровой обработки сигналов*
+_(лек)_
+_533_
+Недашковский В. М.
+
+*15:40-17:15*
+*Дискретная математика*
+_(сем)_
+_430_
+Виноградова М. С.
+
+*17:25-19:00*
+*Схемотехника электронных устройств*
+_(лек)_
+_520_
+Амурский В. Б.'''
+
+    lol = ParseManager.getJson(unic_id, group_name)
+    lol = ParseManager.getDaySchedule(day_name, lol)
+    if res == lol:
+        print(f'getDaySchedule: Good')
