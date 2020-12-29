@@ -40,8 +40,8 @@ class MpeiParseController(ParseController):
             group_schedule = self._getUrl(
                 self.get_schedule_url_pattern % (
                     group_id,
-                    start.strftime("%y.%m.%d"),
-                    finish.strftime("%y.%m.%d")
+                    start.strftime("%Y.%m.%d"),
+                    finish.strftime("%Y.%m.%d")
                 )
             )
 

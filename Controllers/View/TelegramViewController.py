@@ -84,7 +84,7 @@ class TelegramViewController:
         days_of_week = TranslationController().getMessage(
             lang,
             TranslationController.WEEK_DAYS
-        )
+        ).copy()
 
         for i in range(0, len(days_of_week)):
             days_of_week[i] = TelegramViewController.removeFilters(days_of_week[i])
