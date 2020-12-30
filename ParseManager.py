@@ -3,8 +3,6 @@ from datetime import datetime
 import re
 import ast
 
-from DbManager import DbManager
-
 from Controllers.View.TelegramViewController import TelegramViewController
 
 from Controllers.Parse.ParseController import ParseController
@@ -30,10 +28,6 @@ class ParseManager(object):
         if message[-1:] == ".":
             message = message[:-1]
         return message.lower()
-
-    @staticmethod
-    def updateUserSchedule() -> None:
-        pass
 
     @staticmethod
     def getDaySchedule(day_name: str, json_schedule: str) -> str:
@@ -75,52 +69,3 @@ class ParseManager(object):
             return '*%s* - выходной день' % day_name
 
         return '\n\n'.join(activeSlots)
-
-
-if __name__ == "__main__":
-    out_put = '''{"А-06М-20": {"Понедельник": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Вторник": {"09:20-10:55": {"both": ["Зачет с оценкой", "Иностранный язык", "ЭО и ДОТ", ""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Среда": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Четверг": {"09:20-10:55": {"both": ["Зачет с оценкой", "Современные проблемы информатики и вычислительной техники", "ЭО и ДОТ", "ст.преп. Коротких Т.Н."]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Пятница": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}, "Суббота": {"09:20-10:55": {"both": [""]}, "11:10-12:45": {"both": [""]}, "13:45-15:20": {"both": [""]}, "15:35-17:10": {"both": [""]}, "17:20-18:55": {"both": [""]}}}}'''
-    group_name = 'а-06м-20'
-    unic_id = '1'
-    day_name = 'Вторник'
-    res = '''Расписание на *вторник*
-
-*09:20-10:55*
-*Иностранный язык*
-_Зачет с оценкой_
-_ЭО и ДОТ_'''
-
-    lol = ParseManager.getJson(unic_id, group_name)
-    if lol == out_put:
-        print(f'getJson: Good')
-
-    lol = ParseManager.getDaySchedule(day_name, lol)
-    if res == lol:
-        print(f'getDaySchedule: Good')
-
-    group_name = 'иу3-52б'
-    unic_id = '2'
-    day_name = 'Понедельник'
-    res = '''Расписание на *понедельник*
-
-*13:50-15:25*
-*Основы теории управления и цифровой обработки сигналов*
-_(лек)_
-_533_
-Недашковский В. М.
-
-*15:40-17:15*
-*Дискретная математика*
-_(сем)_
-_430_
-Виноградова М. С.
-
-*17:25-19:00*
-*Схемотехника электронных устройств*
-_(лек)_
-_520_
-Амурский В. Б.'''
-
-    lol = ParseManager.getJson(unic_id, group_name)
-    lol = ParseManager.getDaySchedule(day_name, lol)
-    if res == lol:
-        print(f'getDaySchedule: Good')
