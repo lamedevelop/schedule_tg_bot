@@ -19,7 +19,7 @@ class GroupsTableMigration(Migration):
                 university_id INTEGER,
                 schedule_text TEXT,
                 schedule_url TEXT,
-                update_date DATETIME default current_timestamp);'''
+                update_date REAL);'''
 
         SqlLiteDbController().submitQuery(query)
         self.logger.info("GroupsTableMigration up")
