@@ -2,7 +2,7 @@ crontab = {
     'tasks': [
         {
             'name': "schedule_update",
-            'command': "0 1 * * 6 python3 RunManager.py --manager=Db --action=updateGroups",
+            'command': "* * * * * python3 /Users/my_app/RunManager.py --manager=Db --action=updateGroups >> /tmp/2.log",
             'comment': "task 1",
             'is_active': True,
         },

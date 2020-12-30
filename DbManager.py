@@ -67,13 +67,13 @@ class DbManager:
     def updateGroups() -> None:
         from ParseManager import ParseManager
         groups = GroupListModel().getListByDate()
-        for group_id, group_name, university_id in groups:
+        for fields in [g.fields for g in groups]:
             new_schedule_text = ParseManager.downloadSchedule(
-                university_id, group_name
+                fields['university_id'], fields['group_name']
             )
-            GroupModel().get(group_id).update({
+            GroupModel().get(fields['group_id']).update({
                 'schedule_text': new_schedule_text,
-                'update_date': f'{DateTimeController.getCurrTimestamp()}'
+                'update_date': int(DateTimeController.getCurrTimestamp())
             })
 
     # Should be fixed before using

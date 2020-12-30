@@ -25,5 +25,5 @@ class DateTimeController:
         return datetime.now().timestamp()
 
     @staticmethod
-    def getDateDifference(days_count):
-        return (datetime.now() - timedelta(days=days_count)).timestamp() 
+    def getPastTimestamp(days_count):
+        return (datetime.now() - timedelta(days=days_count)).timestamp()

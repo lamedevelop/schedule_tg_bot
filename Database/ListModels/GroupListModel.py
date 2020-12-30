@@ -11,23 +11,22 @@ class GroupListModel(AbstractListModel):
         return super(GroupListModel, self).getList(model_class)
 
     def getListByParams(self, params, model_class=GroupModel):
-        records = super(GroupListModel, self).getListByParams(
-            params, model_class)
-        return self._GroupModelList(records)
+        records = super(GroupListModel, self).getListByParams(params, model_class)
+        return self._getGroupModelList(records)
 
-    def getListByDate(self, days_ago=7, model_class=GroupModel):
+    def getListByDate(self, days_ago=7):
 
-        time_deadline = DateTimeController.getDateDifference(days_ago)
+        time_deadline = DateTimeController.getPastTimestamp(days_ago)
 
         records = SqlLiteDbController().fetchQuery(
-            f'''SELECT {", ".join(model_class.fields.keys())}
+            f'''SELECT {", ".join(GroupModel.fields.keys())}
                 FROM groups
                 WHERE update_date<{time_deadline}'''
         )
 
-        return self._GroupModelList(records)
+        return self._getGroupModelList(records)
 
-    def _GroupModelList(records: list) -> list:
+    def _getGroupModelList(self, records: list) -> list:
         return [
             GroupModel({
                 'group_id': record[0],

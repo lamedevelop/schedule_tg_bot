@@ -16,7 +16,7 @@ class CronManager:
 
         for task in config['tasks']:
             if task['is_active']:
-                crontab += task['command'] + "\t# " + task['comment'] + "\n"
+                crontab += f"# {task['comment']}\n{task['command']}\n"
 
         CrontabController.installCrontab(crontab)
 
