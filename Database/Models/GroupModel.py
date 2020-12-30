@@ -1,4 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
+from datetime import datetime
 
 
 class GroupModel(AbstractModel):
@@ -20,6 +21,7 @@ class GroupModel(AbstractModel):
         return super(GroupModel, self).get(primary_key)
 
     def set(self):
+        self.fields['update_date'] = f'{datetime.now().timestamp()}'
         return super(GroupModel, self).set()
 
     def update(self, new_fields):
