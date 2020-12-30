@@ -12,6 +12,8 @@ from Database.Models.UserMessageModel import UserMessageModel
 from Database.ListModels.GroupListModel import GroupListModel
 from Database.ListModels.UniversityListModel import UniversityListModel
 
+from datetime import datetime
+
 # from Controllers.Db.DbQueriesController import DbQueriesController
 # from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
@@ -60,6 +62,19 @@ class DbManager:
             return group[0].fields
         else:
             return []
+
+    @staticmethod
+    def updateGroups() -> None:
+        from ParseManager import ParseManager
+        groups = GroupListModel().getListByDate()
+        for group_id, group_name, university_id in groups:
+            new_schedule_text = ParseManager.downloadSchedule(
+                university_id, group_name
+            )
+            GroupModel().get(group_id).update({
+                'schedule_text': new_schedule_text,
+                'update_date': f'{datetime.now().timestamp()}'
+            })
 
     # Should be fixed before using
     # @staticmethod

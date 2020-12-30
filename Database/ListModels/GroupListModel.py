@@ -1,6 +1,9 @@
 from Database.ListModels.AbstractListModel import AbstractListModel
 from Database.Models.GroupModel import GroupModel
 
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from datetime import datetime, timedelta
+
 
 class GroupListModel(AbstractListModel):
 
@@ -22,3 +25,15 @@ class GroupListModel(AbstractListModel):
             }))
 
         return groups
+
+    def getListByDate(self, days_ago=7):
+
+        time_deadline = (datetime.now() - timedelta(days=days_ago)).timestamp()
+
+        fields = SqlLiteDbController().fetchQuery(
+            f'''SELECT group_id, group_name, university_id
+                FROM groups
+                WHERE update_date<{time_deadline}'''
+        )
+
+        return fields
