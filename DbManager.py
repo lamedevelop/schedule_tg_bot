@@ -12,7 +12,7 @@ from Database.Models.UserMessageModel import UserMessageModel
 from Database.ListModels.GroupListModel import GroupListModel
 from Database.ListModels.UniversityListModel import UniversityListModel
 
-from datetime import datetime
+from Controllers.Date.DateTimeController import DateTimeController
 
 # from Controllers.Db.DbQueriesController import DbQueriesController
 # from Controllers.Db.SqlLiteDbController import SqlLiteDbController
@@ -73,7 +73,7 @@ class DbManager:
             )
             GroupModel().get(group_id).update({
                 'schedule_text': new_schedule_text,
-                'update_date': f'{datetime.now().timestamp()}'
+                'update_date': f'{DateTimeController.getCurrTimestamp()}'
             })
 
     # Should be fixed before using
