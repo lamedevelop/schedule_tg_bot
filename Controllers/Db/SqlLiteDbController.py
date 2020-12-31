@@ -5,7 +5,7 @@ from Controllers.Log.LogController import LogController
 
 
 class SqlLiteDbController:
-    dbFilename = 'sqlite.db'
+    dbFilename = '/usr/src/app/sqlite.db'
 
     conn = ""
     cursor = ""

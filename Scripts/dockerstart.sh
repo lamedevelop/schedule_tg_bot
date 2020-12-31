@@ -1,21 +1,15 @@
 #!/bin/bash
-
-cd /Users/my_app
-
-# cron
-# cp /etc/crontab /etc/cron.d/crontab
-# touch /etc/crontab /etc/cron.*/*
-#chmod 0666 /etc/crontab
-# crontab -u root /etc/crontab
-
-service cron start
+# dockerstart is entry point for docker container
+cd /usr/src/app
 
 python3 RunManager.py --manager=Cron --action=install
-python3 RunManager.py --manager=Cron --action=enable
 
+echo ">> service cron start"
+service cron start
+echo ">> service cron status"
 service cron status
-echo ""
+echo ">> crontab -l"
 crontab -l
-echo ""
+echo
 
 python3 Bot.py
