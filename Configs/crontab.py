@@ -8,7 +8,7 @@ crontab = {
         },
         {
             'name': "dump_logs_and_db",
-            'command': "0 1 * * 6 cd /usr/src/app;file=dump_$(date +'\%d\%m\%Y').tar.bz2;/bin/tar -czf ${file} Logs/* sqlite.db;/usr/bin/curl -F document=@\"${file}\" https://api.telegram.org/bot<token>/sendDocument?chat_id=<chat_id> >> /tmp/dump_logs_and_db.log",
+            'command': "0 1 * * 6 cd /usr/src/app;file=dump_$(date +'\%d-\%m-\%Y').tar.bz2;/bin/tar -czf ${file} Logs/* sqlite.db;/usr/bin/curl -F document=@\"${file}\" https://api.telegram.org/bot<token>/sendDocument?chat_id=<chat_id> >> /tmp/dump_logs_and_db.log",
             'comment': "dump logs and db to telegram chat",
             'is_active': True,
         },
