@@ -23,7 +23,7 @@ userController = UserController()
 logger = LogController()
 notificator = MonitoringAlertManager()
 
-translator = TranslationController()
+messageGenerator = TranslationController()
 
 
 @dp.message_handler(commands=["start", "changeuniversity"])
@@ -65,9 +65,9 @@ async def chooseUniversity(message):
 
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.ENTER_UNIVERSITY
+            messageGenerator.ENTER_UNIVERSITY
         ).format(message.from_user.first_name),
         reply_markup=viewController.getUniversityKeyboardMarkup()
     )
@@ -82,9 +82,9 @@ async def sendHelp(message):
 
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.CHANGE_GROUP
+            messageGenerator.CHANGE_GROUP
         ),
         reply_markup=viewController.removeKeyboardMarkup()
     )
@@ -94,9 +94,9 @@ async def sendHelp(message):
 async def sendHelp(message):
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.HELP
+            messageGenerator.HELP
         ),
     )
 
@@ -124,9 +124,9 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.FIRST_ENTER_GROUP
+                        messageGenerator.FIRST_ENTER_GROUP
                     ),
                     reply_markup=viewController.removeKeyboardMarkup()
                 )
@@ -148,9 +148,9 @@ async def main(message):
             )
             await send_message_custom(
                 message,
-                translator.getMessage(
+                messageGenerator.getMessage(
                     lang,
-                    translator.SCHEDULE_WAS_FOUND
+                    messageGenerator.SCHEDULE_WAS_FOUND
                 ),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
@@ -173,18 +173,18 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.SCHEDULE_DOWNLOADED
+                        messageGenerator.SCHEDULE_DOWNLOADED
                     ),
                     reply_markup=viewController.getScheduleKeyboardMarkup(lang)
                 )
             else:
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.SCHEDULE_WAS_NOT_FOUND
+                        messageGenerator.SCHEDULE_WAS_NOT_FOUND
                     ).format(message.from_user.first_name),
                 )
 

@@ -111,16 +111,16 @@ Crons running:
 
 ```bash
 # Install crons from config (also updates already existing crons)
-python3 RunManager.py --manager=Cron --action=installCrons
+python3 RunManager.py --manager=Cron --action=install
 
 # Disable all crons
-python3 RunManager.py --manager=Cron --action=disableCrontab
+python3 RunManager.py --manager=Cron --action=disable
 
 # Enable all crons
-python3 RunManager.py --manager=Cron --action=enableCrontab
+python3 RunManager.py --manager=Cron --action=enable
 
 # Removes crontab (delete all crons)
-python3 RunManager.py --manager=Cron --action=removeCrontab
+python3 RunManager.py --manager=Cron --action=erase
 ```
 
 [Up](#schedule-telegram-bot)

@@ -1,4 +1,3 @@
-import json
 import requests
 from abc import abstractmethod
 
@@ -6,7 +5,7 @@ from Controllers.Log.LogController import LogController
 from Controllers.File.FileController import FileController
 
 
-class ParseController(object):
+class AbstractParseController(object):
 
     logger = LogController()
 

@@ -1,11 +1,13 @@
 import re
 from datetime import datetime, timedelta
 
-from Controllers.Parse.ParseController import ParseController
 from Controllers.Log.LogController import LogController
+from Controllers.Parse.AbstractParseController import AbstractParseController
 
 
-class MpeiParseController(ParseController):
+class MpeiAbstractParseController(AbstractParseController):
+
+    university_name = 'МЭИ'
 
     logger = LogController()
 
@@ -78,6 +80,3 @@ class MpeiParseController(ParseController):
         return {x: day.copy() for x in [
             'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
         ]}
-
-    def __str__(self):
-        return '1'

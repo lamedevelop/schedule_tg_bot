@@ -1,25 +1,24 @@
-from Scripts.db_interact import main
-from datetime import datetime
 import re
 import ast
+from datetime import datetime
 
+from DbManager import DbManager
 from Controllers.View.TelegramViewController import TelegramViewController
-
-from Controllers.Parse.ParseController import ParseController
-from Controllers.Parse.MpeiParseController import MpeiParseController
-from Controllers.Parse.BmstuParseController import BmstuParseController
+from Controllers.Parse.MpeiParseController import MpeiAbstractParseController
+from Controllers.Parse.BmstuParseController import BmstuAbstractParseController
 
 
 class ParseManager(object):
 
     parse_controllers = {
-        str(parse_controller()): parse_controller()
-        for parse_controller in ParseController.__subclasses__()
+        MpeiAbstractParseController.university_name: MpeiAbstractParseController(),
+        BmstuAbstractParseController.university_name: BmstuAbstractParseController(),
     }
 
     @staticmethod
     def downloadSchedule(university_id: int, group_name: str) -> str:
-        return ParseManager.parse_controllers[str(university_id)] \
+        university_name = DbManager.getUniversity(university_id)['university_name']
+        return ParseManager.parse_controllers[university_name] \
                            .makeJson(group_name.upper()) \
                            .replace('\'', '\"')
 

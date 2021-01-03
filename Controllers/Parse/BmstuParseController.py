@@ -1,13 +1,16 @@
 import re
 from bs4 import BeautifulSoup
 
-from Controllers.Parse.ParseController import ParseController
 from Controllers.Log.LogController import LogController
+from Controllers.Parse.AbstractParseController import AbstractParseController
 
 
-class BmstuParseController(ParseController):
+class BmstuAbstractParseController(AbstractParseController):
+
+    university_name = 'МГТУ'
 
     logger = LogController()
+
     SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
 
     def _parse(self, group_name: str):
@@ -87,6 +90,3 @@ class BmstuParseController(ParseController):
                 day[curr_time] = subject
             week[day_name] = day
         group_schedule_dict[group_name] = week
-
-    def __str__(self):
-        return '2'

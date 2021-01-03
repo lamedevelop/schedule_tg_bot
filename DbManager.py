@@ -1,23 +1,18 @@
-from Database.ListModels.TelegramUserListModel import TelegramUserListModel
-from Database.Migrations.GroupsTableMigration import GroupsTableMigration
-from Database.Migrations.UniversitiesTableMigration import UniversitiesTableMigration
-from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
-from Database.Migrations.UserMessagesTableMigration import UserMessagesTableMigration
+from Controllers.Log.LogController import LogController
 
 from Database.Models.GroupModel import GroupModel
-from Database.Models.TelegramUserModel import TelegramUserModel
 from Database.Models.UniversityModel import UniversityModel
 from Database.Models.UserMessageModel import UserMessageModel
+from Database.Models.TelegramUserModel import TelegramUserModel
 
 from Database.ListModels.GroupListModel import GroupListModel
 from Database.ListModels.UniversityListModel import UniversityListModel
+from Database.ListModels.TelegramUserListModel import TelegramUserListModel
 
-from Controllers.Date.DateTimeController import DateTimeController
-
-# from Controllers.Db.DbQueriesController import DbQueriesController
-# from Controllers.Db.SqlLiteDbController import SqlLiteDbController
-
-from Controllers.Log.LogController import LogController
+from Database.Migrations.GroupsTableMigration import GroupsTableMigration
+from Database.Migrations.UniversitiesTableMigration import UniversitiesTableMigration
+from Database.Migrations.UserMessagesTableMigration import UserMessagesTableMigration
+from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMigration
 
 
 class DbManager:
@@ -46,6 +41,10 @@ class DbManager:
         return [university.fields for university in UniversityListModel().getList()]
 
     @staticmethod
+    def getUniversity(university_id):
+        return UniversityModel().get(university_id).fields
+
+    @staticmethod
     def addGroup(groupInfo: dict):
         return GroupModel(groupInfo).set()
 
@@ -66,14 +65,16 @@ class DbManager:
     @staticmethod
     def updateGroups() -> None:
         from ParseManager import ParseManager
+
         groups = GroupListModel().getListByDate()
-        for fields in [g.fields for g in groups]:
-            new_schedule_text = ParseManager.downloadSchedule(
-                fields['university_id'], fields['group_name']
+
+        for group in groups:
+            new_schedule = ParseManager.downloadSchedule(
+                group.fields['university_id'],
+                group.fields['group_name']
             )
-            GroupModel().get(fields['group_id']).update({
-                'schedule_text': new_schedule_text,
-                'update_date': int(DateTimeController.getCurrTimestamp())
+            group.update({
+                'schedule_text': new_schedule,
             })
 
     # Should be fixed before using

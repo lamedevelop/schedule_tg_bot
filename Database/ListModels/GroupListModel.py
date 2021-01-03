@@ -1,8 +1,7 @@
-from Database.ListModels.AbstractListModel import AbstractListModel
 from Database.Models.GroupModel import GroupModel
-
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 from Controllers.Date.DateTimeController import DateTimeController
+from Database.ListModels.AbstractListModel import AbstractListModel
 
 
 class GroupListModel(AbstractListModel):
@@ -12,7 +11,7 @@ class GroupListModel(AbstractListModel):
 
     def getListByParams(self, params, model_class=GroupModel):
         records = super(GroupListModel, self).getListByParams(params, model_class)
-        return self._getGroupModelList(records)
+        return self.getModelsList(records)
 
     def getListByDate(self, days_ago=7):
 
@@ -24,9 +23,10 @@ class GroupListModel(AbstractListModel):
                 WHERE update_date<{time_deadline}'''
         )
 
-        return self._getGroupModelList(records)
+        return self.getModelsList(records)
 
-    def _getGroupModelList(self, records: list) -> list:
+    @staticmethod
+    def getModelsList(records: list) -> list:
         return [
             GroupModel({
                 'group_id': record[0],
