@@ -1,5 +1,5 @@
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 from Database.Models.AbstractModel import AbstractModel
+from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class TelegramUserModel(AbstractModel):

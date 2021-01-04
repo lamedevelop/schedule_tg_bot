@@ -1,4 +1,6 @@
-from Configs.tgConfig import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
+from Configs.main import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
+
+from Controllers.Log.DumpController import DumpController
 from Controllers.Date.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
@@ -32,3 +34,7 @@ class MonitoringAlertManager:
             return f'[{self.problem_levels.get(severity)}] {DateTimeController.getCurrDateAndTime()}\n'
         else:
             return ""
+
+    @staticmethod
+    def dump():
+        DumpController().dump()

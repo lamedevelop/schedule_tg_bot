@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import Controllers.Translation.MessagesTranslation.ru as ru
 import Controllers.Translation.MessagesTranslation.en as en
 
@@ -19,3 +19,11 @@ class DateTimeController:
     @staticmethod
     def getCurrDayOfWeek():
         return datetime.today().weekday()
+
+    @staticmethod
+    def getCurrTimestamp():
+        return datetime.now().timestamp()
+
+    @staticmethod
+    def getPastTimestamp(days_count):
+        return (datetime.now() - timedelta(days=days_count)).timestamp()

@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
 
-from Configs.tgConfig import *
+from Configs.main import *
 
 from DbManager import DbManager
 from ParseManager import ParseManager
@@ -16,7 +16,6 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
 dbManager = DbManager()
-parseManager = ParseManager()
 
 viewController = TelegramViewController()
 userController = UserController()
@@ -24,7 +23,7 @@ userController = UserController()
 logger = LogController()
 notificator = MonitoringAlertManager()
 
-translator = TranslationController()
+messageGenerator = TranslationController()
 
 
 @dp.message_handler(commands=["start", "changeuniversity"])
@@ -66,9 +65,9 @@ async def chooseUniversity(message):
 
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.ENTER_UNIVERSITY
+            messageGenerator.ENTER_UNIVERSITY
         ).format(message.from_user.first_name),
         reply_markup=viewController.getUniversityKeyboardMarkup()
     )
@@ -83,9 +82,9 @@ async def sendHelp(message):
 
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.CHANGE_GROUP
+            messageGenerator.CHANGE_GROUP
         ),
         reply_markup=viewController.removeKeyboardMarkup()
     )
@@ -95,9 +94,9 @@ async def sendHelp(message):
 async def sendHelp(message):
     await send_message_custom(
         message,
-        translator.getMessage(
+        messageGenerator.getMessage(
             message.from_user.language_code,
-            translator.HELP
+            messageGenerator.HELP
         ),
     )
 
@@ -125,9 +124,9 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.FIRST_ENTER_GROUP
+                        messageGenerator.FIRST_ENTER_GROUP
                     ),
                     reply_markup=viewController.removeKeyboardMarkup()
                 )
@@ -135,7 +134,7 @@ async def main(message):
 
     elif CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
-        userGroupName = parseManager.filterGroup(message.text)
+        userGroupName = ParseManager.filterGroup(message.text)
         group = dbManager.getGroup({
             'group_name': userGroupName,
             'university_id': universityId
@@ -149,15 +148,15 @@ async def main(message):
             )
             await send_message_custom(
                 message,
-                translator.getMessage(
+                messageGenerator.getMessage(
                     lang,
-                    translator.SCHEDULE_WAS_FOUND
+                    messageGenerator.SCHEDULE_WAS_FOUND
                 ),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
         else:
-            jsonSchedule = parseManager.getJson(universityId, userGroupName)
+            jsonSchedule = ParseManager.downloadSchedule(universityId, userGroupName)
             if len(jsonSchedule) > 2:
                 groupInfo = {
                     "group_name": userGroupName,
@@ -174,18 +173,18 @@ async def main(message):
 
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.SCHEDULE_DOWNLOADED
+                        messageGenerator.SCHEDULE_DOWNLOADED
                     ),
                     reply_markup=viewController.getScheduleKeyboardMarkup(lang)
                 )
             else:
                 await send_message_custom(
                     message,
-                    translator.getMessage(
+                    messageGenerator.getMessage(
                         lang,
-                        translator.SCHEDULE_WAS_NOT_FOUND
+                        messageGenerator.SCHEDULE_WAS_NOT_FOUND
                     ).format(message.from_user.first_name),
                 )
 
@@ -198,7 +197,7 @@ async def main(message):
 
             await send_message_custom(
                 message,
-                parseManager.getDaySchedule(userChoice, groupJsonText),
+                ParseManager.getDaySchedule(userChoice, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 

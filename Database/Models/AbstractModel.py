@@ -63,7 +63,7 @@ class AbstractModel:
         for field_name in new_fields:
             if field_name in self.fields:
                 self.fields[field_name] = new_fields[field_name]
-                update_fields.append(field_name + '=\"' + str(new_fields[field_name]) + '\"')
+                update_fields.append(field_name + '=\'' + str(new_fields[field_name]) + '\'')
 
         SqlLiteDbController().submitQuery(
             f'''UPDATE {self.table_name}

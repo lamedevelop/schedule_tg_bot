@@ -1,28 +1,16 @@
 crontab = {
     'tasks': [
         {
-            'name': "task1",
-            'command': "* * * * * run something 1",
-            'comment': "task 1",
+            'name': "schedule_update",
+            'command': "0 1 * * 6 . /etc/profile; python3 /usr/src/app/RunManager.py --manager=Db --action=updateGroups",
+            'comment': "schedule update",
             'is_active': True,
         },
         {
-            'name': "task2",
-            'command': "* * * * * run something 2",
-            'comment': "task 2",
-            'is_active': False,
-        },
-        {
-            'name': "task3",
-            'command': "* * * * * run something 3",
-            'comment': "task 3",
-            'is_active': False,
-        },
-        {
-            'name': "task4",
-            'command': "* * * * * run something 4",
-            'comment': "task 4",
-            'is_active': False,
+            'name': "dump_logs_and_db",
+            'command': "15 1 * * 6 . /etc/profile; python3 /usr/src/app/RunManager.py --manager=MonitoringAlert --action=dump",
+            'comment': "dump logs and db to telegram chat",
+            'is_active': True,
         },
     ]
 }

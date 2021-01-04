@@ -6,5 +6,6 @@ mkdir Logs
 
 python3 RunManager.py --manager=Db --action=upAllMigrations
 python3 RunManager.py --manager=Db --action=resetDb
+python3 RunManager.py --manager=Cron --action=install
 
-echo "Update Configs/tgConfig.py before running bot"
+echo "Update Configs/main.py before running bot"

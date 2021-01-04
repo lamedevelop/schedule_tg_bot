@@ -12,9 +12,6 @@ class UserController:
     DEFAULT_UNIVERSITY_ID = 0
     DEFAULT_GROUP_ID = 0
 
-    # def __init__(self):
-    #     self.CURR_STATUS = self.DEFAULT_STATUS
-
     def getCurrStatus(self, user_id):
         userInfo = DbManager.getTgUserInfo(user_id)
 
@@ -23,11 +20,8 @@ class UserController:
             LogController().alert(alert)
             MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
-
-        # if isinstance(userInfo['group_id'], int) and isinstance(userInfo['university_id'], int):
         if userInfo['group_id'] != '' and userInfo['university_id'] != '':
             return self.GROUP_CHOSEN
-        # elif isinstance(userInfo['university_id'], int):
         elif userInfo['university_id'] != '':
             return self.UNIVERSITY_CHOSEN
         else:
@@ -54,12 +48,3 @@ class UserController:
             return self.DEFAULT_GROUP_ID
 
         return userInfo['group_id']
-
-    # @staticmethod
-    # def getUserInfo(user_id):
-    #     userInfo = DbManager().getTgUserInfo(user_id)
-    #
-    #     if not userInfo or len(userInfo) < 11:
-    #         return []
-    #
-    #     return userInfo

@@ -1,4 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
+from Controllers.Date.DateTimeController import DateTimeController
 
 
 class GroupModel(AbstractModel):
@@ -12,7 +13,7 @@ class GroupModel(AbstractModel):
         'group_name': '',
         'university_id': '',
         'schedule_text': '',
-        'schedule_url' : '',
+        'schedule_url': '',
         'update_date': ''
     }
 
@@ -20,7 +21,9 @@ class GroupModel(AbstractModel):
         return super(GroupModel, self).get(primary_key)
 
     def set(self):
+        self.fields['update_date'] = int(DateTimeController.getCurrTimestamp())
         return super(GroupModel, self).set()
 
     def update(self, new_fields):
+        new_fields['update_date'] = int(DateTimeController.getCurrTimestamp())
         super(GroupModel, self).update(new_fields)

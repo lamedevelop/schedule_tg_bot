@@ -2,27 +2,40 @@ import re
 import ast
 from datetime import datetime
 
+from DbManager import DbManager
 from Controllers.View.TelegramViewController import TelegramViewController
-from Controllers.Parse.ParseController import ParseController
-from Controllers.Parse.MpeiParseController import MpeiParseController
-from Controllers.Parse.BmstuParseController import BmstuParseController
+from Controllers.Parse.MpeiParseController import MpeiAbstractParseController
+from Controllers.Parse.BmstuParseController import BmstuAbstractParseController
 
 
 class ParseManager(object):
-    def __init__(self):
-        subs = ParseController.__subclasses__()
-        self.comboBox = {str(obj()): obj() for obj in subs}
 
-    def getJson(self, universityId, groupName):
-        return self.comboBox[str(universityId)].makeJson(groupName.upper()).replace('\'', '\"')
+    parse_controllers = {
+        MpeiAbstractParseController.university_name: MpeiAbstractParseController(),
+        BmstuAbstractParseController.university_name: BmstuAbstractParseController(),
+    }
 
-    def getDaySchedule(self, dayName, jsonSchedule):
+    @staticmethod
+    def downloadSchedule(university_id: int, group_name: str) -> str:
+        university_name = DbManager.getUniversity(university_id)['university_name']
+        return ParseManager.parse_controllers[university_name] \
+                           .makeJson(group_name.upper()) \
+                           .replace('\'', '\"')
+
+    @staticmethod
+    def filterGroup(message) -> str:
+        if message[-1:] == ".":
+            message = message[:-1]
+        return message.lower()
+
+    @staticmethod
+    def getDaySchedule(day_name: str, json_schedule: str) -> str:
         numWeek = int(datetime.today().strftime("%U"))
 
-        outputText = ['Расписание на *%s*' %
-                      re.sub(r'а$', 'у', dayName.lower())]
-        jsonToDict = list(ast.literal_eval(jsonSchedule).values())[0]
-        scheduleForDay = jsonToDict[dayName]
+        output_text = ['Расписание на *%s*' %
+                       re.sub(r'а$', 'у', day_name.lower())]
+        dict_schedule = list(ast.literal_eval(json_schedule).values())[0]
+        scheduleForDay = dict_schedule[day_name]
 
         for time, scheduleArr in scheduleForDay.items():
             nextLine = []
@@ -47,20 +60,11 @@ class ParseManager(object):
                         nextLine.extend(params)
                         break
 
-            outputText.append(
-                '\n'.join(list(filter(lambda x: bool(x), nextLine))))
+            output_text.append(
+                '\n'.join(list(filter(bool, nextLine))))
 
-        activeSlots = list(filter(lambda x: bool(x), outputText))
+        activeSlots = list(filter(bool, output_text))
         if len(activeSlots) == 1:
-            return '*%s* - выходной день' % dayName
+            return '*%s* - выходной день' % day_name
 
         return '\n\n'.join(activeSlots)
-
-    @staticmethod
-    def filterGroup(message):
-        if message[-1:] == ".":
-            message = message[:-1]
-        return message.lower()
-    
-    def parseScheduleText(self):
-        pass

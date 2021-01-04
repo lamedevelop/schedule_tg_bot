@@ -1,10 +1,8 @@
 import Configs.crontab as config_provider
+from Controllers.Log.LogController import LogController
 from Controllers.Crontab.CrontabController import CrontabController
 
-from Controllers.Log.LogController import LogController
 
-
-# todo: include running of this manager to the final startup script
 class CronManager:
 
     @staticmethod
@@ -16,7 +14,7 @@ class CronManager:
 
         for task in config['tasks']:
             if task['is_active']:
-                crontab += task['command'] + "\t# " + task['comment'] + "\n"
+                crontab += f"# {task['comment']}\n{task['command']}\n"
 
         CrontabController.installCrontab(crontab)
 
