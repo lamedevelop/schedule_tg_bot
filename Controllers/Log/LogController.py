@@ -1,9 +1,10 @@
+from Configs.main import LOGS_FOLDER
 from Controllers.File.FileController import FileController
 from Controllers.Date.DateTimeController import DateTimeController
 
 
 class LogController:
-    log_filename = 'Logs/logfile_%s.log'
+    log_name_pattern = 'logfile_%s.log'
     toFile = True
 
     def __init__(self, to_file=True):
@@ -20,5 +21,7 @@ class LogController:
     def writeLog(self, message):
         print(message)
         if self.toFile:
-            filepath = self.log_filename % DateTimeController.getCurrDate()
-            FileController.writeToFile(filepath, message)
+            FileController.writeToFile(self.getLogFilename(), message)
+
+    def getLogFilename(self):
+        return LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
