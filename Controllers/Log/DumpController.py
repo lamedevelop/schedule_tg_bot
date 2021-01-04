@@ -1,7 +1,8 @@
 import os
 
 from Controllers.Date.DateTimeController import DateTimeController
-from Configs.main import dbFilename, MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID, LOGS_FOLDER
+from Configs.main import DB_FILENAME, MONITORING_BOT_TOKEN, \
+                            NOTIFICATION_CHAT_ID, LOGS_FOLDER
 
 
 class DumpController:
@@ -17,7 +18,7 @@ class DumpController:
         command = self.archive_command_pattern % (
             self.getDumpFilename(),
             self.getLogsPath(),
-            dbFilename
+            DB_FILENAME
         )
         os.system(command)
 
@@ -35,5 +36,6 @@ class DumpController:
         dump_filename = self.dump_filename_pattern % DateTimeController.getCurrDate()
         return LOGS_FOLDER + dump_filename
 
-    def getLogsPath(self):
+    @staticmethod
+    def getLogsPath():
         return LOGS_FOLDER + '*'

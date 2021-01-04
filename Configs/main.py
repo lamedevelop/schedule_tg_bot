@@ -8,7 +8,8 @@ NOTIFICATION_CHAT_ID = -000000000
 
 # Db
 # SqlLite db filename.
-dbFilename = '/usr/src/app/sqlite.db'
+DB_FILENAME = '/usr/src/app/sqlite.db'
+PROJECT_PATH = '/usr/src/app/'
 
 # Logging
 # Main logging folder
