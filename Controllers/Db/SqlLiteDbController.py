@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-from Configs.db import dbFilename
+from Configs.main import dbFilename
 from Controllers.Log.LogController import LogController
 
 

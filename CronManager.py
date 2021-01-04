@@ -1,10 +1,8 @@
 import Configs.crontab as config_provider
+from Controllers.Log.LogController import LogController
 from Controllers.Crontab.CrontabController import CrontabController
 
-from Controllers.Log.LogController import LogController
 
-
-# todo: include running of this manager to the final startup script
 class CronManager:
 
     @staticmethod

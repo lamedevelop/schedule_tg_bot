@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
 
-from Configs.tgConfig import *
+from Configs.main import *
 
 from DbManager import DbManager
 from ParseManager import ParseManager

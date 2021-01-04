@@ -1,6 +1,7 @@
-from Configs.tgConfig import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
-from Controllers.Date.DateTimeController import DateTimeController
+from Configs.main import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
+
 from Controllers.Log.DumpController import DumpController
+from Controllers.Date.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
 
