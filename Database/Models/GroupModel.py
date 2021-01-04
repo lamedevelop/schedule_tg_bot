@@ -1,5 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
 
 
 class GroupModel(AbstractModel):

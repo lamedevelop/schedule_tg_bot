@@ -2,7 +2,7 @@ from Database.Migrations.Migration import Migration
 from Database.Models.UniversityModel import UniversityModel
 
 from Controllers.Log.LogController import LogController
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
 class UniversitiesTableMigration(Migration):

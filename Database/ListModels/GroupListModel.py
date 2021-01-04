@@ -1,6 +1,6 @@
 from Database.Models.GroupModel import GroupModel
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
+from Controllers.SqlLiteDbController import SqlLiteDbController
 from Database.ListModels.AbstractListModel import AbstractListModel
 
 

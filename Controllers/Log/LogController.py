@@ -1,6 +1,6 @@
 from Configs.main import LOGS_FOLDER
-from Controllers.File.FileController import FileController
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.FileController import FileController
+from Controllers.DateTimeController import DateTimeController
 
 
 class LogController:

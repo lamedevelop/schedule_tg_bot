@@ -2,7 +2,7 @@ from Database.Migrations.Migration import Migration
 from Database.Models.TelegramUserModel import TelegramUserModel
 
 from Controllers.Log.LogController import LogController
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
 class TelegramUsersTableMigration(Migration):

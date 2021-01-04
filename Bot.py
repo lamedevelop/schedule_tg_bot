@@ -8,8 +8,8 @@ from DbManager import DbManager
 from ParseManager import ParseManager
 from Controllers.Log.LogController import LogController
 from MonitoringAlertManager import MonitoringAlertManager
-from Controllers.User.UserController import UserController
-from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.UserController import UserController
+from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
 bot = Bot(token=BOT_TOKEN)

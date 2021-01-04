@@ -1,5 +1,5 @@
-from Database.ListModels.AbstractListModel import AbstractListModel
 from Database.Models.TelegramUserModel import TelegramUserModel
+from Database.ListModels.AbstractListModel import AbstractListModel
 
 
 class TelegramUserListModel(AbstractListModel):

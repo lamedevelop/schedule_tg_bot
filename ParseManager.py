@@ -3,7 +3,7 @@ import ast
 from datetime import datetime
 
 from DbManager import DbManager
-from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Parse.MpeiParseController import MpeiAbstractParseController
 from Controllers.Parse.BmstuParseController import BmstuAbstractParseController
 

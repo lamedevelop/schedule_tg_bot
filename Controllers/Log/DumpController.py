@@ -1,6 +1,6 @@
 import os
 
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
 from Configs.main import DB_FILENAME, MONITORING_BOT_TOKEN, \
                             NOTIFICATION_CHAT_ID, LOGS_FOLDER
 

@@ -1,4 +1,4 @@
-from Controllers.Db.SqlLiteDbController import SqlLiteDbController
+from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
 class AbstractListModel:
