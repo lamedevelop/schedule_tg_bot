@@ -1,6 +1,6 @@
 from DbManager import DbManager
-from MonitoringAlertManager import MonitoringAlertManager
 from Controllers.Log.LogController import LogController
+from MonitoringAlertManager import MonitoringAlertManager
 
 
 class UserController:
