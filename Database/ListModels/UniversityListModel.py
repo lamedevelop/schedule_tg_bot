@@ -1,5 +1,5 @@
-from Database.ListModels.AbstractListModel import AbstractListModel
 from Database.Models.UniversityModel import UniversityModel
+from Database.ListModels.AbstractListModel import AbstractListModel
 
 
 class UniversityListModel(AbstractListModel):

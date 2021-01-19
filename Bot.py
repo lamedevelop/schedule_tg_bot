@@ -6,8 +6,8 @@ from DbManager import DbManager
 from ParseManager import ParseManager
 from AlertManager import AlertManager
 from Controllers.Log.LogController import LogController
-from Controllers.User.UserController import UserController
-from Controllers.View.TelegramViewController import TelegramViewController
+from Controllers.UserController import UserController
+from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
 from Controllers.CliController import CliController

@@ -1,6 +1,6 @@
 import os
 
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
 from Controllers.Notification.NotificationController import NotificationController
 
 

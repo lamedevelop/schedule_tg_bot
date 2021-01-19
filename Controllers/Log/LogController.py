@@ -1,6 +1,6 @@
 from Controllers.CliController import CliController
-from Controllers.File.FileController import FileController
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.FileController import FileController
+from Controllers.DateTimeController import DateTimeController
 
 
 class LogController:

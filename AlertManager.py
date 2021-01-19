@@ -1,6 +1,6 @@
 from Controllers.CliController import CliController
 from Controllers.Log.DumpController import DumpController
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
 
