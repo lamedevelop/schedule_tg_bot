@@ -1,7 +1,7 @@
 import os
 
 from Controllers.CliController import CliController
-from Controllers.Date.DateTimeController import DateTimeController
+from Controllers.DateTimeController import DateTimeController
 
 
 class DumpController:
