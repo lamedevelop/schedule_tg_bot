@@ -7,8 +7,6 @@ from Controllers.SqlLiteDbController import SqlLiteDbController
 
 class TelegramUsersTableMigration(Migration):
 
-    logger = LogController()
-
     def getDescription(self):
         print("Create UsersTable migration")
 
@@ -30,9 +28,9 @@ class TelegramUsersTableMigration(Migration):
                 CONSTRAINT AK_chat_id UNIQUE(chat_id));'''
 
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("TelegramUsersTableMigration up")
+        LogController().info("TelegramUsersTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + TelegramUserModel.table_name + ';'
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("TelegramUsersTableMigration down")
+        LogController().info("TelegramUsersTableMigration down")

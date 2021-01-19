@@ -13,8 +13,8 @@ class DumpController:
 
     api_url = 'https://api.telegram.org/bot%s/sendDocument?chat_id=%s'
 
-    def __init__(self, config=None):
-        self.config = config if config else CliController().getMainConfig()
+    def __init__(self):
+        self.config = CliController().getConfig()
 
     def generateDump(self):
         command = self.archive_command_pattern % (

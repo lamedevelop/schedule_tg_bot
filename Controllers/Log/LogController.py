@@ -4,13 +4,12 @@ from Controllers.DateTimeController import DateTimeController
 
 
 class LogController:
-    log_name_pattern = 'logfile_%s.log'
-    config = None
-    toFile = True
 
-    def __init__(self, config=None, to_file=True):
-        self.config = config if config else CliController().getMainConfig()
+    log_name_pattern = 'logfile_%s.log'
+
+    def __init__(self, to_file=True):
         self.toFile = to_file
+        self.config = CliController().getConfig()
 
     def info(self, event: str):
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event

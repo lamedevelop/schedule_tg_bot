@@ -7,7 +7,8 @@ from Controllers.Log.LogController import LogController
 
 class AbstractParseController(object):
 
-    logger = LogController()
+    def __init__(self):
+        self.logger = LogController()
 
     def writeToJsonFile(self, file_name: str, group_name: str):
         self.logger.info(f"Parser {self.__class__.__name__} started for {group_name}")

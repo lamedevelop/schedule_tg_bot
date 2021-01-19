@@ -6,14 +6,13 @@ from Controllers.Log.LogController import LogController
 
 
 class SqlLiteDbController:
+
     conn = ""
     cursor = ""
 
-    config = None
-
-    def __init__(self, config=None):
-        self.config = config if config else CliController().getMainConfig()
-        self.logger = LogController(config)
+    def __init__(self):
+        self.config = CliController().getConfig()
+        self.logger = LogController()
 
     def openConnection(self):
         self.conn = sqlite3.connect(self.config.DB_FILENAME)

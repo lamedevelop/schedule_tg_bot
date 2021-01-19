@@ -10,17 +10,17 @@ from Controllers.Parse.BmstuParseController import BmstuAbstractParseController
 
 class ParseManager(object):
 
-    parse_controllers = {
-        MpeiAbstractParseController.university_name: MpeiAbstractParseController(),
-        BmstuAbstractParseController.university_name: BmstuAbstractParseController(),
-    }
+    def __init__(self):
+        self.parse_controllers = {
+            MpeiAbstractParseController.university_name: MpeiAbstractParseController(),
+            BmstuAbstractParseController.university_name: BmstuAbstractParseController(),
+        }
 
-    @staticmethod
-    def downloadSchedule(university_id: int, group_name: str) -> str:
+    def downloadSchedule(self, university_id: int, group_name: str) -> str:
         university_name = DbManager.getUniversity(university_id)['university_name']
-        return ParseManager.parse_controllers[university_name] \
-                           .makeJson(group_name.upper()) \
-                           .replace('\'', '\"')
+        return self.parse_controllers[university_name] \
+            .makeJson(group_name.upper()) \
+            .replace('\'', '\"')
 
     @staticmethod
     def filterGroup(message) -> str:

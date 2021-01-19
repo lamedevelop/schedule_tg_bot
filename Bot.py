@@ -5,28 +5,27 @@ from aiogram.dispatcher import Dispatcher
 from DbManager import DbManager
 from ParseManager import ParseManager
 from AlertManager import AlertManager
-from Controllers.Log.LogController import LogController
+from Controllers.CliController import CliController
 from Controllers.UserController import UserController
+from Controllers.Log.LogController import LogController
 from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
-from Controllers.CliController import CliController
-
 
 configImporter = CliController()
+configImporter.setConfigName(configImporter.getConfigName())
 config = configImporter.getConfig()
 
 bot = Bot(token=config.BOT_TOKEN)
 dp = Dispatcher(bot)
 
+parser = ParseManager()
 dbManager = DbManager()
+alertManager = AlertManager()
 
-viewController = TelegramViewController()
+logger = LogController()
 userController = UserController()
-
-logger = LogController(config)
-alertManager = AlertManager(config)
-
+viewController = TelegramViewController()
 messageGenerator = TranslationController()
 
 
@@ -138,7 +137,7 @@ async def main(message):
 
     elif CURR_STATUS == userController.UNIVERSITY_CHOSEN:
         universityId = userController.getUserUniversityId(message.from_user.id)
-        userGroupName = ParseManager.filterGroup(message.text)
+        userGroupName = parser.filterGroup(message.text)
         group = dbManager.getGroup({
             'group_name': userGroupName,
             'university_id': universityId
@@ -160,7 +159,7 @@ async def main(message):
             )
 
         else:
-            jsonSchedule = ParseManager.downloadSchedule(universityId, userGroupName)
+            jsonSchedule = parser.downloadSchedule(universityId, userGroupName)
             if len(jsonSchedule) > 2:
                 groupInfo = {
                     "group_name": userGroupName,
@@ -201,7 +200,7 @@ async def main(message):
 
             await send_message_custom(
                 message,
-                ParseManager.getDaySchedule(userChoice, groupJsonText),
+                parser.getDaySchedule(userChoice, groupJsonText),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 

@@ -1,15 +1,12 @@
 import re
 from datetime import datetime, timedelta
 
-from Controllers.Log.LogController import LogController
 from Controllers.Parse.AbstractParseController import AbstractParseController
 
 
 class MpeiAbstractParseController(AbstractParseController):
 
     university_name = 'МЭИ'
-
-    logger = LogController()
 
     days = {
         'Пн': 'Понедельник',

@@ -17,10 +17,8 @@ class AlertManager:
         DISASTER_LEVEL: "DISASTER"
     }
 
-    def __init__(self, config=None):
-        if not config:
-            config = CliController().getMainConfig()
-
+    def __init__(self):
+        config = CliController().getConfig()
         self.notifiers = [
             # MailNotificationController(),
             TelegramNotificationController(

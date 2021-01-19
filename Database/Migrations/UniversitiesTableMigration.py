@@ -7,8 +7,6 @@ from Controllers.SqlLiteDbController import SqlLiteDbController
 
 class UniversitiesTableMigration(Migration):
 
-    logger = LogController()
-
     def getDescription(self):
         print("Create UniversitiesTable migration")
 
@@ -18,9 +16,9 @@ class UniversitiesTableMigration(Migration):
                 university_name TEXT NOT NULL);'''
 
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("UniversitiesTableMigration up")
+        LogController().info("UniversitiesTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + UniversityModel.table_name + ';'
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("UniversitiesTableMigration down")
+        LogController().info("UniversitiesTableMigration down")
