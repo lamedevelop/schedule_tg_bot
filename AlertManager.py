@@ -1,12 +1,11 @@
-from Configs.main import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
-
+from Controllers.CliController import CliController
 from Controllers.Log.DumpController import DumpController
 from Controllers.Date.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
 
 
-class MonitoringAlertManager:
+class AlertManager:
 
     INFO_LEVEL = 1
     WARNING_LEVEL = 2
@@ -18,10 +17,18 @@ class MonitoringAlertManager:
         DISASTER_LEVEL: "DISASTER"
     }
 
-    def __init__(self):
+    def __init__(self, config=None):
+
+        # todo: Replace with one line with using triple operator
+        if not config:
+            config = CliController().getMainConfig()
+
         self.notifiers = [
             # MailNotificationController(),
-            TelegramNotificationController(MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID),
+            TelegramNotificationController(
+                config.MONITORING_BOT_TOKEN,
+                config.NOTIFICATION_CHAT_ID
+            ),
         ]
 
     def notify(self, message, severity=None):

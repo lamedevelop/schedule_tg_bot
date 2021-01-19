@@ -2,17 +2,21 @@ from aiogram import Bot
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
 
-from Configs.main import *
-
 from DbManager import DbManager
 from ParseManager import ParseManager
+from AlertManager import AlertManager
 from Controllers.Log.LogController import LogController
-from MonitoringAlertManager import MonitoringAlertManager
 from Controllers.User.UserController import UserController
 from Controllers.View.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
-bot = Bot(token=BOT_TOKEN)
+from Controllers.CliController import CliController
+
+
+configImporter = CliController()
+config = configImporter.getConfig()
+
+bot = Bot(token=config.BOT_TOKEN)
 dp = Dispatcher(bot)
 
 dbManager = DbManager()
@@ -20,8 +24,8 @@ dbManager = DbManager()
 viewController = TelegramViewController()
 userController = UserController()
 
-logger = LogController()
-notificator = MonitoringAlertManager()
+logger = LogController(config)
+alertManager = AlertManager(config)
 
 messageGenerator = TranslationController()
 
@@ -45,7 +49,7 @@ async def chooseUniversity(message):
             message.from_user.first_name,
             message.from_user.username
         )
-        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
+        alertManager.notify(log_msg, AlertManager.INFO_LEVEL)
         logger.info(log_msg)
     else:
         # probably reinstalled
@@ -60,7 +64,7 @@ async def chooseUniversity(message):
         )
 
         log_msg = "User {} restarted the bot".format(userInfo.get("username"))
-        notificator.notify(log_msg, MonitoringAlertManager.INFO_LEVEL)
+        alertManager.notify(log_msg, AlertManager.INFO_LEVEL)
         logger.info(log_msg)
 
     await send_message_custom(
@@ -224,22 +228,22 @@ async def send_message_custom(
             )
 
             error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
-            notificator.notify(error_message, notificator.WARNING_LEVEL)
+            alertManager.notify(error_message, alertManager.WARNING_LEVEL)
             logger.alert(error_message)
         else:
             error_message = 'Send message error with user {}: {}'.format(message.from_user.id, e)
-            notificator.notify(error_message, notificator.DISASTER_LEVEL)
+            alertManager.notify(error_message, alertManager.DISASTER_LEVEL)
             logger.alert(error_message)
 
 
 try:
-    notificator.notify("Polling started", notificator.INFO_LEVEL)
+    alertManager.notify("Polling started", alertManager.INFO_LEVEL)
     logger.info("Polling started")
 
     executor.start_polling(dp)
 
-    notificator.notify("Polling stopped manually", notificator.WARNING_LEVEL)
+    alertManager.notify("Polling stopped manually", alertManager.WARNING_LEVEL)
     logger.info("Polling stopped manually")
 except Exception as e:
-    notificator.notify('Error while polling: {}'.format(e), notificator.DISASTER_LEVEL)
+    alertManager.notify('Error while polling: {}'.format(e), alertManager.DISASTER_LEVEL)
     logger.alert('Error while polling: {}'.format(e))

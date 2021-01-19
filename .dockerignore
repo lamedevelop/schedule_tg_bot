@@ -9,3 +9,6 @@ Dockerfile*
 
 *.exe
 .idea/
+
+Configs/og*
+Configs/ab*

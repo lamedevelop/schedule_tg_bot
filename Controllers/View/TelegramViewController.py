@@ -4,7 +4,7 @@ from aiogram.types import InlineKeyboardButton, \
     InlineKeyboardMarkup
 
 from DbManager import DbManager
-from MonitoringAlertManager import MonitoringAlertManager
+from AlertManager import AlertManager
 from Controllers.Log.LogController import LogController
 from Controllers.Date.DateTimeController import DateTimeController
 from Controllers.Translation.TranslationController import TranslationController
@@ -25,9 +25,9 @@ class TelegramViewController:
 
         if not universities:
             LogController().alert("getUniversityKeyboardMarkup failed: universities empty")
-            MonitoringAlertManager().notify(
+            AlertManager().notify(
                 "getUniversityKeyboardMarkup failed: universities empty",
-                MonitoringAlertManager.WARNING_LEVEL
+                AlertManager.WARNING_LEVEL
             )
             universities = [['Default']]
 

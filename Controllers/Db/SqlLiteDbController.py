@@ -1,19 +1,26 @@
 import os
 import sqlite3
 
-from Configs.main import DB_FILENAME
+from Controllers.CliController import CliController
 from Controllers.Log.LogController import LogController
 
 
 class SqlLiteDbController:
-
     conn = ""
     cursor = ""
 
-    logger = LogController()
+    config = None
+
+    def __init__(self, config=None):
+        # todo: Replace with one line with using triple operator
+        if not config:
+            config = CliController().getMainConfig()
+
+        self.config = config
+        self.logger = LogController(config)
 
     def openConnection(self):
-        self.conn = sqlite3.connect(DB_FILENAME)
+        self.conn = sqlite3.connect(self.config.DB_FILENAME)
         self.cursor = self.conn.cursor()
 
     def executeQuery(self, query: str):
@@ -61,7 +68,7 @@ class SqlLiteDbController:
 
     def dropDb(self):
         try:
-            os.remove(DB_FILENAME)
+            os.remove(self.config.DB_FILENAME)
             self.logger.info('DB was deleted')
         except Exception as e:
             self.logger.alert('Error while deleting db: {}'.format(e))

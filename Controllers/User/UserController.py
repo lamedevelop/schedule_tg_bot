@@ -1,5 +1,5 @@
 from DbManager import DbManager
-from MonitoringAlertManager import MonitoringAlertManager
+from AlertManager import AlertManager
 from Controllers.Log.LogController import LogController
 
 
@@ -18,7 +18,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getCurrStatus failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
+            AlertManager().notify(alert, AlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
         if userInfo['group_id'] != '' and userInfo['university_id'] != '':
             return self.GROUP_CHOSEN
@@ -33,7 +33,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserUniversityId failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
+            AlertManager().notify(alert, AlertManager.WARNING_LEVEL)
             return self.DEFAULT_UNIVERSITY_ID
 
         return userInfo['university_id']
@@ -44,7 +44,7 @@ class UserController:
         if not userInfo:
             alert = f'UserController.getUserGroupId failed: user {user_id} info empty'
             LogController().alert(alert)
-            MonitoringAlertManager().notify(alert, MonitoringAlertManager.WARNING_LEVEL)
+            AlertManager().notify(alert, AlertManager.WARNING_LEVEL)
             return self.DEFAULT_GROUP_ID
 
         return userInfo['group_id']

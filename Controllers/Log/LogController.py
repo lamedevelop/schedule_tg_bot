@@ -1,13 +1,19 @@
-from Configs.main import LOGS_FOLDER
+from Controllers.CliController import CliController
 from Controllers.File.FileController import FileController
 from Controllers.Date.DateTimeController import DateTimeController
 
 
 class LogController:
     log_name_pattern = 'logfile_%s.log'
+    config = None
     toFile = True
 
-    def __init__(self, to_file=True):
+    def __init__(self, config=None, to_file=True):
+        # todo: Replace with one line with using triple operator
+        if not config:
+            config = CliController().getMainConfig()
+
+        self.config = config
         self.toFile = to_file
 
     def info(self, event: str):
@@ -24,4 +30,4 @@ class LogController:
             FileController.writeToFile(self.getLogFilename(), message)
 
     def getLogFilename(self):
-        return LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
+        return self.config.LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
