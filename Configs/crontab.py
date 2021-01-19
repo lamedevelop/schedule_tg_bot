@@ -8,7 +8,7 @@ crontab = {
         },
         {
             'name': "dump_logs_and_db",
-            'command': "15 1 * * 6 . /etc/profile; python3 /usr/src/app/RunManager.py --manager=MonitoringAlert --action=dump",
+            'command': "15 1 * * 6 . /etc/profile; python3 /usr/src/app/RunManager.py --manager=Alert --action=dump",
             'comment': "dump logs and db to telegram chat",
             'is_active': True,
         },

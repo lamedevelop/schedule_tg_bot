@@ -18,8 +18,6 @@ class AlertManager:
     }
 
     def __init__(self, config=None):
-
-        # todo: Replace with one line with using triple operator
         if not config:
             config = CliController().getMainConfig()
 

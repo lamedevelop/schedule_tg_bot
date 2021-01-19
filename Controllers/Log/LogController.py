@@ -9,11 +9,7 @@ class LogController:
     toFile = True
 
     def __init__(self, config=None, to_file=True):
-        # todo: Replace with one line with using triple operator
-        if not config:
-            config = CliController().getMainConfig()
-
-        self.config = config
+        self.config = config if config else CliController().getMainConfig()
         self.toFile = to_file
 
     def info(self, event: str):

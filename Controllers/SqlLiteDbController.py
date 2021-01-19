@@ -12,11 +12,7 @@ class SqlLiteDbController:
     config = None
 
     def __init__(self, config=None):
-        # todo: Replace with one line with using triple operator
-        if not config:
-            config = CliController().getMainConfig()
-
-        self.config = config
+        self.config = config if config else CliController().getMainConfig()
         self.logger = LogController(config)
 
     def openConnection(self):

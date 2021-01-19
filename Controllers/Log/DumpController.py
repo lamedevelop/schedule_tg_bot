@@ -14,11 +14,7 @@ class DumpController:
     api_url = 'https://api.telegram.org/bot%s/sendDocument?chat_id=%s'
 
     def __init__(self, config=None):
-        # todo: Replace with one line with using triple operator
-        if not config:
-            config = CliController().getMainConfig()
-
-        self.config = config
+        self.config = config if config else CliController().getMainConfig()
 
     def generateDump(self):
         command = self.archive_command_pattern % (
