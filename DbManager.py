@@ -1,5 +1,3 @@
-from Controllers.Log.LogController import LogController
-
 from Database.Models.GroupModel import GroupModel
 from Database.Models.UniversityModel import UniversityModel
 from Database.Models.UserMessageModel import UserMessageModel
@@ -25,8 +23,6 @@ class DbManager:
         "telegramUsersTableMigration": TelegramUsersTableMigration(),
         "userMessagesTableMigration": UserMessagesTableMigration()
     }
-
-    logger = LogController()
 
     @staticmethod
     def run():
@@ -69,7 +65,7 @@ class DbManager:
         groups = GroupListModel().getListByDate()
 
         for group in groups:
-            new_schedule = ParseManager.downloadSchedule(
+            new_schedule = ParseManager().downloadSchedule(
                 group.fields['university_id'],
                 group.fields['group_name']
             )

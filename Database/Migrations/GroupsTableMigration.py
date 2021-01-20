@@ -6,8 +6,6 @@ from Controllers.SqlLiteDbController import SqlLiteDbController
 
 class GroupsTableMigration(Migration):
 
-    logger = LogController()
-
     def getDescription(self):
         print("Create GroupsTable migration")
 
@@ -21,9 +19,9 @@ class GroupsTableMigration(Migration):
                 update_date INTEGER);'''
 
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("GroupsTableMigration up")
+        LogController().info("GroupsTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + GroupModel.table_name + ';'
         SqlLiteDbController().submitQuery(query)
-        self.logger.info("GroupsTableMigration down")
+        LogController().info("GroupsTableMigration down")

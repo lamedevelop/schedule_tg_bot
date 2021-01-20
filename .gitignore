@@ -9,3 +9,5 @@ __pycache__/
 .idea/
 Logs/*
 Logs/
+Configs/og*
+Configs/ab*

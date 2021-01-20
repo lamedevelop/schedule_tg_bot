@@ -1,12 +1,11 @@
-from Configs.main import MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID
-
+from Controllers.CliController import CliController
 from Controllers.Log.DumpController import DumpController
 from Controllers.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
 from Controllers.Notification.TelegramNotificationController import TelegramNotificationController
 
 
-class MonitoringAlertManager:
+class AlertManager:
 
     INFO_LEVEL = 1
     WARNING_LEVEL = 2
@@ -19,9 +18,13 @@ class MonitoringAlertManager:
     }
 
     def __init__(self):
+        config = CliController().getConfig()
         self.notifiers = [
             # MailNotificationController(),
-            TelegramNotificationController(MONITORING_BOT_TOKEN, NOTIFICATION_CHAT_ID),
+            TelegramNotificationController(
+                config.MONITORING_BOT_TOKEN,
+                config.NOTIFICATION_CHAT_ID
+            ),
         ]
 
     def notify(self, message, severity=None):

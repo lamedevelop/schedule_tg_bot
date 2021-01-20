@@ -1,15 +1,12 @@
 import re
 from bs4 import BeautifulSoup
 
-from Controllers.Log.LogController import LogController
 from Controllers.Parse.AbstractParseController import AbstractParseController
 
 
 class BmstuAbstractParseController(AbstractParseController):
 
     university_name = 'МГТУ'
-
-    logger = LogController()
 
     SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
 

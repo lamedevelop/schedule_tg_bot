@@ -1,14 +1,15 @@
-from Configs.main import LOGS_FOLDER
+from Controllers.CliController import CliController
 from Controllers.FileController import FileController
 from Controllers.DateTimeController import DateTimeController
 
 
 class LogController:
+
     log_name_pattern = 'logfile_%s.log'
-    toFile = True
 
     def __init__(self, to_file=True):
         self.toFile = to_file
+        self.config = CliController().getConfig()
 
     def info(self, event: str):
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event
@@ -24,4 +25,4 @@ class LogController:
             FileController.writeToFile(self.getLogFilename(), message)
 
     def getLogFilename(self):
-        return LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
+        return self.config.LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
