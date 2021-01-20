@@ -1,4 +1,4 @@
-import Configs.crontab as config_provider
+from Configs.crontab import crontab as config
 from Controllers.Log.LogController import LogController
 from Controllers.CrontabController import CrontabController
 
@@ -8,11 +8,11 @@ class CronManager:
     @staticmethod
     def install():
         crontab = ""
-        config = config_provider.getCrontab()
 
         LogController().info("Cron installed")
 
-        for task in config['tasks']:
+        for task_name in config['tasks']:
+            task = config['tasks'][task_name]
             if task['is_active']:
                 crontab += f"# {task['comment']}\n{task['command']}\n"
 

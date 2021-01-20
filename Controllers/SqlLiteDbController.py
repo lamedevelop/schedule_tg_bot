@@ -67,3 +67,13 @@ class SqlLiteDbController:
             self.logger.info('DB was deleted')
         except Exception as e:
             self.logger.alert('Error while deleting db: {}'.format(e))
+
+    def makeDump(self):
+        try:
+            self.openConnection()
+            with open(self.config.DUMP_FILENAME, 'w') as file:
+                for line in self.conn.iterdump():
+                    file.write('%s\n' % line)
+            self.closeConnection()
+        except Exception as e:
+            self.logger.alert('Error while dumping db: {}'.format(e))

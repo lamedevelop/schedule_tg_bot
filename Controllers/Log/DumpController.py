@@ -2,6 +2,7 @@ import os
 
 from Controllers.CliController import CliController
 from Controllers.DateTimeController import DateTimeController
+from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
 class DumpController:
@@ -17,12 +18,14 @@ class DumpController:
         self.config = CliController().getConfig()
 
     def generateDump(self):
+        SqlLiteDbController().makeDump()
         command = self.archive_command_pattern % (
             self.getDumpFilename(),
             self.getLogsPath(),
-            self.config.DB_FILENAME
+            self.config.DUMP_FILENAME
         )
         os.system(command)
+        os.remove(self.config.DUMP_FILENAME)
 
     def sendDump(self):
         url = self.api_url % (

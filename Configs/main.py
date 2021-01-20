@@ -14,3 +14,4 @@ PROJECT_PATH = '/usr/src/app/'
 # Logging
 # Main logging folder
 LOGS_FOLDER = '/usr/src/app/Logs/'
+DUMP_FILENAME = '/usr/src/app/Logs/dump.sql'
