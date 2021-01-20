@@ -56,7 +56,7 @@ async def chooseUniversity(message):
         dbManager.updateTgUser(
             message.from_user.id,
             {
-                "is_alive": "1",
+                "is_alive": True,
                 "university_id": '',
                 "group_id": '',
             }

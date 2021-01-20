@@ -10,8 +10,6 @@ class TelegramUsersTableMigration(Migration):
     def getDescription(self):
         print("Create UsersTable migration")
 
-    # If you will change amount of fields here
-    # do not forget to update new indices at Controllers/UserController
     def up(self):
         query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,10 +17,10 @@ class TelegramUsersTableMigration(Migration):
                 first_name TEXT,
                 last_name TEXT,
                 username TEXT,
-                language_code TEXT,
+                language_code TEXT DEFAULT 'en',
                 is_bot BOOLEAN,
                 is_alive BOOLEAN,
-                registration_date DATETIME default current_timestamp,
+                registration_date INTEGER,
                 university_id INTEGER,
                 group_id INTEGER,
                 CONSTRAINT AK_chat_id UNIQUE(chat_id));'''

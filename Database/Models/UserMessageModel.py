@@ -1,4 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
+from Controllers.DateTimeController import DateTimeController
 
 
 class UserMessageModel(AbstractModel):
@@ -19,6 +20,7 @@ class UserMessageModel(AbstractModel):
         return super(UserMessageModel, self).get(primary_key)
 
     def set(self):
+        self.fields['creation_date'] = int(DateTimeController.getCurrTimestamp())
         return super(UserMessageModel, self).set()
 
     def update(self, new_fields):

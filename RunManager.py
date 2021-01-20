@@ -1,5 +1,8 @@
 import argparse
 import importlib
+import os
+
+from Controllers.CliController import CliController
 
 
 class RunManager:
@@ -28,6 +31,7 @@ class RunManager:
         parser.add_argument("--action")
         parser.add_argument("--param")
         parser.add_argument("--script")
+        parser.add_argument("--config")
 
         args = parser.parse_args()
 
@@ -39,6 +43,8 @@ class RunManager:
             self.paramValue = args.param
         if args.script:
             self.scriptName = args.script
+        if args.config:
+            os.environ[CliController.env_var_name] = args.config
 
     def getManager(self):
         foo = importlib.import_module(self.managerName)

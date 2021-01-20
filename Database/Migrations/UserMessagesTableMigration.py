@@ -16,7 +16,7 @@ class UserMessagesTableMigration(Migration):
                 chat_id INTEGER,
                 user_status INTEGER,
                 message TEXT,
-                creation_date DATETIME default current_timestamp);'''
+                creation_date INTEGER);'''
 
         SqlLiteDbController().submitQuery(query)
         LogController().info("UserMessagesTableMigration up")

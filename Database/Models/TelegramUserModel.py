@@ -1,4 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
+from Controllers.DateTimeController import DateTimeController
 from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
@@ -39,6 +40,7 @@ class TelegramUserModel(AbstractModel):
         return self
 
     def set(self):
+        self.fields['registration_date'] = int(DateTimeController.getCurrTimestamp())
         return super(TelegramUserModel, self).set()
 
     def update(self, new_fields):
