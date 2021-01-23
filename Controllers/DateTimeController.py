@@ -10,7 +10,7 @@ class DateTimeController:
 
     @staticmethod
     def getCurrDate():
-        return datetime.now().strftime("%d-%m-%Y")
+        return datetime.now().strftime("%Y-%m-%d")
 
     @staticmethod
     def getCurrDateAndTime():
@@ -26,4 +26,4 @@ class DateTimeController:
 
     @staticmethod
     def getPastTimestamp(days_count):
-        return (datetime.now() - timedelta(days=days_count)).timestamp()
+        return (datetime.now() - timedelta(seconds=days_count)).timestamp()
