@@ -1,10 +1,10 @@
 import os
 
 from Controllers.DateTimeController import DateTimeController
-from Controllers.Notification.NotificationController import NotificationController
+from Controllers.Notification.AbstractNotificationController import AbstractNotificationController
 
 
-class TelegramNotificationController(NotificationController):
+class TelegramNotificationController(AbstractNotificationController):
 
     max_connection_time = 1
 

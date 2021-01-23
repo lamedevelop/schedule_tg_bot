@@ -6,10 +6,10 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
 from Controllers.Log.LogController import LogController
-from Controllers.Notification.NotificationController import NotificationController
+from Controllers.Notification.AbstractNotificationController import AbstractNotificationController
 
 
-class MailNotificationController(NotificationController):
+class MailNotificationController(AbstractNotificationController):
 
     def __init__(self, config):
         self.sender = config.MAIL_SENDER

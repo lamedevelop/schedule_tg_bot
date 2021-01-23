@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 
 
-class NotificationController:
+class AbstractNotificationController:
     __metaclass__ = ABCMeta
 
     @abstractmethod
