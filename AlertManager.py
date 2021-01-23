@@ -17,17 +17,21 @@ class AlertManager:
         DISASTER_LEVEL: "DISASTER"
     }
 
+    mail_notifier = 0
+    telegram_notifier = 1
+
     def __init__(self):
         config = CliArgsController.getConfig()
-        self.notifiers = [
-            MailNotificationController(config),
-            TelegramNotificationController(config),
-        ]
+        self.notifiers = {
+            self.mail_notifier: MailNotificationController(config),
+            self.telegram_notifier: TelegramNotificationController(config),
+        }
 
     def notify(self, message, severity=None):
         message = self.getHeader(severity) + message
-        for notifier in self.notifiers:
-            notifier.sendMessage(message)
+        self.notifiers[self.telegram_notifier].sendMessage(message)
+        if severity >= self.WARNING_LEVEL:
+            self.notifiers[self.mail_notifier].sendMessage(message)
 
     def getHeader(self, severity):
         if severity and severity in self.problem_levels.keys():
@@ -38,8 +42,3 @@ class AlertManager:
     @staticmethod
     def dump():
         DumpController().dump()
-
-    @staticmethod
-    def mail_test():
-        mailer = MailNotificationController()
-        mailer.sendMessage("Hello!!!!")

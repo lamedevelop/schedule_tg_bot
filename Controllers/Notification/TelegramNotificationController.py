@@ -8,24 +8,26 @@ class TelegramNotificationController(NotificationController):
 
     max_connection_time = 1
 
-    log_filename = 'Logs/telegram_notification_%s.log'
+    log_name_pattern = 'telegram_notification_%s.log'
 
     def __init__(self, config):
-        self.token = config.MONITORING_BOT_TOKEN,
-        self.chat_id = config.NOTIFICATION_CHAT_ID
+        self.config = config
 
     def sendMessage(self, message):
         command = self.buildCommand(message)
-        filepath = self.log_filename % DateTimeController.getCurrDate()
+        filepath = self.getLogFilename()
         os.system(command + " >> " + filepath)
         os.system("echo" + " >> " + filepath)  # used to prevent json reply in cmd
 
+    def getLogFilename(self):
+        return self.config.LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()
+
     def buildUrl(self):
-        return f'https://api.telegram.org/bot{self.token}/sendMessage'
+        return f'https://api.telegram.org/bot{self.config.MONITORING_BOT_TOKEN}/sendMessage'
 
     def buildCommand(self, message):
         url = self.buildUrl()
         return f'curl -s -X POST {url} ' \
                f'--max-time {self.max_connection_time} ' \
-               f'-d chat_id={self.chat_id}  ' \
+               f'-d chat_id={self.config.NOTIFICATION_CHAT_ID}  ' \
                f'-d text=\"{message}\"'
