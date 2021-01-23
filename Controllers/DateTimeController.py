@@ -26,4 +26,4 @@ class DateTimeController:
 
     @staticmethod
     def getPastTimestamp(days_count):
-        return (datetime.now() - timedelta(seconds=days_count)).timestamp()
+        return (datetime.now() - timedelta(days=days_count)).timestamp()
