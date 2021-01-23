@@ -65,7 +65,7 @@ async def chooseUniversity(message):
             }
         )
 
-        log_msg = "User {} restarted the bot".format(userInfo.get("username"))
+        log_msg = "User {} restarted the bot".format(userInfo.get("chat_id"))
         alertManager.notify(log_msg, AlertManager.INFO_LEVEL)
         logger.info(log_msg)
 
