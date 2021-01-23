@@ -1,4 +1,4 @@
-from Controllers.CliController import CliController
+from Controllers.CliArgsController import CliArgsController
 from Controllers.Log.DumpController import DumpController
 from Controllers.DateTimeController import DateTimeController
 from Controllers.Notification.MailNotificationController import MailNotificationController
@@ -18,7 +18,7 @@ class AlertManager:
     }
 
     def __init__(self):
-        config = CliController().getConfig()
+        config = CliArgsController.getConfig()
         self.notifiers = [
             # MailNotificationController(),
             TelegramNotificationController(

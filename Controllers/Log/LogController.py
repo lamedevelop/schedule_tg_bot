@@ -1,5 +1,5 @@
-from Controllers.CliController import CliController
 from Controllers.FileController import FileController
+from Controllers.CliArgsController import CliArgsController
 from Controllers.DateTimeController import DateTimeController
 
 
@@ -9,7 +9,7 @@ class LogController:
 
     def __init__(self, to_file=True):
         self.toFile = to_file
-        self.config = CliController().getConfig()
+        self.config = CliArgsController.getConfig()
 
     def info(self, event: str):
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event

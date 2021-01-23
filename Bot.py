@@ -1,3 +1,5 @@
+import os
+
 from aiogram import Bot
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
@@ -5,15 +7,16 @@ from aiogram.dispatcher import Dispatcher
 from DbManager import DbManager
 from ParseManager import ParseManager
 from AlertManager import AlertManager
-from Controllers.CliController import CliController
+
 from Controllers.UserController import UserController
 from Controllers.Log.LogController import LogController
+from Controllers.CliArgsController import CliArgsController
 from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
 
-configImporter = CliController()
-configImporter.setConfigName(configImporter.getConfigName())
+configImporter = CliArgsController()
+configImporter.parseArgs()
 config = configImporter.getConfig()
 
 bot = Bot(token=config.BOT_TOKEN)
@@ -223,7 +226,7 @@ async def send_message_custom(
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(
                 message.from_user.id,
-                {"is_alive": "0"}
+                {"is_alive": False}
             )
 
             error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)

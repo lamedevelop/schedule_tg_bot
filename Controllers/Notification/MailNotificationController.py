@@ -1,4 +1,6 @@
-import smtplib, ssl
+import ssl
+import smtplib
+
 from Controllers.Notification.NotificationController import NotificationController
 
 
