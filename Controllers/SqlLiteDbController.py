@@ -1,8 +1,8 @@
 import os
 import sqlite3
 
-from Controllers.CliController import CliController
 from Controllers.Log.LogController import LogController
+from Controllers.CliArgsController import CliArgsController
 
 
 class SqlLiteDbController:
@@ -11,7 +11,7 @@ class SqlLiteDbController:
     cursor = ""
 
     def __init__(self):
-        self.config = CliController().getConfig()
+        self.config = CliArgsController().getConfig()
         self.logger = LogController()
 
     def openConnection(self):
