@@ -7,9 +7,10 @@ from aiogram.dispatcher import Dispatcher
 from DbManager import DbManager
 from ParseManager import ParseManager
 from AlertManager import AlertManager
-from Controllers.CliArgsController import CliArgsController
+
 from Controllers.UserController import UserController
 from Controllers.Log.LogController import LogController
+from Controllers.CliArgsController import CliArgsController
 from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 

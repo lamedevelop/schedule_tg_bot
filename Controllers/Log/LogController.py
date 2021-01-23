@@ -9,7 +9,7 @@ class LogController:
 
     def __init__(self, to_file=True):
         self.toFile = to_file
-        self.config = CliArgsController().getConfig()
+        self.config = CliArgsController.getConfig()
 
     def info(self, event: str):
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event

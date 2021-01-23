@@ -1,4 +1,3 @@
-import os
 import argparse
 import importlib
 
@@ -44,7 +43,10 @@ class RunManager:
         if args.script:
             self.scriptName = args.script
         if args.config:
-            os.environ[CliArgsController.config_env_var_name] = args.config
+            CliArgsController.setEnv(
+                CliArgsController.config_env_var_name,
+                args.config
+            )
 
     def getManager(self):
         foo = importlib.import_module(self.managerName)

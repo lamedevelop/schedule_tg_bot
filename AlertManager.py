@@ -18,7 +18,7 @@ class AlertManager:
     }
 
     def __init__(self):
-        config = CliArgsController().getConfig()
+        config = CliArgsController.getConfig()
         self.notifiers = [
             # MailNotificationController(),
             TelegramNotificationController(

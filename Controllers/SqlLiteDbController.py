@@ -11,7 +11,7 @@ class SqlLiteDbController:
     cursor = ""
 
     def __init__(self):
-        self.config = CliArgsController().getConfig()
+        self.config = CliArgsController.getConfig()
         self.logger = LogController()
 
     def openConnection(self):

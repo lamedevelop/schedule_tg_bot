@@ -5,8 +5,6 @@ import importlib
 
 class CliArgsController:
 
-    config = ''
-
     configs_folder = 'Configs'
 
     default_config_name = 'main'
@@ -26,10 +24,18 @@ class CliArgsController:
         args = parser.parse_args()
 
         if args.config:
-            os.environ[self.config_env_var_name] = args.config
+            CliArgsController.setEnv(
+                self.config_env_var_name,
+                args.config
+            )
 
-    def getConfig(self):
-        config_name = os.environ.get(self.config_env_var_name)
+    @staticmethod
+    def getConfig():
+        config_name = os.environ.get(CliArgsController.config_env_var_name)
         if not config_name:
-            config_name = self.default_config_name
-        return importlib.import_module(f'{self.configs_folder}.{config_name}')
+            config_name = CliArgsController.default_config_name
+        return importlib.import_module(f'{CliArgsController.configs_folder}.{config_name}')
+
+    @staticmethod
+    def setEnv(env, val):
+        os.environ[env] = val

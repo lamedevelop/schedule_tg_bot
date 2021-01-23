@@ -15,7 +15,7 @@ class DumpController:
     api_url = 'https://api.telegram.org/bot%s/sendDocument?chat_id=%s'
 
     def __init__(self):
-        self.config = CliArgsController().getConfig()
+        self.config = CliArgsController.getConfig()
 
     def generateDump(self):
         SqlLiteDbController().makeDump()
