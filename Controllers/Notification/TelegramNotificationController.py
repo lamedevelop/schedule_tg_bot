@@ -10,9 +10,9 @@ class TelegramNotificationController(NotificationController):
 
     log_filename = 'Logs/telegram_notification_%s.log'
 
-    def __init__(self, token, chat_id):
-        self.token = token
-        self.chat_id = chat_id
+    def __init__(self, config):
+        self.token = config.MONITORING_BOT_TOKEN,
+        self.chat_id = config.NOTIFICATION_CHAT_ID
 
     def sendMessage(self, message):
         command = self.buildCommand(message)

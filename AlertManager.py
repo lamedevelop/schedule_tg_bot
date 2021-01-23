@@ -20,11 +20,8 @@ class AlertManager:
     def __init__(self):
         config = CliArgsController.getConfig()
         self.notifiers = [
-            # MailNotificationController(),
-            TelegramNotificationController(
-                config.MONITORING_BOT_TOKEN,
-                config.NOTIFICATION_CHAT_ID
-            ),
+            MailNotificationController(config),
+            TelegramNotificationController(config),
         ]
 
     def notify(self, message, severity=None):
@@ -41,3 +38,8 @@ class AlertManager:
     @staticmethod
     def dump():
         DumpController().dump()
+
+    @staticmethod
+    def mail_test():
+        mailer = MailNotificationController()
+        mailer.sendMessage("Hello!!!!")

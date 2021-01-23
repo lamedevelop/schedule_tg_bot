@@ -6,19 +6,21 @@ from Controllers.Notification.NotificationController import NotificationControll
 
 class MailNotificationController(NotificationController):
 
-    def __init__(self):
-        self.port = 465
-        self.smtp_server = "smtp.mail.ru"
-        self.sender_email = "schedulebot@mail.ru"
-        self.receiver_email = "receiver@mail.ru"
-        self.password = "default_password"
+    def __init__(self, config):
+        self.sender_email = config.MAIL_SENDER
+        self.receiver_email = config.MAIL_RECEIVERS
+        self.password = config.MAIL_PASSWORD
+        self.port = config.MAIL_PORT
+        self.smtp_server = config.MAIL_SMTP_SERVER
 
     def sendMessage(self, message):
-        message = """\
-Subject: Hi there
-This message is sent from Python.
+        message = f"""Subject: Schedule error occurred
+This message was automatically sent from schedule_tg_bot server.
+Error message:
+{message}
 """
         context = ssl.create_default_context()
+
         with smtplib.SMTP_SSL(
                 self.smtp_server,
                 self.port,
