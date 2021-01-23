@@ -55,6 +55,8 @@ class MailNotificationController(NotificationController):
                 )
 
     def attachLog(self):
+        """Attach logfile to email."""
+
         logfile = LogController().getLogFilename()
 
         attach_file = open(logfile, 'rb')

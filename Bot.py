@@ -1,4 +1,17 @@
-import os
+"""
+Telegram schedule bot.
+
+Usage:
+    >> python3 Bot.py
+
+Available keys:
+    -c --config - configuration options for Bot
+
+Developers:
+    https://github.com/zoglam
+    https://github.com/oleggr
+"""
+
 
 from aiogram import Bot
 from aiogram.utils import executor

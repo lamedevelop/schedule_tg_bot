@@ -12,6 +12,11 @@ class CliArgsController:
     config_env_var_name = 'SCHEDULE_CONFIG_NAME'
 
     def parseArgs(self):
+        """Parse Bot cli args and set environment variables.
+
+        Currently available args is:
+            -c --config Application configuration file choose
+        """
         parser = argparse.ArgumentParser(description='Cli args bot handler')
 
         parser.add_argument(
@@ -31,6 +36,8 @@ class CliArgsController:
 
     @staticmethod
     def getConfig():
+        """Get application config by config environment variable value."""
+
         config_name = os.environ.get(CliArgsController.config_env_var_name)
         if not config_name:
             config_name = CliArgsController.default_config_name
@@ -38,4 +45,5 @@ class CliArgsController:
 
     @staticmethod
     def setEnv(env, val):
+        """Set environment variable."""
         os.environ[env] = val
