@@ -6,6 +6,8 @@ from Controllers.Notification.NotificationController import NotificationControll
 
 class TelegramNotificationController(NotificationController):
 
+    max_connection_time = 1
+
     log_filename = 'Logs/telegram_notification_%s.log'
 
     def __init__(self, token, chat_id):
@@ -23,4 +25,7 @@ class TelegramNotificationController(NotificationController):
 
     def buildCommand(self, message):
         url = self.buildUrl()
-        return f'curl -s -X POST {url}  -d chat_id={self.chat_id}  -d text=\"{message}\"'
+        return f'curl -s -X POST {url} ' \
+               f'--max-time {self.max_connection_time} ' \
+               f'-d chat_id={self.chat_id}  ' \
+               f'-d text=\"{message}\"'
