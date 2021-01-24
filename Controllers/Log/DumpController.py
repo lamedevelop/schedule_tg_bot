@@ -2,7 +2,7 @@ import os
 
 from Controllers.CliArgsController import CliArgsController
 from Controllers.DateTimeController import DateTimeController
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.PostgreDbController import PostgreDbController
 
 
 class DumpController:
@@ -18,7 +18,7 @@ class DumpController:
         self.config = CliArgsController.getConfig()
 
     def generateDump(self):
-        SqlLiteDbController().makeDump()
+        PostgreDbController().makeDump()
         command = self.archive_command_pattern % (
             self.getDumpFilename(),
             self.getLogsPath(),

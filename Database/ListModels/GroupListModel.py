@@ -1,6 +1,6 @@
 from Database.Models.GroupModel import GroupModel
 from Controllers.DateTimeController import DateTimeController
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.PostgreDbController import PostgreDbController
 from Database.ListModels.AbstractListModel import AbstractListModel
 
 
@@ -17,7 +17,7 @@ class GroupListModel(AbstractListModel):
 
         time_deadline = DateTimeController.getPastTimestamp(days_ago)
 
-        records = SqlLiteDbController().fetchQuery(
+        records = PostgreDbController().fetchQuery(
             f'''SELECT {", ".join(GroupModel.fields.keys())}
                 FROM groups
                 WHERE update_date<{time_deadline}'''

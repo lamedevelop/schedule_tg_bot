@@ -21,9 +21,9 @@ class UserController:
             LogController().alert(alert)
             AlertManager().notify(alert, AlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
-        if userInfo['group_id'] != '' and userInfo['university_id'] != '':
+        if userInfo['group_id'] != -1 and userInfo['university_id'] != -1:
             return self.GROUP_CHOSEN
-        elif userInfo['university_id'] != '':
+        elif userInfo['university_id'] != -1:
             return self.UNIVERSITY_CHOSEN
         else:
             return self.DEFAULT_STATUS

@@ -1,4 +1,4 @@
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.PostgreDbController import PostgreDbController
 
 
 class AbstractListModel:
@@ -6,7 +6,7 @@ class AbstractListModel:
     def getList(self, model_class):
         models = []
 
-        records = SqlLiteDbController().fetchQuery(
+        records = PostgreDbController().fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name}'''
         )
@@ -24,9 +24,9 @@ class AbstractListModel:
     def getListByParams(self, params, model_class):
         query_params = []
         for key in params:
-            query_params.append(key + '="' + str(params[key]) + '"')
+            query_params.append(key + "='" + str(params[key]) + "'")
 
-        fields = SqlLiteDbController().fetchQuery(
+        fields = PostgreDbController().fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name} 
                 WHERE ''' + ' AND '.join(query_params)

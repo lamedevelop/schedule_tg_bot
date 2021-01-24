@@ -1,4 +1,4 @@
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.PostgreDbController import PostgreDbController
 
 
 class AbstractModel:
@@ -28,10 +28,10 @@ class AbstractModel:
                '\n> '.join(self_fields)
 
     def get(self, primary_key):
-        fields = SqlLiteDbController().fetchQuery(
-            f'''SELECT {", ".join(self.fields.keys())} 
+        fields = PostgreDbController().fetchQuery(
+            f"""SELECT {", ".join(self.fields.keys())} 
                 FROM {self.table_name} 
-                WHERE {self.primary_key[0]}="{primary_key}"'''
+                WHERE {self.primary_key[0]}='{primary_key}'"""
         )
 
         if len(fields) > 0 and len(fields[0]) == len(self.fields):
@@ -50,7 +50,7 @@ class AbstractModel:
                 set_fields['names'].append(field_name)
                 set_fields['values'].append('\'' + str(self.fields[field_name]) + '\'')
 
-        record_id = SqlLiteDbController().submitQuery(
+        record_id = PostgreDbController().submitQuery(
             f'''INSERT INTO {self.table_name} ({', '.join(set_fields['names'])}) 
                 VALUES ({', '.join(set_fields['values'])})'''
         )
@@ -65,8 +65,8 @@ class AbstractModel:
                 self.fields[field_name] = new_fields[field_name]
                 update_fields.append(field_name + '=\'' + str(new_fields[field_name]) + '\'')
 
-        SqlLiteDbController().submitQuery(
-            f'''UPDATE {self.table_name}
+        PostgreDbController().submitQuery(
+            f"""UPDATE {self.table_name}
                 SET {', '.join(update_fields)}
-                WHERE {self.primary_key[0]}="{self.fields[self.primary_key[0]]}"'''
+                WHERE {self.primary_key[0]}='{self.fields[self.primary_key[0]]}'"""
         )

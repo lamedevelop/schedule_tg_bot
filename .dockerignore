@@ -1,14 +1,17 @@
 .git
 .vscode
 __pycache__
+venv
 
 .gitignore
 .dockerignore
 README.md
 Dockerfile*
+docker-compose*
 
 *.exe
 .idea/
 
+Logs/
 Configs/og*
 Configs/ab*
