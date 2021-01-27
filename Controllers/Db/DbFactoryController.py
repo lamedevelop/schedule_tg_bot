@@ -3,6 +3,7 @@ from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
 class DbFactoryController:
+
     @staticmethod
     def getDbController():
         """Controller generator

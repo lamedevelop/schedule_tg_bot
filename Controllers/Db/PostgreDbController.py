@@ -14,7 +14,8 @@ class PostgreDbController(AbstractDbController):
             'password': self.config.POSTGRES_PASSWORD,
             'host': self.config.POSTGRES_HOST,
             'port': self.config.POSTGRES_PORT,
-            'dbname': self.config.POSTGRES_DB
+            'dbname': self.config.POSTGRES_DB,
+            'connect_timeout': self.config.POSTGRES_CONN_TIMEOUT
         }
 
     def makeDump(self):

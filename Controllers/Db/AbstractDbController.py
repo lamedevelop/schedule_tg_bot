@@ -5,7 +5,6 @@ from Controllers.CliArgsController import CliArgsController
 from Controllers.Log.LogController import LogController
 
 
-
 class AbstractDbController:
 
     DB_MODULE: ModuleType
@@ -31,7 +30,7 @@ class AbstractDbController:
         self.cursor.close()
         self.conn.close()
 
-    def fetchResult(self) -> list:
+    def _fetchResult(self) -> list:
         rows = self.cursor.fetchall()
         return [row for row in rows]
 
@@ -49,7 +48,7 @@ class AbstractDbController:
         try:
             self._openConnection()
             self._executeQuery(query)
-            result = self.fetchResult()
+            result = self._fetchResult()
             self._closeConnection()
             return result
         except Exception as error:

@@ -18,7 +18,7 @@ class CliArgsController:
             "-c",
             "--config",
             default=self.default_config_name,
-            help="chose config Bot.py running with"
+            help="config for Bot.py"
         )
 
         args = parser.parse_args()

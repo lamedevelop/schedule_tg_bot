@@ -16,6 +16,7 @@ POSTGRES_USERNAME = 'postgres'
 POSTGRES_PASSWORD = 'secret'
 POSTGRES_HOST = 'postgresql_domain'
 POSTGRES_PORT = '5432'
+POSTGRES_CONN_TIMEOUT = 5
 
 # Home project directory
 PROJECT_PATH = '/usr/src/app/'
