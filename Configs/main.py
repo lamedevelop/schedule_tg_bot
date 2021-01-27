@@ -10,6 +10,13 @@ NOTIFICATION_CHAT_ID = -000000000
 # SqlLite db filename.
 DB_FILENAME = '/usr/src/app/sqlite.db'
 PROJECT_PATH = '/usr/src/app/'
+# Postgre db filename.
+POSTGRES_DB = 'database'
+POSTGRES_USERNAME = 'postgres'
+POSTGRES_PASSWORD = 'secret'
+POSTGRES_HOST = 'postgresql_domain'
+POSTGRES_PORT = '5432'
+
 
 # Logging
 # Main logging folder
