@@ -1,9 +1,6 @@
 from Database.Migrations.Migration import Migration
 from Database.Models.UniversityModel import UniversityModel
 
-from Controllers.Log.LogController import LogController
-from Controllers.Db.PostgreDbController import PostgreDbController
-
 
 class UniversitiesTableMigration(Migration):
 
@@ -15,10 +12,10 @@ class UniversitiesTableMigration(Migration):
                 university_id SERIAL PRIMARY KEY,
                 university_name TEXT NOT NULL);'''
 
-        PostgreDbController().submitQuery(query)
-        LogController().info("UniversitiesTableMigration up")
+        self.dbController.submitQuery(query)
+        self.logger.info("UniversitiesTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + UniversityModel.table_name + ';'
-        PostgreDbController().submitQuery(query)
-        LogController().info("UniversitiesTableMigration down")
+        self.dbController.submitQuery(query)
+        self.logger.info("UniversitiesTableMigration down")

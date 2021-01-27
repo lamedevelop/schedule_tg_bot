@@ -1,7 +1,7 @@
-from Controllers.Db.AbstractDbController import AbstractDbController
-
 import psycopg2
 import subprocess
+
+from Controllers.Db.AbstractDbController import AbstractDbController
 
 
 class PostgreDbController(AbstractDbController):

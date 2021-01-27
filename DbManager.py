@@ -15,8 +15,6 @@ from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMi
 
 class DbManager:
 
-    DEFAULT_GROUP_ID = 0
-
     migrations = {
         "groupsTableMigration": GroupsTableMigration(),
         "universitiesTableMigration": UniversitiesTableMigration(),

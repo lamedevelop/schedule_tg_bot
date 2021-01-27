@@ -1,5 +1,3 @@
-import os
-
 from aiogram import Bot
 from aiogram.utils import executor
 from aiogram.dispatcher import Dispatcher
@@ -42,8 +40,8 @@ async def chooseUniversity(message):
         'language_code': message.from_user.language_code,
         'is_bot': False,
         'is_alive': True,
-        'university_id': -1,
-        'group_id': -1,
+        'university_id': userController.DEFAULT_UNIVERSITY_ID,
+        'group_id': userController.DEFAULT_GROUP_ID,
     }
 
     if not dbManager.checkUserExist(userInfo['chat_id']):
@@ -62,9 +60,9 @@ async def chooseUniversity(message):
         dbManager.updateTgUser(
             message.from_user.id,
             {
-                "is_alive": True,
-                'university_id': -1,
-                'group_id': -1,
+                'is_alive': True,
+                'university_id': userController.DEFAULT_UNIVERSITY_ID,
+                'group_id': userController.DEFAULT_GROUP_ID,
             }
         )
 
@@ -86,7 +84,7 @@ async def chooseUniversity(message):
 async def sendHelp(message):
     dbManager.updateTgUser(
         message.from_user.id,
-        {"group_id": -1}
+        {'group_id': userController.DEFAULT_GROUP_ID}
     )
 
     await send_message_custom(

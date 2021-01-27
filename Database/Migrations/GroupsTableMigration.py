@@ -1,7 +1,5 @@
 from Database.Models.GroupModel import GroupModel
 from Database.Migrations.Migration import Migration
-from Controllers.Log.LogController import LogController
-from Controllers.Db.PostgreDbController import PostgreDbController
 
 
 class GroupsTableMigration(Migration):
@@ -18,10 +16,10 @@ class GroupsTableMigration(Migration):
                 schedule_url TEXT,
                 update_date INTEGER);'''
 
-        PostgreDbController().submitQuery(query)
-        LogController().info("GroupsTableMigration up")
+        self.dbController.submitQuery(query)
+        self.logger.info("GroupsTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + GroupModel.table_name + ';'
-        PostgreDbController().submitQuery(query)
-        LogController().info("GroupsTableMigration down")
+        self.dbController.submitQuery(query)
+        self.logger.info("GroupsTableMigration down")

@@ -1,9 +1,6 @@
 from Database.Migrations.Migration import Migration
 from Database.Models.TelegramUserModel import TelegramUserModel
 
-from Controllers.Log.LogController import LogController
-from Controllers.Db.PostgreDbController import PostgreDbController
-
 
 class TelegramUsersTableMigration(Migration):
 
@@ -25,10 +22,10 @@ class TelegramUsersTableMigration(Migration):
                 group_id INTEGER,
                 CONSTRAINT AK_chat_id UNIQUE(chat_id));'''
 
-        PostgreDbController().submitQuery(query)
-        LogController().info("TelegramUsersTableMigration up")
+        self.dbController.submitQuery(query)
+        self.logger.info("TelegramUsersTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + TelegramUserModel.table_name + ';'
-        PostgreDbController().submitQuery(query)
-        LogController().info("TelegramUsersTableMigration down")
+        self.dbController.submitQuery(query)
+        self.logger.info("TelegramUsersTableMigration down")

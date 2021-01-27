@@ -1,12 +1,15 @@
-from Controllers.Db.PostgreDbController import PostgreDbController
+from Controllers.Db.DbFactoryController import DbFactoryController
 
 
 class AbstractListModel:
 
+    def __init__(self):
+        self.dbController = DbFactoryController.getDbController()
+
     def getList(self, model_class):
         models = []
 
-        records = PostgreDbController().fetchQuery(
+        records = self.dbController.fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name}'''
         )
@@ -26,7 +29,7 @@ class AbstractListModel:
         for key in params:
             query_params.append(key + "='" + str(params[key]) + "'")
 
-        fields = PostgreDbController().fetchQuery(
+        fields = self.dbController.fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name} 
                 WHERE ''' + ' AND '.join(query_params)

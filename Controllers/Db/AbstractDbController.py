@@ -1,8 +1,9 @@
+from types import ModuleType
+from abc import abstractmethod
+
 from Controllers.CliArgsController import CliArgsController
 from Controllers.Log.LogController import LogController
 
-from types import ModuleType
-from typing import Any
 
 
 class AbstractDbController:
@@ -21,7 +22,7 @@ class AbstractDbController:
         self.conn = self.DB_MODULE.connect(**self.DB_PARAMS)
         self.cursor = self.conn.cursor()
 
-    def _executeQuery(self, query: str) -> Any:
+    def _executeQuery(self, query: str) -> int:
         self.cursor.execute(query)
         self.conn.commit()
         return self.cursor.lastrowid
@@ -34,13 +35,13 @@ class AbstractDbController:
         rows = self.cursor.fetchall()
         return [row for row in rows]
 
-    def submitQuery(self, query: str) -> Any:
+    def submitQuery(self, query: str) -> int:
         try:
             self._openConnection()
             record_id = self._executeQuery(query)
             self._closeConnection()
             return record_id
-        except self.DB_MODULE.Error as error:
+        except Exception as error:
             self.logger.alert(f'Error while connecting to database: {error}')
             print('Problem query: ', query)
 
@@ -51,10 +52,9 @@ class AbstractDbController:
             result = self.fetchResult()
             self._closeConnection()
             return result
-
-        except self.DB_MODULE.Error as error:
+        except Exception as error:
             self.logger.alert(f'Error while connecting to database: {error}')
             print('Problem query: ', query)
 
+    @abstractmethod
     def makeDump(self) -> None: ...
-    def dropDb(self) -> None: ...
