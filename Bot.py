@@ -47,6 +47,14 @@ messageGenerator = TranslationController()
 
 @dp.message_handler(commands=["start", "changeuniversity"])
 async def chooseUniversity(message):
+    """Start message.
+
+    Configure university. Drops university
+    if user already registered.
+
+    @param message Telegram message class.
+    """
+
     userInfo = {
         'chat_id': message.chat.id,
         'first_name': message.from_user.first_name,
@@ -68,7 +76,7 @@ async def chooseUniversity(message):
         logger.info(log_msg)
     else:
         # probably reinstalled
-        # todo: add handler in user activity tracking task SB-61
+        # @todo: add handler in user activity tracking task SB-61
         dbManager.updateTgUser(
             message.from_user.id,
             {
@@ -93,7 +101,13 @@ async def chooseUniversity(message):
 
 
 @dp.message_handler(commands=["changegroup"])
-async def sendHelp(message):
+async def chooseGroup(message):
+    """Configure group.
+
+    Drops group if user already registered.
+
+    @param message Telegram message class.
+    """
     dbManager.updateTgUser(
         message.from_user.id,
         {"group_id": ''}
@@ -111,6 +125,10 @@ async def sendHelp(message):
 
 @dp.message_handler(commands=["help"])
 async def sendHelp(message):
+    """Send help message.
+
+    @param message Telegram message class.
+    """
     await send_message_custom(
         message,
         messageGenerator.getMessage(
@@ -227,6 +245,13 @@ async def send_message_custom(
         reply_markup=None,
         parse_mode="markdown"
 ):
+    """Custom send message method.
+
+    @param message Telegram message class.
+    @param text Reply message text.
+    @param reply_markup Reply message markup.
+    @param parse_mode Reply message parse mode.
+    """
     try:
         await bot.send_message(
             message.chat.id,

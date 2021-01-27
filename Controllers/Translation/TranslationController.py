@@ -40,7 +40,7 @@ class TranslationController:
         }
     }
 
-    def getMessage(self, language, index):
+    def getMessage(self, language: str, index: int) -> str | list:
         """Get message to reply in correct language.
 
         @param language User language.

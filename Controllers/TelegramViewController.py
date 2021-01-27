@@ -1,5 +1,5 @@
 import json
-from aiogram.types import ReplyKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 from DbManager import DbManager
 from AlertManager import AlertManager
@@ -10,6 +10,7 @@ from Controllers.Translation.TranslationController import TranslationController
 
 
 class TelegramViewController:
+
     icons = {
         "snowman": u'\U000026C4',
         "watches": u'\U0001F551',
@@ -18,7 +19,7 @@ class TelegramViewController:
     }
 
     @staticmethod
-    def getUniversityKeyboardMarkup():
+    def getUniversityKeyboardMarkup() -> ReplyKeyboardMarkup:
         markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         universities = DbManager.getUniversities()
 
@@ -35,17 +36,23 @@ class TelegramViewController:
 
         return markup
 
-    # old method
-    # probably should be removed
-    # @staticmethod
-    # def getGroupKeyboardMarkup(universityId):
-    #     markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    #     groups = DbManager().getGroupsByUniversityId(universityId)
-    #
-    #     for group in groups:
-    #         markup.row(group[1])
-    #
-    #     return markup
+    @staticmethod
+    def getGroupKeyboardMarkup(universityId) -> ReplyKeyboardMarkup:
+        """
+        @deprecated Currently deprecated.
+
+        @param universityId Id for universities.
+
+        @return Telegram keyboard markup.
+        """
+
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
+        groups = DbManager.getGroupsByUniversityId(universityId)
+
+        for group in groups:
+            markup.row(group[1])
+
+        return markup
 
     @staticmethod
     def removeKeyboardMarkup():
@@ -53,31 +60,36 @@ class TelegramViewController:
         removeKeyboardEncoded = json.dumps(removeKeyboard)
         return removeKeyboardEncoded
 
-    # experimental method
-    # will be updated or removed later
-    # @staticmethod
-    # def inlineGroupChooseKeyboardMarkup():
-    #     keyboard = [["hello"], ["world"]]
-    #     markup = InlineKeyboardMarkup()
-    #
-    #     stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
-    #
-    #     for key, value in stringList.items():
-    #         markup.add(
-    #             InlineKeyboardButton(
-    #                 text=value,
-    #                 callback_data="['value', '" + value + "', '" + key + "']"
-    #             ),
-    #             InlineKeyboardButton(
-    #                 text="X",
-    #                 callback_data="['key', '" + key + "']"
-    #             )
-    #         )
-    #
-    #     return markup
+    @staticmethod
+    def inlineGroupChooseKeyboardMarkup() -> InlineKeyboardMarkup:
+        """
+        Experimental method will be updated or removed later.
+
+        @deprecated Currently deprecated.
+
+        @return Inline keyboard markup.
+        """
+        keyboard = [["hello"], ["world"]]
+        markup = InlineKeyboardMarkup()
+
+        stringList = {"Name": "John", "Language": "Python", "API": "pyTelegramBotAPI"}
+
+        for key, value in stringList.items():
+            markup.add(
+                InlineKeyboardButton(
+                    text=value,
+                    callback_data="['value', '" + value + "', '" + key + "']"
+                ),
+                InlineKeyboardButton(
+                    text="X",
+                    callback_data="['key', '" + key + "']"
+                )
+            )
+
+        return markup
 
     @staticmethod
-    def getScheduleKeyboardMarkup(lang):
+    def getScheduleKeyboardMarkup(lang) -> ReplyKeyboardMarkup:
         markup = ReplyKeyboardMarkup(resize_keyboard=True)
 
         days_of_week = TranslationController().getMessage(
@@ -103,11 +115,11 @@ class TelegramViewController:
         return markup
 
     @staticmethod
-    def isDayOfWeek(day):
+    def isDayOfWeek(day) -> bool:
         return day in DateTimeController.days_of_week.values()
 
     @staticmethod
-    def applyMarkup(params: list):
+    def applyMarkup(params: list) -> list:
 
         watches = TelegramViewController.icons.get('watches')
 
@@ -123,7 +135,7 @@ class TelegramViewController:
         return result
 
     @staticmethod
-    def applyLookHereFilter(word):
+    def applyLookHereFilter(word: str) -> str:
         if TelegramViewController.icons["look_here_left"] in word \
                 or TelegramViewController.icons["look_here_right"] in word:
             return word
@@ -133,7 +145,7 @@ class TelegramViewController:
                    + TelegramViewController.icons["look_here_right"]
 
     @staticmethod
-    def removeFilters(word):
+    def removeFilters(word: str) -> str:
         day = word.title()
 
         for key in DateTimeController.days_of_week:

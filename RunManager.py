@@ -6,9 +6,18 @@ from Controllers.CliArgsController import CliArgsController
 
 class RunManager:
     """
-    Class RunManager to run managers from command line
+    Class RunManager to run managers from command line.
+
+    RunManager allows to run any static method of any manager.
+
     Usage: 
-        python3 CliRunInterface.py --manager={ManagerName without 'Manager'} --action={Action name}
+        >> python3 RunManager.py --manager={ManagerName without 'Manager'} --action={Action name}
+        >> python3 RunManager.py --manager={ManagerName without 'Manager'} --action={Action name} --param={Single method parameter}
+        >> python3 RunManager.py --script={Script name}
+        >> python3 RunManager.py --script=utils.{Script name in utils folder}
+
+        >> python3 RunManager.py --config={Config name} --script={Script name}
+        >> python3 RunManager.py --config={Config name} --manager={ManagerName without 'Manager'} --action={Action name}
     """
 
     managerName = ""
@@ -24,6 +33,8 @@ class RunManager:
     scriptsFolder = "Scripts"
 
     def parseCli(self):
+        """Parse cli args."""
+
         parser = argparse.ArgumentParser(description='Cli interface for schedule bot')
 
         parser.add_argument("--manager")
@@ -49,10 +60,12 @@ class RunManager:
             )
 
     def getManager(self):
+        """Import manager by name."""
         foo = importlib.import_module(self.managerName)
         self.manager = getattr(foo, self.managerName)
 
     def runAction(self):
+        """Run required action of manager."""
         self.action = getattr(self.manager, self.actionName)
         if self.paramValue:
             self.action(self.paramValue)
@@ -60,10 +73,12 @@ class RunManager:
             self.action()
 
     def getScript(self):
+        """Import script module."""
         foo = importlib.import_module(f'{self.scriptsFolder}.{self.scriptName}')
         self.script = getattr(foo, "main")
 
     def run(self):
+        """Parse params and run action of manager or script."""
         self.parseCli()
         if self.managerName:
             self.getManager()
