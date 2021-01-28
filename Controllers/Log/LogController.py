@@ -12,10 +12,18 @@ class LogController:
         self.config = CliArgsController.getConfig()
 
     def info(self, event: str):
+        """Write log with info severity.
+
+        @param event Occurred event description.
+        """
         message = "INFO | " + DateTimeController.getCurrDateAndTime() + " | " + event
         self.writeLog(message)
 
     def alert(self, event: str):
+        """Write log with alert severity.
+
+        @param event Occurred error description.
+        """
         message = "ALERT | " + DateTimeController.getCurrDateAndTime() + " | " + event
         self.writeLog(message)
 
@@ -25,4 +33,5 @@ class LogController:
             FileController.writeToFile(self.getLogFilename(), message)
 
     def getLogFilename(self):
+        """Construct log filename by pattern and date."""
         return self.config.LOGS_FOLDER + self.log_name_pattern % DateTimeController.getCurrDate()

@@ -17,22 +17,37 @@ class AlertManager:
         DISASTER_LEVEL: "DISASTER"
     }
 
+    mail_notifier = 0
+    telegram_notifier = 1
+
     def __init__(self):
         config = CliArgsController.getConfig()
-        self.notifiers = [
-            # MailNotificationController(),
-            TelegramNotificationController(
-                config.MONITORING_BOT_TOKEN,
-                config.NOTIFICATION_CHAT_ID
-            ),
-        ]
+        self.notifiers = {
+            self.mail_notifier: MailNotificationController(config),
+            self.telegram_notifier: TelegramNotificationController(config),
+        }
 
     def notify(self, message, severity=None):
+        """Send notification to dev team.
+
+        @note Mail notification works only for Warning
+        severity and higher to prevent mail flood.
+
+        @param message Event description.
+        @param severity Event severity id.
+        """
         message = self.getHeader(severity) + message
-        for notifier in self.notifiers:
-            notifier.sendMessage(message)
+        self.notifiers[self.telegram_notifier].sendMessage(message)
+        if severity >= self.WARNING_LEVEL:
+            self.notifiers[self.mail_notifier].sendMessage(message)
 
     def getHeader(self, severity):
+        """Get header by event severity.
+
+        @param severity Id of event severity.
+
+        @return Severity label if it exist or empty string.
+        """
         if severity and severity in self.problem_levels.keys():
             return f'[{self.problem_levels.get(severity)}] {DateTimeController.getCurrDateAndTime()}\n'
         else:
@@ -40,4 +55,5 @@ class AlertManager:
 
     @staticmethod
     def dump():
+        """Dump testing method."""
         DumpController().dump()
