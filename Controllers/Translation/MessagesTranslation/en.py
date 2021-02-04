@@ -17,6 +17,8 @@ SCHEDULE_DOWNLOADED = "Schedule was *downloaded*!\n" \
 
 SCHEDULE_WAS_NOT_FOUND = "Group *was not found*!\nTry another group"
 
+UNDEFINED_MESSAGE = '*Undefined command!*\nTry insert day of week or press key on the keyboard'
+
 HELP = '''
 Start of using
 /start
@@ -35,7 +37,21 @@ Number of group should be entered in *russian language*. Example:
 А-12м-20
 
 Dev team contacts:
-@kekmarakek и @grit4in
+@kekmarakek and @grit4in
+'''
+
+ADMIN_HELP = '''
+Basic commands:
+/start
+/changeuniversity
+/changegroup
+/help
+
+Admin command kit:
+/updategroup *group name*
+
+Bot creators:
+@kekmarakek and @grit4in
 '''
 
 WEEK_DAYS = {

@@ -60,18 +60,13 @@ class DbManager:
 
     @staticmethod
     def updateGroups() -> None:
-        from ParseManager import ParseManager
+        from Controllers.Db.ScheduleUpdateController import ScheduleUpdateController
+        ScheduleUpdateController.updateGroups()
 
-        groups = GroupListModel().getListByDate()
-
-        for group in groups:
-            new_schedule = ParseManager().downloadSchedule(
-                group.fields['university_id'],
-                group.fields['group_name']
-            )
-            group.update({
-                'schedule_text': new_schedule,
-            })
+    @staticmethod
+    def updateGroup(group_name) -> None:
+        from Controllers.Db.ScheduleUpdateController import ScheduleUpdateController
+        ScheduleUpdateController.updateGroupByName(group_name)
 
     @staticmethod
     def getGroupsByUniversityId(universityId):

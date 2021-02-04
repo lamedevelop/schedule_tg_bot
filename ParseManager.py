@@ -20,13 +20,13 @@ class ParseManager(object):
         university_name = DbManager.getUniversity(university_id)['university_name']
         return self.parse_controllers[university_name] \
             .makeJson(group_name.upper()) \
-            .replace('\'', '\"')
+            .replace('\'', '\"')  # here is upper
 
     @staticmethod
     def filterGroup(message) -> str:
         if message[-1:] == ".":
             message = message[:-1]
-        return message.lower()
+        return message.lower()  # and here is lower. So lower or upper?
 
     @staticmethod
     def getDaySchedule(day_name: str, json_schedule: str) -> str:
