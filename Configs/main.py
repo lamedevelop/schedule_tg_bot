@@ -22,6 +22,14 @@ POSTGRES_CONN_TIMEOUT = 5
 PROJECT_PATH = '/usr/src/app/'
 
 # Logging
-# Main logging folder
+# Main logging folder.
 LOGS_FOLDER = '/usr/src/app/Logs/'
 DUMP_FILENAME = '/usr/src/app/Logs/dump.sql'
+
+# Mail
+# Sender credentials.
+MAIL_PORT = 465
+MAIL_SMTP_SERVER = "smtp.mail.com"
+MAIL_SENDER = "your@mail.com"
+MAIL_PASSWORD = "mail_password"
+MAIL_RECEIVERS = ["receiver1@mail.com", "receiver2@mail.com"]

@@ -1,37 +1,68 @@
 import ssl
 import smtplib
+from email import encoders
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
 
-from Controllers.Notification.NotificationController import NotificationController
+from Controllers.Log.LogController import LogController
+from Controllers.Notification.AbstractNotificationController import AbstractNotificationController
 
 
-class MailNotificationController(NotificationController):
+class MailNotificationController(AbstractNotificationController):
 
-    def __init__(self):
-        self.port = 465
-        self.smtp_server = "smtp.mail.ru"
-        self.sender_email = "schedulebot@mail.ru"
-        self.receiver_email = "receiver@mail.ru"
-        self.password = "default_password"
+    def __init__(self, config):
+        self.sender = config.MAIL_SENDER
+        self.receivers = config.MAIL_RECEIVERS
+        self.password = config.MAIL_PASSWORD
+        self.port = config.MAIL_PORT
+        self.smtp_server = config.MAIL_SMTP_SERVER
+        self.mail = MIMEMultipart()
 
     def sendMessage(self, message):
-        message = """\
-Subject: Hi there
-This message is sent from Python.
+        mail_content = f"""This message was automatically sent from schedule_tg_bot server.
+
+{message}
 """
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(
-                self.smtp_server,
-                self.port,
-                context=context
-        ) as server:
 
-            server.login(
-                self.sender_email,
-                self.password
-            )
+        self.mail['From'] = self.sender
+        self.mail['Subject'] = 'Schedule error occurred'
+        self.mail.attach(MIMEText(mail_content, 'plain'))
 
-            server.sendmail(
-                self.sender_email,
-                self.receiver_email,
-                message
-            )
+        self.attachLog()
+
+        for receiver in self.receivers:
+
+            self.mail['To'] = receiver
+
+            context = ssl.create_default_context()
+
+            with smtplib.SMTP_SSL(
+                    self.smtp_server,
+                    self.port,
+                    context=context
+            ) as server:
+
+                server.login(
+                    self.sender,
+                    self.password
+                )
+
+                server.sendmail(
+                    self.sender,
+                    receiver,
+                    self.mail.as_string()
+                )
+
+    def attachLog(self):
+        """Attach logfile to email."""
+
+        logfile = LogController().getLogFilename()
+
+        attach_file = open(logfile, 'rb')
+        payload = MIMEBase('application', 'octate-stream')
+        payload.set_payload(attach_file.read())
+        encoders.encode_base64(payload)
+        payload.add_header('Content-Decomposition', 'attachment; filename= www', filename=logfile)
+
+        self.mail.attach(payload)

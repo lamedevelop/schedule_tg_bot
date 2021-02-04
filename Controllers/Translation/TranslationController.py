@@ -40,10 +40,15 @@ class TranslationController:
         }
     }
 
-    def getMessage(self, language, index):
-        # currently we not sure if english language code is en
-        # and we can't expect this right now, so we left this here
-        # todo: fix language tags
+    def getMessage(self, language: str, index: int) -> str or list:
+        """Get message to reply in correct language.
+
+        @param language User language.
+        @param index Reply message id.
+
+        @todo fix language tags
+        """
+
         if language != 'ru':
             language = 'en'
         return self.messages[language][index]

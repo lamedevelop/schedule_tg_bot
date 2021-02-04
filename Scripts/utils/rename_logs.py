@@ -1,3 +1,11 @@
+"""
+Rename logs script from %d-%m-%Y to %Y-%m-%d format.
+
+Usage:
+    >> python3 RunManager.py [--config=custom] --script=rename_logs
+"""
+
+
 import os
 import re
 
@@ -11,6 +19,11 @@ def main():
 
 
 def rename(files):
+    """Rename log files.
+
+    @param files Array of files in logs dir.
+    """
+
     for file in files:
         file_s = file.split('_')
         day, month, year = file_s[-1].split('.log')[0].split('-')
@@ -24,6 +37,11 @@ def rename(files):
 
 
 def check(files):
+    """Check that all files was renamed.
+
+    @param files Array of files in logs dir.
+    """
+
     regex = re.compile('(_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].log$)')
 
     for file in files:

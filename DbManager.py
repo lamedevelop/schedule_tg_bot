@@ -71,16 +71,24 @@ class DbManager:
                 'schedule_text': new_schedule,
             })
 
-    # Should be fixed before using
-    # @staticmethod
-    # def getGroupsByUniversityId(universityId):
-    #     records = GroupListModel().getListByParams({'university_id': universityId})
-    #     return [
-    #         {
-    #             'group_id': record.fields['group_id'],
-    #             'group_name': record.fields['group_name'],
-    #         } for record in records
-    #     ]
+    @staticmethod
+    def getGroupsByUniversityId(universityId):
+        """
+        @deprecated Currently deprecated.
+
+        @note Should be fixed before using.
+
+        @param universityId
+
+        @return Bunch of groups by universityId.
+        """
+        records = GroupListModel().getListByParams({'university_id': universityId})
+        return [
+            {
+                'group_id': record.fields['group_id'],
+                'group_name': record.fields['group_name'],
+            } for record in records
+        ]
 
     @staticmethod
     def checkUserExist(chat_id):
