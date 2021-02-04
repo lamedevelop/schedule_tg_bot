@@ -24,6 +24,7 @@ from AlertManager import AlertManager
 from Controllers.UserController import UserController
 from Controllers.Log.LogController import LogController
 from Controllers.CliArgsController import CliArgsController
+from Controllers.MetricsController import MetricsController
 from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
@@ -142,6 +143,24 @@ async def updateGroup(message):
                 message,
                 f'Group {argument} was updated',
             )
+    else:
+        await send_message_custom(
+            message,
+            messageGenerator.getMessage(
+                message.from_user.language_code,
+                messageGenerator.UNDEFINED_MESSAGE
+            ),
+        )
+
+
+@dp.message_handler(commands=["metrics"])
+async def getMetrics(message):
+    if message.from_user.id in config.BOT_ADMINS:
+        await send_message_custom(
+            message,
+            MetricsController().getMetrics()
+        )
+
     else:
         await send_message_custom(
             message,
