@@ -1,14 +1,13 @@
 import psycopg2
 import subprocess
 
-from Controllers.Db.AbstractDbController import AbstractDbController
+from Controllers.Db.AbstractSqlController import AbstractSqlController
 
 
-class PostgreDbController(AbstractDbController):
+class PostgreDbController(AbstractSqlController):
 
     def __init__(self):
         super().__init__()
-        self.DB_MODULE = psycopg2
         self.DB_PARAMS = {
             'user': self.config.POSTGRES_USERNAME,
             'password': self.config.POSTGRES_PASSWORD,
@@ -17,6 +16,38 @@ class PostgreDbController(AbstractDbController):
             'dbname': self.config.POSTGRES_DB,
             'connect_timeout': self.config.POSTGRES_CONN_TIMEOUT
         }
+        self.conn = psycopg2.connect(**self.DB_PARAMS)
+        self.cursor = self.conn.cursor()
+
+    def __del__(self):
+        self.cursor.close()
+        self.conn.close()
+
+    def _executeQuery(self, query: str) -> int:
+        self.cursor.execute(query)
+        self.conn.commit()
+        return self.cursor.lastrowid
+
+    def _fetchResult(self) -> list:
+        rows = self.cursor.fetchall()
+        return [row for row in rows]
+
+    def submitQuery(self, query: str) -> int:
+        try:
+            record_id = self._executeQuery(query)
+            return record_id
+        except Exception as error:
+            self.logger.alert(f'Error while connecting to POSTGRES db: {error}')
+            print('Problem query: ', query)
+
+    def fetchQuery(self, query: str) -> list:
+        try:
+            self._executeQuery(query)
+            result = self._fetchResult()
+            return result
+        except Exception as error:
+            self.logger.alert(f'Error while connecting to POSTGRES db: {error}')
+            print('Problem query: ', query)
 
     def makeDump(self):
         # pg_dump --dbname=postgresql://postgres:secret@postgresql_domain:5432/database -f dump.sql
@@ -39,4 +70,4 @@ class PostgreDbController(AbstractDbController):
                 self.logger.alert(
                     f'Command failed. Return code : {process.returncode}')
         except Exception as e:
-            self.logger.alert(f'Error while dumping db: {e}')
+            self.logger.alert(f'Error while dumping POSTGRES db: {e}')
