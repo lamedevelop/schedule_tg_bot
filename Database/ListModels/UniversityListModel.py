@@ -9,3 +9,6 @@ class UniversityListModel(AbstractListModel):
 
     def getListByParams(self, params, model_class=UniversityModel):
         return super(UniversityListModel, self).getListByParams(params, model_class)
+
+    def count(self, model_class=UniversityModel):
+        return super(UniversityListModel, self).count(model_class)

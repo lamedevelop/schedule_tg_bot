@@ -9,3 +9,6 @@ class TelegramUserListModel(AbstractListModel):
 
     def getListByParams(self, params, model_class=TelegramUserModel):
         return super(TelegramUserListModel, self).getListByParams(params, model_class)
+
+    def count(self, model_class=TelegramUserModel):
+        return super(TelegramUserListModel, self).count(model_class)
