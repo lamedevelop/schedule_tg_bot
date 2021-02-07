@@ -20,36 +20,56 @@ class PostgreDbController(AbstractSqlController):
         self.cursor = self.conn.cursor()
 
     def __del__(self):
+        """Closes cursor and conn connections when object destroys"""
         self.cursor.close()
         self.conn.close()
 
     def _executeQuery(self, query: str) -> int:
+        """Executes SQL statement
+
+        @param query SQL statement
+        """
         self.cursor.execute(query)
         self.conn.commit()
         return self.cursor.lastrowid
 
     def _fetchResult(self) -> list:
+        """Fetches result from last executed SELECT statement
+
+        @return List of rows from result table
+        """
         rows = self.cursor.fetchall()
         return [row for row in rows]
 
     def submitQuery(self, query: str) -> int:
+        """Executes INSERT or UPDATE statements
+
+        @param query SQL statement
+        """
         try:
             record_id = self._executeQuery(query)
             return record_id
         except Exception as error:
-            self.logger.alert(f'Error while connecting to POSTGRES db: {error}')
+            self.logger.alert(
+                f'Error while connecting to POSTGRES db: {error}')
             print('Problem query: ', query)
 
     def fetchQuery(self, query: str) -> list:
+        """Executes SELECT query and returns result
+
+        @param query SQL statement
+        """
         try:
             self._executeQuery(query)
             result = self._fetchResult()
             return result
         except Exception as error:
-            self.logger.alert(f'Error while connecting to POSTGRES db: {error}')
+            self.logger.alert(
+                f'Error while connecting to POSTGRES db: {error}')
             print('Problem query: ', query)
 
     def makeDump(self):
+        """Makes dump database"""
         # pg_dump --dbname=postgresql://postgres:secret@postgresql_domain:5432/database -f dump.sql
         try:
             process = subprocess.Popen(
