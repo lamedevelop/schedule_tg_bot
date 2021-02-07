@@ -1,10 +1,10 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 from Controllers.CliArgsController import CliArgsController
 from Controllers.Log.LogController import LogController
 
 
-class AbstractSqlController:
+class AbstractSqlController(ABC):
 
     DB_PARAMS: dict
 
