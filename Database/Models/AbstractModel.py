@@ -1,4 +1,4 @@
-from Controllers.Db.DbFactoryController import DbFactoryController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class AbstractModel:
@@ -12,7 +12,7 @@ class AbstractModel:
     }
 
     def __init__(self, fields={}):
-        self.dbController = DbFactoryController.getDbController()
+        self.dbController = DbControllerFactory.getDbController()
 
         for field_name in fields:
             if field_name in self.fields:

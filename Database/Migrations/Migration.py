@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 
 from Controllers.Log.LogController import LogController
-from Controllers.Db.DbFactoryController import DbFactoryController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class Migration(ABC):
 
     def __init__(self):
-        self.dbController = DbFactoryController.getDbController()
+        self.dbController = DbControllerFactory.getDbController()
         self.logger = LogController()
 
     @abstractmethod

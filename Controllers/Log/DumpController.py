@@ -2,7 +2,7 @@ import os
 
 from Controllers.CliArgsController import CliArgsController
 from Controllers.DateTimeController import DateTimeController
-from Controllers.Db.DbFactoryController import DbFactoryController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class DumpController:
@@ -16,7 +16,7 @@ class DumpController:
 
     def __init__(self):
         self.config = CliArgsController.getConfig()
-        self.dbController = DbFactoryController.getDbController()
+        self.dbController = DbControllerFactory.getDbController()
 
     def generateDump(self):
         self.dbController.makeDump()

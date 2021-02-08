@@ -1,10 +1,10 @@
-from Controllers.Db.DbFactoryController import DbFactoryController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class AbstractListModel:
 
     def __init__(self):
-        self.dbController = DbFactoryController.getDbController()
+        self.dbController = DbControllerFactory.getDbController()
 
     def getList(self, model_class):
         models = []
