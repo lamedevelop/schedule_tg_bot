@@ -16,22 +16,29 @@ class PostgreDbController(AbstractSqlController):
             'dbname': self.config.POSTGRES_DB,
             'connect_timeout': self.config.POSTGRES_CONN_TIMEOUT
         }
+        # self.conn = psycopg2.connect(**self.DB_PARAMS)
+        # self.cursor = self.conn.cursor()
+
+    # def __del__(self):
+    #     """Closes cursor and conn connections when object destroys"""
+    #     self.cursor.close()
+    #     self.conn.close()
+
+    def _openConnection(self):
         self.conn = psycopg2.connect(**self.DB_PARAMS)
         self.cursor = self.conn.cursor()
 
-    def __del__(self):
-        """Closes cursor and conn connections when object destroys"""
+    def _closeConnection(self):
+        self.conn.commit()
         self.cursor.close()
         self.conn.close()
 
-    def _executeQuery(self, query: str) -> int:
+    def _executeQuery(self, query: str):
         """Executes SQL statement
 
         @param query SQL statement
         """
         self.cursor.execute(query)
-        self.conn.commit()
-        return self.cursor.lastrowid
 
     def _fetchResult(self) -> list:
         """Fetches result from last executed SELECT statement
@@ -47,8 +54,10 @@ class PostgreDbController(AbstractSqlController):
         @param query SQL statement
         """
         try:
-            record_id = self._executeQuery(query)
-            return record_id
+            self._openConnection()
+            self._executeQuery(query)
+            self._closeConnection()
+            return 1
         except Exception as error:
             self.logger.alert(
                 f'Error while connecting to POSTGRES db: {error}')
@@ -60,8 +69,10 @@ class PostgreDbController(AbstractSqlController):
         @param query SQL statement
         """
         try:
+            self._openConnection()
             self._executeQuery(query)
             result = self._fetchResult()
+            self._closeConnection()
             return result
         except Exception as error:
             self.logger.alert(

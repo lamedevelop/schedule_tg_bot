@@ -15,13 +15,6 @@ from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMi
 
 class DbManager:
 
-    migrations = {
-        "groupsTableMigration": GroupsTableMigration(),
-        "universitiesTableMigration": UniversitiesTableMigration(),
-        "telegramUsersTableMigration": TelegramUsersTableMigration(),
-        "userMessagesTableMigration": UserMessagesTableMigration()
-    }
-
     @staticmethod
     def run():
         print('empty method')
@@ -110,29 +103,38 @@ class DbManager:
     def writeUserMessage(messageInfo):
         UserMessageModel(messageInfo).set()
 
+    @staticmethod
+    def getMigrations():
+        return {
+            "groupsTableMigration": GroupsTableMigration(),
+            "universitiesTableMigration": UniversitiesTableMigration(),
+            "telegramUsersTableMigration": TelegramUsersTableMigration(),
+            "userMessagesTableMigration": UserMessagesTableMigration()
+        }
+
     # Migrations methods
     @staticmethod
     def upMigration(migration):
-        DbManager.migrations.get(migration).up()
+        DbManager.getMigrations().get(migration).up()
 
     @staticmethod
     def downMigration(migration):
-        DbManager.migrations.get(migration).down()
+        DbManager.getMigrations().get(migration).down()
 
     @staticmethod
     def upAllMigrations():
-        for migration in DbManager.migrations:
-            DbManager.migrations[migration].up()
+        for migration in DbManager.getMigrations():
+            DbManager.getMigrations()[migration].up()
 
     @staticmethod
     def downAllMigrations():
-        for migration in DbManager.migrations:
-            DbManager.migrations[migration].down()
+        for migration in DbManager.getMigrations():
+            DbManager.getMigrations()[migration].down()
 
     @staticmethod
     def getDescriptionForAllMigrations():
-        for migration in DbManager.migrations:
-            DbManager.migrations[migration].getDescription()
+        for migration in DbManager.getMigrations():
+            DbManager.getMigrations()[migration].getDescription()
 
     @staticmethod
     def fillGroups():
