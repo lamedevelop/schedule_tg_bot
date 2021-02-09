@@ -18,6 +18,14 @@ POSTGRES_HOST = 'postgresql_domain'
 POSTGRES_PORT = '5432'
 POSTGRES_CONN_TIMEOUT = 5
 
+# Maria db config
+MARIA_DB = 'database'
+MARIA_USERNAME = 'maria'
+MARIA_PASSWORD = 'secret'
+MARIA_HOST = 'localhost'
+MARIA_PORT = '3306'
+MARIA_CONN_TIMEOUT = 2
+
 # Home project directory
 PROJECT_PATH = '/usr/src/app/'
 
