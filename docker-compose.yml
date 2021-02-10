@@ -6,28 +6,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PROJECT_PATH: $PROJECT_PATH
       labels:
         - "oleg.gr@outlook.com"
-    command: /usr/src/app/Scripts/dockerstart.sh
+    command: ${PROJECT_PATH}Scripts/dockerstart.sh
     volumes:
-      - ./Logs:/usr/src/app/Logs
+      - ./Logs:${PROJECT_PATH}Logs
     ports:
       - 8081:8081
+    env_file: .env
     links:
-      - postgresql:postgresql_domain
+      - mariadb:db_domain
     depends_on:
-      postgresql:
-        condition: service_healthy
+      - mariadb
 
-  postgresql:
-    container_name: postgres
-    image: postgres:12.5-alpine
-    environment:
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=database
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.5
+    volumes:
+      - dbvolume:/var/lib/mysql
     ports:
-      - "5432:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: "exit 0"
+      - 3306:3306
+    restart: always
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: $MARIA_PASSWORD
+      MYSQL_DATABASE: $MARIA_DB
+
+volumes:
+  dbvolume:

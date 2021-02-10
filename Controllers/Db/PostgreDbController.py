@@ -1,4 +1,4 @@
-import psycopg2
+#import psycopg2
 import subprocess
 
 from Controllers.Db.AbstractSqlController import AbstractSqlController
@@ -25,7 +25,7 @@ class PostgreDbController(AbstractSqlController):
     #     self.conn.close()
 
     def _openConnection(self):
-        self.conn = psycopg2.connect(**self.DB_PARAMS)
+        #self.conn = psycopg2.connect(**self.DB_PARAMS)
         self.cursor = self.conn.cursor()
 
     def _closeConnection(self):
@@ -35,14 +35,12 @@ class PostgreDbController(AbstractSqlController):
 
     def _executeQuery(self, query: str):
         """Executes SQL statement
-
         @param query SQL statement
         """
         self.cursor.execute(query)
 
     def _fetchResult(self) -> list:
         """Fetches result from last executed SELECT statement
-
         @return List of rows from result table
         """
         rows = self.cursor.fetchall()
@@ -50,7 +48,6 @@ class PostgreDbController(AbstractSqlController):
 
     def submitQuery(self, query: str) -> int:
         """Executes INSERT or UPDATE statements
-
         @param query SQL statement
         """
         try:
@@ -65,7 +62,6 @@ class PostgreDbController(AbstractSqlController):
 
     def fetchQuery(self, query: str) -> list:
         """Executes SELECT query and returns result
-
         @param query SQL statement
         """
         try:
