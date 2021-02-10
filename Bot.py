@@ -61,8 +61,8 @@ async def chooseUniversity(message):
         'last_name': message.from_user.last_name,
         'username': message.from_user.username,
         'language_code': message.from_user.language_code,
-        'is_bot': False,
-        'is_alive': True,
+        'is_bot': 0,
+        'is_alive': 1,
         'university_id': userController.DEFAULT_UNIVERSITY_ID,
         'group_id': userController.DEFAULT_GROUP_ID,
     }
@@ -83,7 +83,7 @@ async def chooseUniversity(message):
         dbManager.updateTgUser(
             message.from_user.id,
             {
-                'is_alive': True,
+                'is_alive': 1,
                 'university_id': userController.DEFAULT_UNIVERSITY_ID,
                 'group_id': userController.DEFAULT_GROUP_ID,
             }
@@ -267,7 +267,7 @@ async def send_message_custom(
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(
                 message.from_user.id,
-                {"is_alive": False}
+                {"is_alive": 0}
             )
 
             error_message = 'Send message error: user {} blocked the bot'.format(

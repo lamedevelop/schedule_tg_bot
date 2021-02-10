@@ -9,11 +9,12 @@ class UserMessagesTableMigration(Migration):
 
     def up(self):
         query = '''CREATE TABLE ''' + UserMessageModel.table_name + ''' (
-                message_id SERIAL PRIMARY KEY,
+                message_id INTEGER NOT NULL AUTO_INCREMENT,
                 chat_id INTEGER,
                 user_status INTEGER,
                 message TEXT,
-                creation_date INTEGER);'''
+                creation_date INTEGER,
+                PRIMARY KEY (message_id));'''
 
         self.dbController.submitQuery(query)
         self.logger.info("UserMessagesTableMigration up")
