@@ -64,6 +64,17 @@ sudo docker build --tag schedule_bot:1.0 .
 # Run container
 sudo docker run --detach --publish 8443:8443 --name schedulebot schedule_bot:1.0
 ```
+Run in docker-compose way:
+```bash
+# Full project
+docker-compose up -d --build
+
+# Only app service
+docker-compose run -d --service-ports app
+
+# Only database service
+docker-compose run -d --service-ports mariadb
+```
 
 ### Cmd run
 For tests you can start the bot from CLI:
