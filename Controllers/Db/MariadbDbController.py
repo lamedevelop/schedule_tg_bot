@@ -16,13 +16,14 @@ class MariadbDbController(AbstractSqlController):
             'database': self.config.MARIA_DB,
             # 'connect_timeout': self.config.MARIA_CONN_TIMEOUT
         }
+        # print(self.DB_PARAMS)
         self.conn = mariadb.connect(**self.DB_PARAMS)
         self.cursor = self.conn.cursor()
 
-    def __del__(self):
-        """Closes cursor and conn connections when object destroys"""
-        self.cursor.close()
-        self.conn.close()
+    # def __del__(self):
+    #     """Closes cursor and conn connections when object destroys"""
+    #     self.cursor.close()
+    #     self.conn.close()
 
     def _executeQuery(self, query: str) -> int:
         """Executes SQL statement
@@ -30,7 +31,8 @@ class MariadbDbController(AbstractSqlController):
         @param query SQL statement
         """
         self.cursor.execute(query)
-        #self.conn.commit()
+        if 'SELECT' not in query:
+            self.conn.commit()
         return self.cursor.lastrowid
 
     def _fetchResult(self) -> list:
@@ -67,17 +69,19 @@ class MariadbDbController(AbstractSqlController):
             self.logger.alert(
                 f'Error while connecting to mariadb: {error}')
             print('Problem query: ', query)
+# mysqldump -u[USERNAME] -p[PASSWORD] --add-drop-table --no-data [DATABASE] | grep ^DROP | mysql -u[USERNAME] -p[PASSWORD] [DATABASE]
 
     def makeDump(self):
         """Makes dump database"""
-        # pg_dump --dbname=postgresql://postgres:secret@postgresql_domain:5432/database -f dump.sql
         try:
             process = subprocess.Popen(
                 [
                     'mysqldump',
-                    '-h', self.config.POSTGRES_HOST,
-                    '-P', self.config.POSTGRES_PORT,
-                    '-u -root', self.config.POSTGRES_DB,
+                    '-h', self.config.MARIA_HOST,
+                    '-P', self.config.MARIA_PORT,
+                    '-u root',
+                    '--password=', self.config.MARIA_PASSWORD,
+                    self.config.MARIA_DB,
                     '>', self.config.DUMP_FILENAME
                 ],
                 stdout=subprocess.PIPE

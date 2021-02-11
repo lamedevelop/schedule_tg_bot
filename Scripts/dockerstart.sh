@@ -1,9 +1,9 @@
 #!/bin/sh
 # dockerstart is entry point for docker container
-cd /usr/src/app
+cd $PROJECT_PATH
 
-export $(grep -v '^#' .env | xargs)
-rm -f .env
+# export $(grep -v '^#' .env | grep -o -e "\w\+=[A-z\!-@]\+" | xargs)
+# rm -f .env
 
 until mysql -h $MARIA_HOST -p$MARIA_PASSWORD; do
     >&2 echo "mariadb is unavailable - sleeping"
