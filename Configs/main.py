@@ -12,14 +12,6 @@ NOTIFICATION_CHAT_ID = os.environ['NOTIFICATION_CHAT_ID']
 # SqlLite db filename
 DB_FILENAME = os.environ['DB_FILENAME']
 
-# Postgre db config
-POSTGRES_DB = os.environ['POSTGRES_DB']
-POSTGRES_USERNAME = os.environ['POSTGRES_USERNAME']
-POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
-POSTGRES_HOST = os.environ['POSTGRES_HOST']
-POSTGRES_PORT = os.environ['POSTGRES_PORT']
-POSTGRES_CONN_TIMEOUT = os.environ['POSTGRES_CONN_TIMEOUT']
-
 # Maria db config
 MARIA_DB = os.environ['MARIA_DB']
 MARIA_USERNAME = os.environ['MARIA_USERNAME']
