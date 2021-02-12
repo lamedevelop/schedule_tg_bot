@@ -10,7 +10,7 @@ class UniversitiesTableMigration(Migration):
     def up(self):
         query = '''CREATE TABLE ''' + UniversityModel.table_name + ''' (
                 university_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                university_name TEXT NOT NULL;'''
+                university_name TEXT NOT NULL);'''
 
         self.dbController.submitQuery(query)
         self.logger.info("UniversitiesTableMigration up")

@@ -14,7 +14,7 @@ class GroupsTableMigration(Migration):
                 university_id INTEGER,
                 schedule_text TEXT,
                 schedule_url TEXT,
-                update_date INTEGER;'''
+                update_date INTEGER);'''
 
         self.dbController.submitQuery(query)
         self.logger.info("GroupsTableMigration up")

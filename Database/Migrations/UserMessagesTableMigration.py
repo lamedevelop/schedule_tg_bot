@@ -13,7 +13,7 @@ class UserMessagesTableMigration(Migration):
                 chat_id INTEGER,
                 user_status INTEGER,
                 message TEXT,
-                creation_date INTEGER;'''
+                creation_date INTEGER);'''
 
         self.dbController.submitQuery(query)
         self.logger.info("UserMessagesTableMigration up")

@@ -20,7 +20,7 @@ class TelegramUsersTableMigration(Migration):
                 registration_date INTEGER,
                 university_id INTEGER,
                 group_id INTEGER,
-                CONSTRAINT AK_chat_id UNIQUE(chat_id);'''
+                CONSTRAINT AK_chat_id UNIQUE(chat_id));'''
 
         self.dbController.submitQuery(query)
         self.logger.info("TelegramUsersTableMigration up")
