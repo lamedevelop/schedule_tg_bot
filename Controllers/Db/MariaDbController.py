@@ -1,6 +1,6 @@
 import mariadb
-import subprocess
 
+from Controllers.FileController import FileController
 from Controllers.Db.AbstractSqlController import AbstractSqlController
 
 
@@ -73,29 +73,16 @@ class MariaDbController(AbstractSqlController):
             print('Problem query: ', query)
 
     def makeDump(self):
-        """Makes dump database
-
-        mysqldump
-            -u[USERNAME]
-            -p[PASSWORD]
-            --add-drop-table
-            --no-data [DATABASE] | grep ^DROP | mysql -u[USERNAME] -p[PASSWORD] [DATABASE]
-        """
+        """Makes dump database"""
         try:
-            process = subprocess.Popen(
-                [
-                    'mysqldump',
-                    '-h', self.config.MARIA_HOST,
-                    '-P', self.config.MARIA_PORT,
-                    '-u', self.config.MARIA_USERNAME,
-                    '--password=', self.config.MARIA_PASSWORD,
-                    self.config.MARIA_DB,
-                    '>', self.config.DUMP_FILENAME
-                ],
-                stdout=subprocess.PIPE
+            FileController.runCommand(
+                'mysqldump' +
+                ' -h' + self.config.MARIA_HOST +
+                ' -P' + self.config.MARIA_PORT +
+                ' -u' + self.config.MARIA_USERNAME +
+                ' --password=' + self.config.MARIA_PASSWORD +
+                ' ' + self.config.MARIA_DB +
+                ' >> ' + self.config.DUMP_FILENAME
             )
-            if process.returncode != 0:
-                self.logger.alert(
-                    f'Command failed. Return code : {process.returncode}')
         except Exception as e:
             self.logger.alert(f'Error while dumping mariaDB: {e}')
