@@ -13,6 +13,12 @@ class AbstractSqlController(ABC):
         self.logger = LogController()
 
     @abstractmethod
+    def _openConnection(self) -> None: ...
+
+    @abstractmethod
+    def _closeConnection(self) -> None: ...
+
+    @abstractmethod
     def _executeQuery(self, query: str) -> int: ...
 
     @abstractmethod

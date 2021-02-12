@@ -1,4 +1,3 @@
-from Controllers.Db.PostgreDbController import PostgreDbController
 from Controllers.Db.MariadbDbController import MariadbDbController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 

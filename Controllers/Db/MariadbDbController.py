@@ -69,17 +69,23 @@ class MariadbDbController(AbstractSqlController):
             self.logger.alert(
                 f'Error while connecting to mariadb: {error}')
             print('Problem query: ', query)
-# mysqldump -u[USERNAME] -p[PASSWORD] --add-drop-table --no-data [DATABASE] | grep ^DROP | mysql -u[USERNAME] -p[PASSWORD] [DATABASE]
 
     def makeDump(self):
-        """Makes dump database"""
+        """Makes dump database
+
+        mysqldump
+            -u[USERNAME]
+            -p[PASSWORD]
+            --add-drop-table
+            --no-data [DATABASE] | grep ^DROP | mysql -u[USERNAME] -p[PASSWORD] [DATABASE]
+        """
         try:
             process = subprocess.Popen(
                 [
                     'mysqldump',
                     '-h', self.config.MARIA_HOST,
                     '-P', self.config.MARIA_PORT,
-                    '-u root',
+                    '-u', self.config.MARIA_USERNAME,
                     '--password=', self.config.MARIA_PASSWORD,
                     self.config.MARIA_DB,
                     '>', self.config.DUMP_FILENAME

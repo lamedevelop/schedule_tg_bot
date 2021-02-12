@@ -9,7 +9,7 @@ class TelegramUsersTableMigration(Migration):
 
     def up(self):
         query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
-                user_id INTEGER NOT NULL AUTO_INCREMENT,
+                user_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 chat_id INTEGER NOT NULL,
                 first_name TEXT,
                 last_name TEXT,
@@ -20,8 +20,7 @@ class TelegramUsersTableMigration(Migration):
                 registration_date INTEGER,
                 university_id INTEGER,
                 group_id INTEGER,
-                CONSTRAINT AK_chat_id UNIQUE(chat_id),
-                PRIMARY KEY (user_id));'''
+                CONSTRAINT AK_chat_id UNIQUE(chat_id);'''
 
         self.dbController.submitQuery(query)
         self.logger.info("TelegramUsersTableMigration up")

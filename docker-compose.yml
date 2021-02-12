@@ -31,8 +31,10 @@ services:
     restart: always
     env_file: .env
     environment:
-      MYSQL_ROOT_PASSWORD: $MARIA_PASSWORD
       MYSQL_DATABASE: $MARIA_DB
+      MYSQL_USER: $MARIA_USERNAME
+      MYSQL_PASSWORD: $MARIA_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MARIA_PASSWORD
 
 volumes:
   dbvolume:

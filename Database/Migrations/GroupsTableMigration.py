@@ -9,13 +9,12 @@ class GroupsTableMigration(Migration):
 
     def up(self):
         query = '''CREATE TABLE ''' + GroupModel.table_name + ''' (
-                group_id INTEGER NOT NULL AUTO_INCREMENT,
+                group_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 group_name TEXT NOT NULL,
                 university_id INTEGER,
                 schedule_text TEXT,
                 schedule_url TEXT,
-                update_date INTEGER,
-                PRIMARY KEY (group_id));'''
+                update_date INTEGER;'''
 
         self.dbController.submitQuery(query)
         self.logger.info("GroupsTableMigration up")
