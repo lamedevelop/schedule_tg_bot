@@ -4,7 +4,7 @@ import subprocess
 from Controllers.Db.AbstractSqlController import AbstractSqlController
 
 
-class MariadbDbController(AbstractSqlController):
+class MariaDbController(AbstractSqlController):
 
     def __init__(self):
         super().__init__()
@@ -14,26 +14,18 @@ class MariadbDbController(AbstractSqlController):
             'host': self.config.MARIA_HOST,
             'port': int(self.config.MARIA_PORT),
             'database': self.config.MARIA_DB,
-            # 'connect_timeout': self.config.MARIA_CONN_TIMEOUT
+            'connect_timeout': self.config.MARIA_CONN_TIMEOUT
         }
-        # print(self.DB_PARAMS)
+
+    def _openConnection(self):
+        """Open connection and create cursor"""
         self.conn = mariadb.connect(**self.DB_PARAMS)
         self.cursor = self.conn.cursor()
 
-    # def __del__(self):
-    #     """Closes cursor and conn connections when object destroys"""
-    #     self.cursor.close()
-    #     self.conn.close()
-
-    def _executeQuery(self, query: str) -> int:
-        """Executes SQL statement
-
-        @param query SQL statement
-        """
-        self.cursor.execute(query)
-        if 'SELECT' not in query:
-            self.conn.commit()
-        return self.cursor.lastrowid
+    def _closeConnection(self):
+        """Closes cursor and conn connections when object destroys"""
+        self.cursor.close()
+        self.conn.close()
 
     def _fetchResult(self) -> list:
         """Fetches result from last executed SELECT statement
@@ -49,7 +41,13 @@ class MariadbDbController(AbstractSqlController):
         @param query SQL statement
         """
         try:
-            record_id = self._executeQuery(query)
+            self._openConnection()
+
+            self.cursor.execute(query)
+            record_id = self.cursor.lastrowid
+            self.conn.commit()
+
+            self._closeConnection()
             return record_id
         except Exception as error:
             self.logger.alert(
@@ -62,8 +60,12 @@ class MariadbDbController(AbstractSqlController):
         @param query SQL statement
         """
         try:
-            self._executeQuery(query)
+            self._openConnection()
+
+            self.cursor.execute(query)
             result = self._fetchResult()
+
+            self._closeConnection()
             return result
         except Exception as error:
             self.logger.alert(

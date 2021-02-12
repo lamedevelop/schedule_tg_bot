@@ -7,15 +7,15 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PROJECT_PATH: $PROJECT_PATH
+        PROJECT_PATH: /usr/src/app/
       labels:
         - "oleg.gr@outlook.com"
-    command: ${PROJECT_PATH}Scripts/dockerstart.sh
+    command: /usr/src/app/Scripts/dockerstart.sh
     volumes:
-      - ./Logs:${PROJECT_PATH}Logs
+      - ./Logs:/usr/src/app/Logs
     ports:
       - 8081:8081
-    env_file: .env
+    restart: always
     links:
       - mariadb:db_domain
     depends_on:
@@ -29,12 +29,11 @@ services:
     ports:
       - 3306:3306
     restart: always
-    env_file: .env
     environment:
-      MYSQL_DATABASE: $MARIA_DB
-      MYSQL_USER: $MARIA_USERNAME
-      MYSQL_PASSWORD: $MARIA_PASSWORD
-      MYSQL_ROOT_PASSWORD: $MARIA_PASSWORD
+      MYSQL_DATABASE: appdata
+      MYSQL_USER: maria
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
 
 volumes:
   dbvolume:

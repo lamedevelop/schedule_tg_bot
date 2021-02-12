@@ -1,4 +1,4 @@
-from Controllers.Db.MariadbDbController import MariadbDbController
+from Controllers.Db.MariaDbController import MariaDbController
 from Controllers.Db.SqlLiteDbController import SqlLiteDbController
 
 
@@ -10,4 +10,4 @@ class DbControllerFactory:
 
         @return instance of AbstractDbController
         """
-        return MariadbDbController()
+        return MariaDbController()

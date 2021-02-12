@@ -267,7 +267,7 @@ async def send_message_custom(
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(
                 message.from_user.id,
-                {"is_alive": 0}
+                {'is_alive': 0}
             )
 
             error_message = 'Send message error: user {} blocked the bot'.format(
