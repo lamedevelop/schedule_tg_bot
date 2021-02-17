@@ -86,3 +86,25 @@ class MariaDbController(AbstractSqlController):
             )
         except Exception as e:
             self.logger.alert(f'Error while dumping mariaDB: {e}')
+
+    def connectToDb(self):
+        """Command to connect to db from cli"""
+        try:
+            FileController.runCommand(
+                f'mysql' +
+                f' --host={self.config.MARIA_HOST}' +
+                f' --port={int(self.config.MARIA_PORT)}'
+                f' --user={self.config.MARIA_USERNAME}' +
+                f' --password={self.config.MARIA_PASSWORD}'
+            )
+        except Exception as e:
+            self.logger.alert(f'Error while connecting to mariaDB: {e}')
+
+    def checkConnection(self):
+        """Check db availability"""
+        try:
+            self._openConnection()
+            self._closeConnection()
+            return self.DB_AVAILABLE
+        except Exception as e:
+            return self.DB_UNAVAILABLE

@@ -10,7 +10,7 @@ services:
         PROJECT_PATH: /usr/src/app/
       labels:
         - "oleg.gr@outlook.com"
-    command: /usr/src/app/Scripts/dockerstart.sh
+    command: /usr/src/app/Scripts/dockerstart.sh /usr/src/app
     volumes:
       - ./Logs:/usr/src/app/Logs
     ports:

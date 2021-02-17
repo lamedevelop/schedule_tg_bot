@@ -8,6 +8,9 @@ class AbstractSqlController(ABC):
 
     DB_PARAMS: dict
 
+    DB_AVAILABLE = True
+    DB_UNAVAILABLE = False
+
     def __init__(self) -> None:
         self.config = CliArgsController().getConfig()
         self.logger = LogController()

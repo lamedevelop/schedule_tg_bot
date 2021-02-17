@@ -86,3 +86,12 @@ class SqlLiteDbController(AbstractSqlController):
             self.logger.info('DB was deleted')
         except Exception as e:
             self.logger.alert('Error while deleting SQLITE db: {}'.format(e))
+
+    def checkConnection(self):
+        """Check db availability"""
+        try:
+            self._openConnection()
+            self._closeConnection()
+            return self.DB_AVAILABLE
+        except Exception as e:
+            return self.DB_UNAVAILABLE

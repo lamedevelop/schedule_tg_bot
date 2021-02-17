@@ -1,3 +1,4 @@
+from time import sleep
 from datetime import datetime, timedelta
 import Controllers.Translation.MessagesTranslation.ru as ru
 import Controllers.Translation.MessagesTranslation.en as en
@@ -37,3 +38,7 @@ class DateTimeController:
         @param days_count Backwards days count.
         """
         return (datetime.now() - timedelta(days=days_count)).timestamp()
+
+    @staticmethod
+    def sleep(delta):
+        sleep(delta)

@@ -1,3 +1,7 @@
+from Controllers.Log.LogController import LogController
+from Controllers.DateTimeController import DateTimeController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
+
 from Database.Models.GroupModel import GroupModel
 from Database.Models.UniversityModel import UniversityModel
 from Database.Models.UserMessageModel import UserMessageModel
@@ -14,10 +18,6 @@ from Database.Migrations.TelegramUsersTableMigration import TelegramUsersTableMi
 
 
 class DbManager:
-
-    @staticmethod
-    def run():
-        print('empty method')
 
     @staticmethod
     def addUniversity(university_name: str):
@@ -102,6 +102,22 @@ class DbManager:
     @staticmethod
     def writeUserMessage(messageInfo):
         UserMessageModel(messageInfo).set()
+
+    @staticmethod
+    def connectDb():
+        DbControllerFactory.getDbController().connectToDb()
+
+    @staticmethod
+    def checkDbAvailability():
+        return DbControllerFactory.getDbController().checkConnection()
+
+    @staticmethod
+    def startupDb():
+        while not DbManager.checkDbAvailability():
+            LogController().alert('Db unavailable. Waiting 5 seconds for connection')
+            DateTimeController.sleep(5)
+        DbManager.upAllMigrations()
+        DbManager.fillGroups()
 
     @staticmethod
     def getMigrations():
