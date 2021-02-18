@@ -95,7 +95,8 @@ class MariaDbController(AbstractSqlController):
                 f' --host={self.config.MARIA_HOST}' +
                 f' --port={int(self.config.MARIA_PORT)}'
                 f' --user={self.config.MARIA_USERNAME}' +
-                f' --password={self.config.MARIA_PASSWORD}'
+                f' --password={self.config.MARIA_PASSWORD}' +
+                f' --database={self.config.MARIA_DB}'
             )
         except Exception as e:
             self.logger.alert(f'Error while connecting to mariaDB: {e}')
