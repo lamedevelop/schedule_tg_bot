@@ -108,4 +108,5 @@ class MariaDbController(AbstractSqlController):
             self._closeConnection()
             return self.DB_AVAILABLE
         except Exception as e:
+            self.logger.alert(f'MariaDB is unavailable: {e}')
             return self.DB_UNAVAILABLE
