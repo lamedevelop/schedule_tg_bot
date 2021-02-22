@@ -27,5 +27,3 @@ class ScheduleUpdateController:
         group.update({
             'schedule_text': new_schedule,
         })
-
-
