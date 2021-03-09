@@ -2,7 +2,7 @@ import os
 
 from Controllers.CliArgsController import CliArgsController
 from Controllers.DateTimeController import DateTimeController
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class DumpController:
@@ -16,9 +16,10 @@ class DumpController:
 
     def __init__(self):
         self.config = CliArgsController.getConfig()
+        self.dbController = DbControllerFactory.getDbController()
 
     def generateDump(self):
-        SqlLiteDbController().makeDump()
+        self.dbController.makeDump()
         command = self.archive_command_pattern % (
             self.getDumpFilename(),
             self.getLogsPath(),

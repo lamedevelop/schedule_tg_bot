@@ -1,12 +1,15 @@
-from Controllers.SqlLiteDbController import SqlLiteDbController
+from Controllers.Db.DbControllerFactory import DbControllerFactory
 
 
 class AbstractListModel:
 
+    def __init__(self):
+        self.dbController = DbControllerFactory.getDbController()
+
     def getList(self, model_class):
         models = []
 
-        records = SqlLiteDbController().fetchQuery(
+        records = self.dbController.fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name}'''
         )
@@ -24,9 +27,9 @@ class AbstractListModel:
     def getListByParams(self, params, model_class):
         query_params = []
         for key in params:
-            query_params.append(key + '="' + str(params[key]) + '"')
+            query_params.append(key + "='" + str(params[key]) + "'")
 
-        fields = SqlLiteDbController().fetchQuery(
+        fields = self.dbController.fetchQuery(
             f'''SELECT {", ".join(model_class.fields.keys())} 
                 FROM {model_class.table_name} 
                 WHERE ''' + ' AND '.join(query_params)

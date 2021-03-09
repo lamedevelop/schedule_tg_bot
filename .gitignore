@@ -11,3 +11,4 @@ Logs/*
 Logs/
 Configs/og*
 Configs/ab*
+venv/

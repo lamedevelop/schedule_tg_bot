@@ -61,7 +61,10 @@ async def chooseUniversity(message):
         'last_name': message.from_user.last_name,
         'username': message.from_user.username,
         'language_code': message.from_user.language_code,
-        'is_alive': True
+        'is_bot': 0,
+        'is_alive': 1,
+        'university_id': userController.DEFAULT_UNIVERSITY_ID,
+        'group_id': userController.DEFAULT_GROUP_ID,
     }
 
     if not dbManager.checkUserExist(userInfo['chat_id']):
@@ -80,9 +83,9 @@ async def chooseUniversity(message):
         dbManager.updateTgUser(
             message.from_user.id,
             {
-                "is_alive": True,
-                "university_id": '',
-                "group_id": '',
+                'is_alive': 1,
+                'university_id': userController.DEFAULT_UNIVERSITY_ID,
+                'group_id': userController.DEFAULT_GROUP_ID,
             }
         )
 
@@ -110,7 +113,7 @@ async def chooseGroup(message):
     """
     dbManager.updateTgUser(
         message.from_user.id,
-        {"group_id": ''}
+        {'group_id': userController.DEFAULT_GROUP_ID}
     )
 
     await send_message_custom(
@@ -264,14 +267,16 @@ async def send_message_custom(
         if "bot was blocked by the user" in str(e):
             dbManager.updateTgUser(
                 message.from_user.id,
-                {"is_alive": False}
+                {'is_alive': 0}
             )
 
-            error_message = 'Send message error: user {} blocked the bot'.format(message.from_user.id)
+            error_message = 'Send message error: user {} blocked the bot'.format(
+                message.from_user.id)
             alertManager.notify(error_message, alertManager.WARNING_LEVEL)
             logger.alert(error_message)
         else:
-            error_message = 'Send message error with user {}: {}'.format(message.from_user.id, e)
+            error_message = 'Send message error with user {}: {}'.format(
+                message.from_user.id, e)
             alertManager.notify(error_message, alertManager.DISASTER_LEVEL)
             logger.alert(error_message)
 
@@ -285,5 +290,6 @@ try:
     alertManager.notify("Polling stopped manually", alertManager.WARNING_LEVEL)
     logger.info("Polling stopped manually")
 except Exception as e:
-    alertManager.notify('Error while polling: {}'.format(e), alertManager.DISASTER_LEVEL)
+    alertManager.notify('Error while polling: {}'.format(e),
+                        alertManager.DISASTER_LEVEL)
     logger.alert('Error while polling: {}'.format(e))

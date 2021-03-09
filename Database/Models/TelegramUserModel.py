@@ -1,6 +1,5 @@
 from Database.Models.AbstractModel import AbstractModel
 from Controllers.DateTimeController import DateTimeController
-from Controllers.SqlLiteDbController import SqlLiteDbController
 
 
 class TelegramUserModel(AbstractModel):
@@ -27,7 +26,7 @@ class TelegramUserModel(AbstractModel):
         return super(TelegramUserModel, self).get(primary_key)
 
     def getByChatId(self, chat_id):
-        fields = SqlLiteDbController().fetchQuery(
+        fields = self.dbController.fetchQuery(
             f'''SELECT {", ".join(TelegramUserModel.fields.keys())} 
                 FROM {TelegramUserModel.table_name} 
                 WHERE chat_id={chat_id}'''
