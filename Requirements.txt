@@ -4,5 +4,5 @@ bs4
 requests
 beautifulsoup4~=4.9.1
 python-crontab
-# psycopg2
 mariadb
+psutil

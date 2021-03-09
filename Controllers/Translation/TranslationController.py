@@ -10,9 +10,11 @@ class TranslationController:
     SCHEDULE_WAS_FOUND = 4
     SCHEDULE_DOWNLOADED = 5
     SCHEDULE_WAS_NOT_FOUND = 6
-    HELP = 7
-    WEEK_DAYS = 8
-    WEEK_DAYS_SHORT = 9
+    UNDEFINED_MESSAGE = 7
+    HELP = 8
+    ADMIN_HELP = 9
+    WEEK_DAYS = 10
+    WEEK_DAYS_SHORT = 11
 
     messages = {
         'ru': {
@@ -22,7 +24,9 @@ class TranslationController:
             SCHEDULE_WAS_FOUND:     ru.SCHEDULE_WAS_FOUND,
             SCHEDULE_DOWNLOADED:    ru.SCHEDULE_DOWNLOADED,
             SCHEDULE_WAS_NOT_FOUND: ru.SCHEDULE_WAS_NOT_FOUND,
+            UNDEFINED_MESSAGE:      ru.UNDEFINED_MESSAGE,
             HELP:                   ru.HELP,
+            ADMIN_HELP:             en.ADMIN_HELP,
             WEEK_DAYS:              ru.WEEK_DAYS,
             WEEK_DAYS_SHORT:        ru.WEEK_DAYS_SHORT,
         },
@@ -34,7 +38,9 @@ class TranslationController:
             SCHEDULE_WAS_FOUND:     en.SCHEDULE_WAS_FOUND,
             SCHEDULE_DOWNLOADED:    en.SCHEDULE_DOWNLOADED,
             SCHEDULE_WAS_NOT_FOUND: en.SCHEDULE_WAS_NOT_FOUND,
+            UNDEFINED_MESSAGE:      en.UNDEFINED_MESSAGE,
             HELP:                   en.HELP,
+            ADMIN_HELP:             en.ADMIN_HELP,
             WEEK_DAYS:              en.WEEK_DAYS,
             WEEK_DAYS_SHORT:        en.WEEK_DAYS_SHORT,
         }

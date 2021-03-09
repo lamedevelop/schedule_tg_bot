@@ -24,6 +24,7 @@ from AlertManager import AlertManager
 from Controllers.UserController import UserController
 from Controllers.Log.LogController import LogController
 from Controllers.CliArgsController import CliArgsController
+from Controllers.MetricsController import MetricsController
 from Controllers.TelegramViewController import TelegramViewController
 from Controllers.Translation.TranslationController import TranslationController
 
@@ -126,17 +127,70 @@ async def chooseGroup(message):
     )
 
 
+@dp.message_handler(commands=["updategroup"])
+async def updateGroup(message):
+    if message.from_user.id in config.BOT_ADMINS:
+        argument = message.get_args()
+
+        if not argument:
+            await send_message_custom(
+                message,
+                f'Group {argument} not found\nUsage /updategroup *group name*',
+            )
+
+        else:
+            dbManager.updateGroup(
+                parser.filterGroup(argument)
+            )
+            await send_message_custom(
+                message,
+                f'Group {argument} was updated',
+            )
+    else:
+        await send_message_custom(
+            message,
+            messageGenerator.getMessage(
+                message.from_user.language_code,
+                messageGenerator.UNDEFINED_MESSAGE
+            ),
+        )
+
+
+@dp.message_handler(commands=["metrics"])
+async def getMetrics(message):
+    if message.from_user.id in config.BOT_ADMINS:
+        await send_message_custom(
+            message,
+            MetricsController().getMetrics()
+        )
+
+    else:
+        await send_message_custom(
+            message,
+            messageGenerator.getMessage(
+                message.from_user.language_code,
+                messageGenerator.UNDEFINED_MESSAGE
+            ),
+        )
+
+
 @dp.message_handler(commands=["help"])
 async def sendHelp(message):
     """Send help message.
 
     @param message Telegram message class.
     """
+
+    if message.from_user.id in config.BOT_ADMINS:
+        message_id = messageGenerator.ADMIN_HELP
+    else:
+        message_id = messageGenerator.HELP
+
     await send_message_custom(
         message,
         messageGenerator.getMessage(
             message.from_user.language_code,
-            messageGenerator.HELP
+            message_id
         ),
     )
 
@@ -238,6 +292,15 @@ async def main(message):
             await send_message_custom(
                 message,
                 parser.getDaySchedule(userChoice, groupJsonText),
+                reply_markup=viewController.getScheduleKeyboardMarkup(lang)
+            )
+        else:
+            await send_message_custom(
+                message,
+                messageGenerator.getMessage(
+                    lang,
+                    messageGenerator.UNDEFINED_MESSAGE
+                ),
                 reply_markup=viewController.getScheduleKeyboardMarkup(lang)
             )
 
