@@ -1,16 +1,14 @@
-FROM python:3.7-slim
-LABEL maintainer="oleg.gr@outlook.com"
+FROM python:3.7-alpine3.11
 
-RUN apt-get update && \
-    apt-get install -y curl cron && \
-    apt-get clean
+RUN apk add mariadb-dev mariadb-client gcc musl-dev curl --no-cache --quiet
 
-WORKDIR /usr/src/app
+ARG PROJECT_PATH
+WORKDIR $PROJECT_PATH
+
 COPY . .
 
-RUN pip install --upgrade pip
+RUN pip install -q --upgrade pip
 RUN pip install --no-cache-dir -r Requirements.txt
-RUN chmod +x /usr/src/app/Scripts/dockerstart.sh
+RUN chmod +x ${PROJECT_PATH}Scripts/dockerstart.sh
 
 EXPOSE 80
-CMD ["/usr/src/app/Scripts/dockerstart.sh"]

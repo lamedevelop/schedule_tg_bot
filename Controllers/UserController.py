@@ -10,8 +10,8 @@ class UserController:
     UNIVERSITY_CHOSEN = 1
     GROUP_CHOSEN = 2
 
-    DEFAULT_UNIVERSITY_ID = 0
     DEFAULT_GROUP_ID = 0
+    DEFAULT_UNIVERSITY_ID = 0
 
     def getCurrStatus(self, user_id):
         userInfo = DbManager.getTgUserInfo(user_id)
@@ -21,10 +21,14 @@ class UserController:
             LogController().alert(alert)
             AlertManager().notify(alert, AlertManager.WARNING_LEVEL)
             return self.DEFAULT_STATUS
-        if userInfo['group_id'] != '' and userInfo['university_id'] != '':
+
+        if userInfo['group_id'] != self.DEFAULT_GROUP_ID \
+                and userInfo['university_id'] != self.DEFAULT_UNIVERSITY_ID:
             return self.GROUP_CHOSEN
-        elif userInfo['university_id'] != '':
+
+        elif userInfo['university_id'] != self.DEFAULT_UNIVERSITY_ID:
             return self.UNIVERSITY_CHOSEN
+
         else:
             return self.DEFAULT_STATUS
 

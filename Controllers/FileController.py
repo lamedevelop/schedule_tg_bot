@@ -30,3 +30,7 @@ class FileController:
         with open(filepath, 'a') as file:
             for x in message:
                 file.write(x)
+
+    @staticmethod
+    def runCommand(command):
+        os.system(command)

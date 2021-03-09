@@ -1,6 +1,5 @@
 from Database.Models.GroupModel import GroupModel
 from Controllers.DateTimeController import DateTimeController
-from Controllers.SqlLiteDbController import SqlLiteDbController
 from Database.ListModels.AbstractListModel import AbstractListModel
 
 
@@ -12,11 +11,11 @@ class GroupListModel(AbstractListModel):
     def getListByParams(self, params, model_class=GroupModel):
         return super(GroupListModel, self).getListByParams(params, model_class)
 
-    def getListByDate(self, days_ago=7, model_class=GroupModel):
+    def getListByDate(self, days_ago=1, model_class=GroupModel):
 
         time_deadline = DateTimeController.getPastTimestamp(days_ago)
 
-        records = SqlLiteDbController().fetchQuery(
+        records = self.dbController.fetchQuery(
             f'''SELECT {", ".join(GroupModel.fields.keys())}
                 FROM groups
                 WHERE update_date<{time_deadline}'''

@@ -8,8 +8,18 @@ NOTIFICATION_CHAT_ID = -000000000
 BOT_ADMINS = [000000000]
 
 # Db
-# SqlLite db filename.
+# SqlLite db filename
 DB_FILENAME = '/usr/src/app/sqlite.db'
+
+# Maria db config
+MARIA_DB = 'database'
+MARIA_USERNAME = 'maria'
+MARIA_PASSWORD = 'secret'
+MARIA_HOST = 'localhost'
+MARIA_PORT = '3306'
+MARIA_CONN_TIMEOUT = 2
+
+# Home project directory
 PROJECT_PATH = '/usr/src/app/'
 
 # Logging

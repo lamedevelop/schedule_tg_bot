@@ -1,9 +1,6 @@
 from Database.Migrations.Migration import Migration
 from Database.Models.UniversityModel import UniversityModel
 
-from Controllers.Log.LogController import LogController
-from Controllers.SqlLiteDbController import SqlLiteDbController
-
 
 class UniversitiesTableMigration(Migration):
 
@@ -12,13 +9,13 @@ class UniversitiesTableMigration(Migration):
 
     def up(self):
         query = '''CREATE TABLE ''' + UniversityModel.table_name + ''' (
-                university_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                university_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 university_name TEXT NOT NULL);'''
 
-        SqlLiteDbController().submitQuery(query)
-        LogController().info("UniversitiesTableMigration up")
+        self.dbController.submitQuery(query)
+        self.logger.info("UniversitiesTableMigration up")
 
     def down(self):
         query = 'DROP TABLE ' + UniversityModel.table_name + ';'
-        SqlLiteDbController().submitQuery(query)
-        LogController().info("UniversitiesTableMigration down")
+        self.dbController.submitQuery(query)
+        self.logger.info("UniversitiesTableMigration down")

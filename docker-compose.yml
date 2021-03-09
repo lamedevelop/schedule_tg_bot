@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_PATH: /usr/src/app/
+      labels:
+        - "oleg.gr@outlook.com"
+    command: /usr/src/app/Scripts/dockerstart.sh /usr/src/app
+    volumes:
+      - ./Logs:/usr/src/app/Logs
+    ports:
+      - 8081:8081
+    restart: always
+    links:
+      - mariadb:db_domain
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.5
+    volumes:
+      - dbvolume:/var/lib/mysql
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_DATABASE: appdata
+      MYSQL_USER: maria
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+
+volumes:
+  dbvolume:
