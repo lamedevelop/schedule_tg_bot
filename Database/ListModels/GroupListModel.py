@@ -12,7 +12,7 @@ class GroupListModel(AbstractListModel):
         records = super(GroupListModel, self).getListByParams(params, model_class)
         return self.getModelsList(records)
 
-    def getListByDate(self, days_ago=7):
+    def getListByDate(self, days_ago=1):
 
         time_deadline = DateTimeController.getPastTimestamp(days_ago)
 

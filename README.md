@@ -16,7 +16,30 @@ Telegram bot for delivering university schedule to students
 
 ## Startup guide
 
-### Quickstart
+### Docker deploy
+
+```bash
+# Full project
+docker-compose up -d --build
+
+# Only app service
+docker-compose run -d --service-ports app
+
+# Only database service
+docker-compose run -d --service-ports mariadb
+```
+
+Running db separately from app is useful for testing. 
+You can run bot locally from cli, change it and then 
+simply reload without container rebuilding.
+
+Command to run bot from cli:
+```bash
+python3 Bot.py
+```
+
+### Manual deploy
+
 ##### Step 1 - Install requirements
 Install requirements from file
 ```bash
@@ -35,7 +58,7 @@ Just run Scripts/quickstart.sh.
 chmod +x ./Scripts/quickstart.sh
 ./Script/quickstart.sh
 ``` 
-Important thing is that when you will be asked to enter "Common Name" - enter your server id.
+Important thing is that when you will be asked to enter "Common Name" - enter your server ip.
 
 ##### Step 4 - Run daemon
 
@@ -53,45 +76,12 @@ systemctl start schedulebot
 systemctl status schedulebot.service
 ```
 
-Using this deploy way you will solve problem of unexpected bot stops. Systemd will restart the bot if it will down for some reason.
-
-### Docker deploy
-Run in docker way:
-```bash
-# Build container
-sudo docker build --tag schedule_bot:1.0 .
-
-# Run container
-sudo docker run --detach --publish 8443:8443 --name schedulebot schedule_bot:1.0
-```
-Run in docker-compose way:
-```bash
-# Full project
-docker-compose up -d --build
-
-# Only app service
-docker-compose run -d --service-ports app
-
-# Only database service
-docker-compose run -d --service-ports mariadb
-```
-
-### Cmd run
-For tests you can start the bot from CLI:
-```bash
-python3 Bot.py
-```
-
 [Up](#schedule-telegram-bot)
 
 
 ## Useful commands
 
-
-For managing db in manual control you can use 2 ways:
-
-* Use RunManager.py and run methods of DbManager manually
-* Use db_interact.py script
+Use RunManager.py and run methods of any manager manually.
 
 Here are some commands for manual calling DbManager functions.
 
@@ -99,21 +89,21 @@ Db interactions:
 
 ```bash
 # Set all migrations to up state 
-# Also creates db file it it's not exist
 python3 RunManager.py --manager=Db --action=upAllMigrations
 
 # Set all migrations to down state 
 python3 RunManager.py --manager=Db --action=downAllMigrations
 
-# Drop db file
+# Drop db
 python3 RunManager.py -—manager=Db —-action=dropDb
 
-# Drop dp and fill with test data
+# Drop dp, create new one and fill with test data
 python3 RunManager.py --manager=Db --action=resetDb 
 ```
 
 
-Command to run db_interact.py script. You can change action of the script inside of it's main function in the db_interact.py file.
+Command to run db_interact.py script. You can change action of the script 
+inside of it's main function in the db_interact.py file.
 ```bash
 python3 RunManager.py --script=db_interact
 ```
