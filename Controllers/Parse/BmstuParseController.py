@@ -1,4 +1,5 @@
 import re
+
 from bs4 import BeautifulSoup
 
 from Controllers.Parse.AbstractParseController import AbstractParseController
@@ -8,82 +9,88 @@ class BmstuAbstractParseController(AbstractParseController):
 
     university_name = 'МГТУ'
 
-    SCHEDULE_LIST_URL = 'https://students.bmstu.ru/schedule/list'
+    _MAIN_URL = 'https://students.bmstu.ru'
+    _SCHEDULE_LIST_URL = f'{_MAIN_URL}/schedule/list'
+    _GROUP_SCHEDULE_URL = f'{_MAIN_URL}/%s'
+
+    _re_lesson = re.compile(
+        r'<i>(?P<lesson_type>.*?)</i> ' +
+        r'<span>(?P<lesson_name>.*?)</span> ' +
+        r'<i>(?P<study_room>.*?)</i> ' +
+        r'<i>(?P<teacher>.*?)</i>'
+    )
 
     def _parse(self, group_name: str):
 
-        get_list = self._getUrl(self.SCHEDULE_LIST_URL)
-        if get_list is None:
+        schedule_list_resp = self._get_url_response(self._SCHEDULE_LIST_URL)
+        if schedule_list_resp is None:
             return {}
 
-        html_list = get_list.text.replace('\n', '')
-        soup_list = BeautifulSoup(html_list, 'html.parser')
-        a_tags = soup_list.find_all(
-            'a', class_='btn btn-sm btn-default text-nowrap')
-        group_schedule_dict = {}
+        html = schedule_list_resp.text.replace('\n', '')
+        soup = BeautifulSoup(html, 'html.parser')
+        a_tags = soup.find_all(
+            'a', class_='btn btn-primary text-nowrap')
 
-        for item in a_tags:
-            if item.get_text().strip() == group_name:
-                self._parseTask(item, group_schedule_dict)
-                break
-        return group_schedule_dict
+        for a_tag in a_tags:
+            if a_tag.get_text().strip() == group_name:
+                return self._get_group_schedule(a_tag, group_name)
 
-    def _parseTask(self, item, group_schedule_dict):
-        group_name = item.get_text().strip()
-        group_schedule_url = f"https://students.bmstu.ru/{item.get('href')}"
+        return {}
 
-        get_group_schedule = self._getUrl(group_schedule_url)
-        if get_group_schedule is None:
-            group_schedule_dict[group_name] = {}
+    def _get_group_schedule(self, a_tag, group_name):
 
-        week = {}
-        html_group = get_group_schedule.text.replace('\n', '')
-        soup_group = BeautifulSoup(html_group, 'html.parser')
-        day_div = soup_group.find_all(
+        group_schedule = {}
+        week_schedule = {}
+
+        group_schedule_url = self._GROUP_SCHEDULE_URL % a_tag.get('href')
+        group_schedule_response = self._get_url_response(group_schedule_url)
+        if group_schedule_response is None:
+            return {}
+
+        html = group_schedule_response.text.replace('\n', '')
+        soup = BeautifulSoup(html, 'html.parser')
+        days_div = soup.find_all(
             'div', class_='col-md-6 hidden-sm hidden-md hidden-lg')
 
-        for div in day_div:
-            day = {}
-            day_shedule = div.find('tbody')
-            day_name = day_shedule.find('strong').get_text()
-            time_and_subject = day_shedule.find_all('tr')
+        for day_div in days_div:
+            day_shedule = {}
+            day_shedule_data = day_div.find('tbody')
+            day_name = day_shedule_data.find('strong').get_text()
+            _, _, *lessons_schedule = day_shedule_data.find_all('tr')
 
-            for item in time_and_subject[2:]:
-                curr_time = item.find(
+            for lesson_schedule in lessons_schedule:
+                lesson_time = lesson_schedule.find(
                     'td', class_='bg-grey text-nowrap').get_text()
-                time_groups = re.match(r'(.{5})(.{5})', curr_time)
-                curr_time = f'{time_groups.group(1)}-{time_groups.group(2)}'
+                formated_lesson_time = f'{lesson_time[:5]}-{lesson_time[5:]}'
 
-                both = item.find('td', colspan='2')
-                subject_patt = re.compile(
-                    r'<i>(.*?)</i> <span>(.*?)</span> <i>(.*?)</i> <i>(.*?)</i>')
+                unchanging_lesson = lesson_schedule.find('td', colspan='2')
 
-                if both:
-                    both_turple = subject_patt.findall(
-                        str(both).replace('\xa0', ' ').replace(
-                            'Самостоятельная работа', '')
+                if unchanging_lesson:
+                    lesson_params = self._re_lesson.findall(
+                        str(unchanging_lesson)
+                        .replace('\xa0', ' ')
+                        .replace('Самостоятельная работа', '')
                     )
-                    both_schedule = [list(x) for x in both_turple][0]
 
-                    subject = {
-                        'both': both_schedule if list(
-                            filter(lambda x: bool(x), both_schedule)
-                        ) else ['']
+                    prms = lesson_params[0]
+                    lesson = {
+                        'both': prms if tuple(filter(bool, prms)) else ['']
                     }
                 else:
-                    numerator = item.find('td', class_='text-success')
-                    denominator = item.find('td', class_='text-info')
-                    numerator_turple = subject_patt.findall(
+                    numerator = a_tag.find('td', class_='text-success')
+                    denominator = a_tag.find('td', class_='text-info')
+                    num_params = self._re_lesson.findall(
                         str(numerator).replace('\xa0', ' ')
                     )
-                    denominator_turple = subject_patt.findall(
+                    den_params = self._re_lesson.findall(
                         str(denominator).replace('\xa0', ' ')
                     )
-                    subject = {
-                        'numerator': [list(x) for x in numerator_turple][0] if numerator_turple else [''],
-                        'denominator': [list(x) for x in denominator_turple][0] if denominator_turple else ['']
+                    lesson = {
+                        'numerator': num_params[0] if num_params else [''],
+                        'denominator': den_params[0] if den_params else ['']
                     }
 
-                day[curr_time] = subject
-            week[day_name] = day
-        group_schedule_dict[group_name] = week
+                day_shedule[formated_lesson_time] = lesson
+            week_schedule[day_name] = day_shedule
+        group_schedule[group_name] = week_schedule
+        return group_schedule
