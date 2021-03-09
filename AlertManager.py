@@ -17,15 +17,15 @@ class AlertManager:
         DISASTER_LEVEL: "DISASTER"
     }
 
-    mail_notifier = 0
-    telegram_notifier = 1
-
     def __init__(self):
         config = CliArgsController.getConfig()
-        self.notifiers = {
-            self.mail_notifier: MailNotificationController(config),
-            self.telegram_notifier: TelegramNotificationController(config),
-        }
+        self.notifiers = [
+            TelegramNotificationController(config),
+        ]
+
+        self.disaster_notifiers = [
+            # MailNotificationController(config),
+        ]
 
     def notify(self, message, severity=None):
         """Send notification to dev team.
@@ -37,9 +37,12 @@ class AlertManager:
         @param severity Event severity id.
         """
         message = self.getHeader(severity) + message
-        self.notifiers[self.telegram_notifier].sendMessage(message)
-        if severity >= self.WARNING_LEVEL:
-            self.notifiers[self.mail_notifier].sendMessage(message)
+
+        for notifier in self.notifiers:
+            notifier.sendMessage(message)
+
+        for disaster_notifier in self.disaster_notifiers:
+            disaster_notifier.sendMessage(message)
 
     def getHeader(self, severity):
         """Get header by event severity.
