@@ -3,6 +3,9 @@
 Telegram bot for delivering university schedule to students
 
 
+<a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/badge/python-v3-green" /></a>
+
 ### Contents
 
 - [Start the bot](#start-the-bot)
