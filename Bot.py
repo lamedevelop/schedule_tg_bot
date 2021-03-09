@@ -135,7 +135,7 @@ async def updateGroup(message):
         if not argument:
             await send_message_custom(
                 message,
-                f'Group {argument} not found',
+                f'Group {argument} not found\nUsage /updategroup *group name*',
             )
 
         else:
