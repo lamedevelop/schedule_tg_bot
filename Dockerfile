@@ -1,6 +1,14 @@
 FROM python:3.7-alpine3.11
 
-RUN apk add mariadb-dev mariadb-client gcc musl-dev curl --no-cache --quiet
+RUN apk add \
+    mariadb-dev \
+    mariadb-client \
+    gcc \
+    musl-dev \
+    curl \
+    libc-dev \
+    linux-headers \
+    --no-cache --quiet
 
 ARG PROJECT_PATH
 WORKDIR $PROJECT_PATH
