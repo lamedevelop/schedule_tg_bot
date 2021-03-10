@@ -174,6 +174,21 @@ async def getMetrics(message):
         )
 
 
+@dp.message_handler(commands=["dump"])
+async def getMetrics(message):
+    if message.from_user.id in config.BOT_ADMINS:
+        alertManager.dump()
+
+    else:
+        await send_message_custom(
+            message,
+            messageGenerator.getMessage(
+                message.from_user.language_code,
+                messageGenerator.UNDEFINED_MESSAGE
+            ),
+        )
+
+
 @dp.message_handler(commands=["help"])
 async def sendHelp(message):
     """Send help message.
