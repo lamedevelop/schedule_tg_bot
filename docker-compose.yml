@@ -5,7 +5,7 @@ services:
     container_name: app
     build:
       context: .
-      dockerfile: Scripts/Dockerfile
+      dockerfile: Dockerfile
       args:
         PROJECT_PATH: /usr/src/app/
       labels:
