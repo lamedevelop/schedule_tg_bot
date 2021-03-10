@@ -23,7 +23,7 @@ class MpeiAbstractParseController(AbstractParseController):
     def _parse(self, group_name: str):
         week = self.getDefaultWeek()
 
-        group_id = self._getUrl(self.get_group_url_pattern % group_name)
+        group_id = self._get_url_response(self.get_group_url_pattern % group_name)
         if group_id is None:
             return {}
 
@@ -36,7 +36,7 @@ class MpeiAbstractParseController(AbstractParseController):
             start = date + timedelta(days=-date.isoweekday())
             finish = start + timedelta(days=6)
 
-            group_schedule = self._getUrl(
+            group_schedule = self._get_url_response(
                 self.get_schedule_url_pattern % (
                     group_id,
                     start.strftime("%Y.%m.%d"),

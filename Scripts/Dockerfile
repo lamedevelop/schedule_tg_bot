@@ -13,7 +13,7 @@ RUN apk add \
 ARG PROJECT_PATH
 WORKDIR $PROJECT_PATH
 
-COPY . .
+COPY .. ..
 
 RUN pip install -q --upgrade pip
 RUN pip install --no-cache-dir -r Requirements.txt

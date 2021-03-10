@@ -20,7 +20,7 @@ class AbstractParseController(object):
         self.logger.info(f"Parser {self.__class__.__name__} started for {group_name}")
         return str(self._parse(group_name))
 
-    def _getUrl(self, url: str):
+    def _get_url_response(self, url: str):
         try:
             response = requests.get(url, timeout=30)
         except requests.Timeout:
