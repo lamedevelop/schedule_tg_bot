@@ -34,6 +34,3 @@ class FileController:
     @staticmethod
     def runCommand(command):
         os.system(command)
-
-    def dummy(self):
-        pass
