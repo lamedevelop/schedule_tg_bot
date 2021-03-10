@@ -12,7 +12,7 @@ class UserMessagesTableMigration(Migration):
                 message_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 chat_id INTEGER,
                 user_status INTEGER,
-                message TEXT,
+                message BLOB,
                 creation_date INTEGER);'''
 
         self.dbController.submitQuery(query)

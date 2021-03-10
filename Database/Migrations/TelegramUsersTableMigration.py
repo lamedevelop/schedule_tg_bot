@@ -11,9 +11,9 @@ class TelegramUsersTableMigration(Migration):
         query = '''CREATE TABLE ''' + TelegramUserModel.table_name + ''' (
                 user_id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 chat_id INTEGER NOT NULL,
-                first_name TEXT,
-                last_name TEXT,
-                username TEXT,
+                first_name BLOB,
+                last_name BLOB,
+                username BLOB,
                 language_code TEXT DEFAULT 'en',
                 is_bot INTEGER,
                 is_alive INTEGER,
