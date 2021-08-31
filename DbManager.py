@@ -1,8 +1,10 @@
 from Controllers.Log.LogController import LogController
 from Controllers.DateTimeController import DateTimeController
 from Controllers.Db.DbControllerFactory import DbControllerFactory
+from Database.Migrations.LoginRequestTableMigration import LoginRequestTableMigration
 
 from Database.Models.GroupModel import GroupModel
+from Database.Models.LoginRequestModel import LoginRequestModel
 from Database.Models.UniversityModel import UniversityModel
 from Database.Models.UserMessageModel import UserMessageModel
 from Database.Models.TelegramUserModel import TelegramUserModel
@@ -30,6 +32,15 @@ class DbManager:
     @staticmethod
     def getUniversity(university_id):
         return UniversityModel().get(university_id).fields
+
+    @staticmethod
+    def getUniversityByName(universityName):
+        university = UniversityModel().getUniversityByName(universityName)
+
+        if bool(university):
+            return university.fields
+        else:
+            return []
 
     @staticmethod
     def addGroup(groupInfo: dict):
@@ -79,6 +90,18 @@ class DbManager:
         ]
 
     @staticmethod
+    def setLoginRequest(requestInfo: dict):
+        return LoginRequestModel(requestInfo).set()
+
+    @staticmethod
+    def getLoginRequestByClient(client_ip: str):
+        return LoginRequestModel().getRequestByClient(client_ip).fields
+
+    @staticmethod
+    def dropLoginRequest(request_id: dict):
+        return LoginRequestModel().get(request_id).drop()
+
+    @staticmethod
     def checkUserExist(chat_id):
         return bool(TelegramUserListModel().getListByParams({'chat_id': chat_id}))
 
@@ -120,7 +143,8 @@ class DbManager:
             "groupsTableMigration": GroupsTableMigration(),
             "universitiesTableMigration": UniversitiesTableMigration(),
             "telegramUsersTableMigration": TelegramUsersTableMigration(),
-            "userMessagesTableMigration": UserMessagesTableMigration()
+            "userMessagesTableMigration": UserMessagesTableMigration(),
+            "loginRequestTableMigration": LoginRequestTableMigration(),
         }
 
     # Migrations methods

@@ -57,6 +57,11 @@ class AbstractModel:
                 VALUES ({', '.join(set_fields['values'])})'''
         )
 
+        print(f'''INSERT INTO {self.table_name} ({', '.join(set_fields['names'])}) 
+                VALUES ({', '.join(set_fields['values'])})''')
+
+        print('record_id', record_id)
+
         return record_id
 
     def update(self, new_fields):
@@ -70,5 +75,12 @@ class AbstractModel:
         self.dbController.submitQuery(
             f"""UPDATE {self.table_name}
                 SET {', '.join(update_fields)}
+                WHERE {self.primary_key[0]}='{self.fields[self.primary_key[0]]}'"""
+        )
+
+    def drop(self):
+        self.dbController.submitQuery(
+            f"""DELETE
+                FROM {self.table_name} 
                 WHERE {self.primary_key[0]}='{self.fields[self.primary_key[0]]}'"""
         )
