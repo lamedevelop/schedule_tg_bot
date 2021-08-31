@@ -1,0 +1,12 @@
+FROM python:3.9
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -q --upgrade pip
+RUN pip install --no-cache-dir -r Requirements.txt
+
+EXPOSE 8000
+
+RUN uvicorn web:app --host=0.0.0.0 --reload

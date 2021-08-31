@@ -14,7 +14,20 @@ services:
     volumes:
       - ./Logs:/usr/src/app/Logs
     ports:
-      - 8081:8081
+      - "8081:8081"
+    restart: always
+    links:
+      - mariadb:db_domain
+    depends_on:
+      - mariadb
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: WebDockerfile
+    ports:
+      - "8000:8000"
     restart: always
     links:
       - mariadb:db_domain
